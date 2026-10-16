@@ -33,7 +33,16 @@ class AsyncRateLimiter:
 
 
 class OpenAILLMEngine(BaseLLMEngine):
-    def __init__(self, model_name: str = None, api_key: str = None, base_url: str = None):
+    def __init__(
+        self,
+        model_name: str = None,
+        api_key: str = None,
+        base_url: str = None,
+        *,
+        manage_local_server: bool = True,
+        discover_local_model: bool = True,
+        serialize_local_requests: bool = True,
+    ):
         import openai
         api_key = api_key or config.llm_cloud_api_key
         if not api_key and config.llm_provider == "openai-compatible":
@@ -77,7 +86,7 @@ class OpenAILLMEngine(BaseLLMEngine):
         is_local = base_url and ("localhost" in base_url or "127.0.0.1" in base_url)
         
         # Only start server if we are not running a pytest test run
-        if is_local and not os.environ.get("PYTEST_CURRENT_TEST"):
+        if is_local and manage_local_server and not os.environ.get("PYTEST_CURRENT_TEST"):
             server_running = False
             try:
                 import openai
@@ -145,12 +154,13 @@ class OpenAILLMEngine(BaseLLMEngine):
 
         self.client = openai.OpenAI(**client_args)
         self._is_local = is_local
+        self._serialize_local_requests = serialize_local_requests
         self.rate_limiter = AsyncRateLimiter(config.llm_request_delay)
 
         # Auto-discover the actual model name from the local server.
         # Local servers (optiq, ollama, vLLM) expose loaded models via /v1/models.
         # Using the wrong name causes the server to try downloading from HuggingFace.
-        if is_local and not os.environ.get("PYTEST_CURRENT_TEST"):
+        if is_local and discover_local_model and not os.environ.get("PYTEST_CURRENT_TEST"):
             try:
                 models_response = self.client.models.list()
                 available = [m.id for m in models_response.data]
@@ -173,11 +183,28 @@ class OpenAILLMEngine(BaseLLMEngine):
         con.success(f"OpenAI API LLM ready: [bold]{self.model_name}[/bold]")
 
     def _call_completions_with_lock(self, *args, **kwargs):
-        if self._is_local:
+        if self._is_local and self._serialize_local_requests:
             with _local_request_lock:
                 return self.client.chat.completions.create(*args, **kwargs)
         else:
             return self.client.chat.completions.create(*args, **kwargs)
+
+    def chat_completion(self, messages, *, model=None, temperature=0.0, response_format=None, max_tokens=None):
+        """Call the configured OpenAI-compatible provider with explicit chat messages.
+
+        This method lets evaluators reuse the application's provider engine while
+        keeping system/user prompts and structured-output settings explicit.
+        """
+        kwargs = {
+            "model": model or self.model_name,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        if response_format is not None:
+            kwargs["response_format"] = response_format
+        if max_tokens is not None:
+            kwargs["max_tokens"] = max_tokens
+        return self._call_completions_with_lock(**kwargs)
 
     def _truncate_to_context(self, text: str, max_input_tokens: int) -> str:
         if self.tokenizer is None:

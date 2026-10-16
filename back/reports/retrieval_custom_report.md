@@ -40,8 +40,7 @@ This report displays the retrieval stage performance of your custom configuratio
 
 | Baseline | Success Rate | Mean Recall | Context Precision | Mean Latency |
 | :--- | :---: | :---: | :---: | :---: |
-| B1 | 100.0% | 1.0000 | 1.0000 | 0.169s |
-| B2 | 100.0% | 1.0000 | 1.0000 | 0.029s |
+| B2 | 100.0% | 1.0000 | 1.0000 | 0.056s |
 
 
 > [!NOTE]

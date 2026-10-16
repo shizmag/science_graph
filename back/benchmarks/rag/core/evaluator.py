@@ -3,6 +3,7 @@ import sys
 import time
 import asyncio
 import json
+import math
 import re
 import random
 import yaml
@@ -29,17 +30,42 @@ from core.subprocess_runner import format_progress_marker
 
 class CloudEvaluator:
     """Interacts with the Cloud LLM provider (OpenAI API compatible) to score generated answers."""
-    def __init__(self, api_key: str, base_url: str, model_name: str, concurrency: int, rpm: int, max_retries: int = 5):
-        try:
-            import openai
-        except ImportError:
-            raise ImportError("Please install the 'openai' python package to use CloudEvaluator.")
-        
-        self.client = openai.AsyncOpenAI(api_key=api_key, base_url=base_url)
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str,
+        model_name: str,
+        concurrency: int,
+        rpm: int,
+        max_retries: int = 5,
+        *,
+        provider_engine=None,
+        temperature: float = 0.0,
+        response_format=None,
+        strict_output_validation: bool = False,
+        request_observer=None,
+        max_output_tokens: Optional[int] = None,
+        request_guard=None,
+    ):
+        if provider_engine is None:
+            try:
+                import openai
+            except ImportError:
+                raise ImportError("Please install the 'openai' python package to use CloudEvaluator.")
+            self.client = openai.AsyncOpenAI(api_key=api_key, base_url=base_url)
+        else:
+            self.client = None
+        self.provider_engine = provider_engine
         self.model_name = model_name
         self.semaphore = asyncio.Semaphore(concurrency)
         self.rate_limiter = AsyncRateLimiter(rpm)
         self.max_retries = max_retries
+        self.temperature = temperature
+        self.response_format = response_format
+        self.strict_output_validation = strict_output_validation
+        self.request_observer = request_observer
+        self.max_output_tokens = max_output_tokens
+        self.request_guard = request_guard
 
     def can_acquire(self) -> bool:
         """Returns True if the underlying rate limiter has immediate capacity."""
@@ -55,27 +81,74 @@ class CloudEvaluator:
             max_retries = self.max_retries
         from src import console as con
         async with self.semaphore:
-            for attempt in range(max_retries):
+            for attempt in range(max(1, max_retries)):
                 await self.rate_limiter.wait()
+                if self.request_guard:
+                    self.request_guard()
+                started_at = time.monotonic()
                 try:
-                    response = await self.client.chat.completions.create(
-                        model=self.model_name,
-                        messages=[
+                    messages = [
                             {"role": "system", "content": system_prompt},
                             {"role": "user", "content": user_prompt}
-                        ],
-                        temperature=0.0,
-                    )
+                    ]
+                    request_kwargs = {
+                        "model": self.model_name,
+                        "messages": messages,
+                        "temperature": self.temperature,
+                    }
+                    if self.max_output_tokens is not None:
+                        request_kwargs["max_tokens"] = int(self.max_output_tokens)
+                    if self.response_format is not None:
+                        request_kwargs["response_format"] = self.response_format
+                    if self.provider_engine is None:
+                        response = await self.client.chat.completions.create(**request_kwargs)
+                    else:
+                        response = await asyncio.to_thread(
+                            self.provider_engine.chat_completion,
+                            messages,
+                            model=self.model_name,
+                            temperature=self.temperature,
+                            response_format=self.response_format,
+                            max_tokens=self.max_output_tokens,
+                        )
                     
                     if not response or not getattr(response, "choices", None):
-                        raise ValueError(f"Invalid API response: choices list is missing or empty. Raw response: {response}")
+                        raise ValueError("Invalid API response: choices list is missing or empty.")
                     
                     choice = response.choices[0]
                     if not choice or not getattr(choice, "message", None) or choice.message.content is None:
                         raise ValueError("Invalid API response: message content is None.")
                     
+                    if self.request_observer:
+                        usage = getattr(response, "usage", None)
+                        self.request_observer({
+                            "event": "success",
+                            "attempt": attempt + 1,
+                            "request_id": getattr(response, "id", None),
+                            "model": getattr(response, "model", self.model_name),
+                            "elapsed_seconds": round(time.monotonic() - started_at, 6),
+                            "prompt_tokens": getattr(usage, "prompt_tokens", None),
+                            "completion_tokens": getattr(usage, "completion_tokens", None),
+                            "total_tokens": getattr(usage, "total_tokens", None),
+                            "gateway_cost": getattr(usage, "cost", getattr(response, "cost", None)),
+                            "gateway_cost_details": getattr(usage, "cost_details", None),
+                            "finish_reason": getattr(choice, "finish_reason", None),
+                            "response_format": self.response_format,
+                            "max_output_tokens": self.max_output_tokens,
+                        })
                     return choice.message.content
                 except Exception as e:
+                    if self.request_observer:
+                        self.request_observer({
+                            "event": "error",
+                            "attempt": attempt + 1,
+                            "model": self.model_name,
+                            "elapsed_seconds": round(time.monotonic() - started_at, 6),
+                            "error_type": type(e).__name__,
+                            "status_code": getattr(e, "status_code", None),
+                            "response_format": self.response_format,
+                            "max_output_tokens": self.max_output_tokens,
+                        })
                     wait_time = (2 ** attempt) + random.uniform(0.1, 1.0)
                     
                     # Special handling for Rate Limit (429) or rate limit messages
@@ -138,11 +211,13 @@ class CloudEvaluator:
                         )
                     else:
                         con.warning(
-                            f"Cloud API Call Error (Attempt {attempt+1}/{max_retries}): {e}. "
+                            f"Cloud API Call Error (Attempt {attempt+1}/{max(1, max_retries)}): {type(e).__name__}. "
                             f"Retrying in {wait_time:.2f}s..."
                         )
                     
-                    if attempt == max_retries - 1:
+                    status_code = getattr(e, "status_code", None)
+                    is_nonretryable_client_error = status_code is not None and 400 <= status_code < 500 and status_code != 429
+                    if is_nonretryable_client_error or attempt == max(1, max_retries) - 1:
                         raise e
                     await asyncio.sleep(wait_time)
             raise RuntimeError("Cloud LLM request failed after maximum retries.")
@@ -153,7 +228,7 @@ class CloudEvaluator:
         system_prompt = evaluator_config["system_prompt"]
         user_prompt = evaluator_config["user_prompt_template"].format(**kwargs)
 
-        max_parse_retries = 3
+        max_parse_retries = 2 if self.strict_output_validation else 3
         for parse_attempt in range(max_parse_retries):
             raw_response = await self.call_llm(system_prompt, user_prompt)
             try:
@@ -167,6 +242,8 @@ class CloudEvaluator:
                     f"Raw response: {raw_response[:200] if raw_response else 'None'}..."
                 )
                 if parse_attempt == max_parse_retries - 1:
+                    if self.strict_output_validation:
+                        raise ValueError(f"Independent judge returned invalid structured output: {e}") from e
                     return {"score": 0.0, "error": str(e), "raw_response": raw_response}
                 await asyncio.sleep(1.0)
         return {"score": 0.0, "error": "Evaluation parsing failed."}
@@ -177,7 +254,7 @@ class CloudEvaluator:
         system_prompt = evaluator_config["system_prompt"]
         user_prompt = evaluator_config["user_prompt_template"].format(**kwargs)
 
-        max_parse_retries = 3
+        max_parse_retries = 2 if self.strict_output_validation else 3
         for parse_attempt in range(max_parse_retries):
             raw_response = await self.call_llm(system_prompt, user_prompt)
             try:
@@ -202,6 +279,12 @@ class CloudEvaluator:
                             raise ValueError(f"Metric '{k}' is missing the 'score' key.")
                     else:
                         raise ValueError(f"Metric '{k}' has invalid data type: {type(metric_data)}")
+                    if self.strict_output_validation:
+                        score = parsed[k]["score"]
+                        if isinstance(score, bool) or not isinstance(score, (int, float)):
+                            raise ValueError(f"Metric '{k}' score must be numeric.")
+                        if not math.isfinite(float(score)) or not 0.0 <= float(score) <= 1.0:
+                            raise ValueError(f"Metric '{k}' score must be finite and within [0, 1].")
                 
                 return parsed
             except Exception as e:
@@ -210,6 +293,8 @@ class CloudEvaluator:
                     f"Raw response: {raw_response[:200] if raw_response else 'None'}..."
                 )
                 if parse_attempt == max_parse_retries - 1:
+                    if self.strict_output_validation:
+                        raise ValueError(f"Independent judge returned invalid structured output: {e}") from e
                     fallback = {
                         "answer_relevance": {"score": 0.0, "error": str(e)},
                         "semantic_accuracy": {"score": 0.0, "error": str(e)}

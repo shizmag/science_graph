@@ -68,3 +68,30 @@ def LLMEngine(use_cloud: bool = False, purpose: str = "index", *args, **kwargs) 
                     from src.llm_engine import MlxLLMEngine
                     src.llm_engine._local_engine_singleton = MlxLLMEngine(model_path=model_path, *args, **kwargs)
             return src.llm_engine._local_engine_singleton
+
+
+def create_provider_engine(
+    provider_name: str,
+    *,
+    model_name: str,
+    api_key: str,
+    base_url: str,
+) -> BaseLLMEngine:
+    """Create a non-singleton engine for an explicitly selected API provider.
+
+    Revision judges use this path to avoid changing the application's default
+    generator or reusing the production judge singleton. Localhost endpoints are
+    treated as gateways; this factory never starts or discovers a local model.
+    """
+    if provider_name.lower() not in {"omniroute", "openai-compatible"}:
+        raise ValueError(f"Unsupported provider engine: {provider_name}")
+    from src.llm_engine import OpenAILLMEngine
+
+    return OpenAILLMEngine(
+        model_name=model_name,
+        api_key=api_key,
+        base_url=base_url,
+        manage_local_server=False,
+        discover_local_model=False,
+        serialize_local_requests=False,
+    )

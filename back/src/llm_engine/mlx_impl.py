@@ -104,13 +104,21 @@ def _decode_token_key(tokenizer: Any, token_id: int) -> str:
 
 
 def _telemetry_defaults() -> Dict[str, Any]:
-    return {
+    defaults = {
         "logprob": 0.0,
         "entropy": 0.0,
         "msp": 0.0,
         "logit_margin": 0.0,
+        "top1_prob_full": 0.0,
+        "nll_nats": 0.0,
+        "nll_bits_per_token": 0.0,
         "top_logprobs": {},
     }
+    for k in (20, 50, 100):
+        defaults[f"entropy_k{k}_bits"] = 0.0
+        defaults[f"retained_mass_k{k}"] = 0.0
+        defaults[f"top1_prob_local_k{k}"] = 0.0
+    return defaults
 
 
 def _telemetry_from_single_logprob(
@@ -131,8 +139,6 @@ def _telemetry_from_single_logprob(
             return fields
 
         store_k = min(int(top_k_store), V)
-        ent_k = min(int(top_k_entropy), V)
-
         if token_id is not None:
             tid = int(token_id)
             if 0 <= tid < V:
@@ -165,13 +171,25 @@ def _telemetry_from_single_logprob(
         p_store = mx.softmax(top_lp)
         fields["msp"] = float(mx.max(p_store).item())
 
-        if ent_k < V:
-            ent_indices = mx.argpartition(vec, -ent_k)[-ent_k:]
-            ent_lp = vec[ent_indices]
-        else:
-            ent_lp = vec
-        p_ent = mx.softmax(ent_lp)
-        fields["entropy"] = max(0.0, -float(mx.sum(p_ent * mx.log2(p_ent + 1e-12)).item()))
+        log_z = mx.logsumexp(vec)
+        fields["top1_prob_full"] = float(mx.exp(pairs[0][0] - log_z).item())
+        for requested_k in sorted({20, 50, 100, int(top_k_entropy)}):
+            k = min(requested_k, V)
+            if k < V:
+                indices = mx.argpartition(vec, -k)[-k:]
+                values = vec[indices]
+            else:
+                values = vec
+            probabilities = mx.softmax(values)
+            entropy = -mx.sum(probabilities * mx.log2(probabilities + 1e-12))
+            mass = mx.sum(mx.exp(values - log_z))
+            suffix = str(requested_k)
+            fields[f"entropy_k{suffix}_bits"] = max(0.0, float(entropy.item()))
+            fields[f"retained_mass_k{suffix}"] = min(1.0, max(0.0, float(mass.item())))
+            fields[f"top1_prob_local_k{suffix}"] = float(mx.max(probabilities).item())
+        fields["entropy"] = fields.get(f"entropy_k{int(top_k_entropy)}_bits", 0.0)
+        fields["nll_nats"] = -fields["logprob"]
+        fields["nll_bits_per_token"] = fields["nll_nats"] / 0.6931471805599453
         return fields
     except Exception:
         return fields
@@ -211,8 +229,6 @@ def build_compact_tokens_info(
             return out
 
         store_k = min(int(top_k_store), V)
-        ent_k = min(int(top_k_entropy), V)
-
         if store_k < V:
             top_idx = mx.argpartition(stacked, -store_k, axis=-1)[:, -store_k:]
         else:
@@ -230,13 +246,22 @@ def build_compact_tokens_info(
         else:
             margin_arr = mx.zeros((N,), dtype=mx.float32)
 
-        if ent_k < V:
-            ent_idx = mx.argpartition(stacked, -ent_k, axis=-1)[:, -ent_k:]
-            ent_lp = mx.take_along_axis(stacked, ent_idx, axis=-1)
-        else:
-            ent_lp = stacked
-        p_ent = mx.softmax(ent_lp, axis=-1)
-        ent_arr = -mx.sum(p_ent * mx.log2(p_ent + 1e-12), axis=-1)
+        log_z = mx.logsumexp(stacked, axis=-1, keepdims=True)
+        full_top1_prob = mx.exp(top_lp_sorted[:, :1] - log_z).reshape(-1)
+        topk_arrays = {}
+        for requested_k in sorted({20, 50, 100, int(top_k_entropy)}):
+            k = min(requested_k, V)
+            if k < V:
+                indices = mx.argpartition(stacked, -k, axis=-1)[:, -k:]
+                values = mx.take_along_axis(stacked, indices, axis=-1)
+            else:
+                values = stacked
+            probabilities = mx.softmax(values, axis=-1)
+            entropy = -mx.sum(probabilities * mx.log2(probabilities + 1e-12), axis=-1)
+            mass = mx.sum(mx.exp(values - log_z), axis=-1)
+            local_top1 = mx.max(probabilities, axis=-1)
+            topk_arrays[requested_k] = (entropy, mass, local_top1)
+        ent_arr = topk_arrays[int(top_k_entropy)][0]
 
         tid_list: List[int] = []
         tid_valid: List[bool] = []
@@ -253,20 +278,33 @@ def build_compact_tokens_info(
         tid_arr = mx.array(tid_list)
         chosen = stacked[mx.arange(N), tid_arr]
 
-        mx.eval(msp_arr, margin_arr, ent_arr, chosen, top_lp_sorted, top_idx_sorted)
+        mx.eval(msp_arr, margin_arr, ent_arr, chosen, top_lp_sorted, top_idx_sorted, full_top1_prob)
 
         msp_list = msp_arr.tolist()
         margin_list = margin_arr.tolist()
         ent_list = ent_arr.tolist()
         chosen_list = chosen.tolist()
+        full_top1_prob_list = full_top1_prob.tolist()
         top_lp_list = top_lp_sorted.tolist()
         top_idx_list = top_idx_sorted.tolist()
+        topk_values = {}
+        for requested_k, (entropy, mass, local_top1) in topk_arrays.items():
+            mx.eval(entropy, mass, local_top1)
+            topk_values[requested_k] = (entropy.tolist(), mass.tolist(), local_top1.tolist())
 
         for j, i in enumerate(valid_idx):
             out[i]["logprob"] = float(chosen_list[j]) if tid_valid[j] else 0.0
             out[i]["entropy"] = max(0.0, float(ent_list[j]))
             out[i]["msp"] = float(msp_list[j])
             out[i]["logit_margin"] = float(margin_list[j])
+            out[i]["top1_prob_full"] = float(full_top1_prob_list[j])
+            out[i]["nll_nats"] = -out[i]["logprob"]
+            out[i]["nll_bits_per_token"] = out[i]["nll_nats"] / 0.6931471805599453
+            for requested_k, (entropies, masses, local_top1s) in topk_values.items():
+                suffix = str(requested_k)
+                out[i][f"entropy_k{suffix}_bits"] = max(0.0, float(entropies[j]))
+                out[i][f"retained_mass_k{suffix}"] = min(1.0, max(0.0, float(masses[j])))
+                out[i][f"top1_prob_local_k{suffix}"] = float(local_top1s[j])
 
             row_lps = top_lp_list[j]
             row_ids = top_idx_list[j]
