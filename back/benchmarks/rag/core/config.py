@@ -6,6 +6,7 @@ and run directory creation utilities.
 
 import copy
 import argparse
+import hashlib
 import random
 from datetime import datetime
 from pathlib import Path
@@ -31,6 +32,16 @@ BASELINES_INFO: Dict[str, str] = {
 STANDARD_BASELINES: List[str] = ["B0", "B1", "B2", "B3", "B4", "B5", "B6"]
 
 DEFAULT_LIMIT = 50
+
+
+def database_file_sha256(database_path: Path | str) -> str:
+    """Hash a resolved SQLite database file without opening it through the repository layer."""
+    target_db = Path(database_path).expanduser().resolve(strict=True)
+    digest = hashlib.sha256()
+    with target_db.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 # Store default config settings for reference and rollback
 DEFAULT_COMPONENTS = copy.deepcopy(config.data.get("rag_components", {}))
@@ -153,6 +164,10 @@ def add_custom_config_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--db-path", type=str, default=None,
         help="Path to SQLite database file (defaults to project science_graph.db)."
+    )
+    parser.add_argument(
+        "--db-sha256", type=str, default=None,
+        help="Expected SHA-256 for --db-path; fail if the database identity differs."
     )
     parser.add_argument(
         "--custom", action="store_true",
@@ -386,8 +401,11 @@ def get_baseline_config(baseline: str, config_rag_components: dict) -> Dict[str,
     elif baseline == "B6":
         components = {k: config_rag_components.get(k, True) for k in config_rag_components.keys()}
         components["hyde"] = False
-        components["reranker"] = True
-        components["graph_neighbors_in_rrf"] = True
+        # B6's frozen runtime configuration supplies True for the ordinary
+        # reference. Preserve an explicit False so component ablations can
+        # disable either path without changing unrelated baseline settings.
+        components["reranker"] = bool(config_rag_components.get("reranker", True))
+        components["graph_neighbors_in_rrf"] = bool(config_rag_components.get("graph_neighbors_in_rrf", True))
     elif baseline == "CUSTOM":
         components = {k: config_rag_components.get(k, True) for k in config_rag_components.keys()}
         components["hyde"] = False
@@ -527,7 +545,10 @@ def create_graph_run_dir(
     return run_dir
 
 
-def resolve_project_db_path(db_path_arg: Optional[str] = None) -> Path:
+def resolve_project_db_path(
+    db_path_arg: Optional[str] = None,
+    expected_sha256: Optional[str] = None,
+) -> Path:
     """Resolves and configures the SQLite database path in global config.
     Checks explicit CLI argument, local project science_graph.db, or defaults.
     """
@@ -538,7 +559,11 @@ def resolve_project_db_path(db_path_arg: Optional[str] = None) -> Path:
     target_db = None
 
     if db_path_arg:
-        target_db = Path(db_path_arg).resolve()
+        target_db = Path(db_path_arg).expanduser().resolve()
+        if not target_db.is_file():
+            raise FileNotFoundError(
+                f"Explicit SQLite database path does not name an existing file: {target_db}"
+            )
     else:
         back_dir = file_path.parents[3]
         repo_dir = file_path.parents[4] if len(file_path.parents) > 4 else back_dir
@@ -557,10 +582,33 @@ def resolve_project_db_path(db_path_arg: Optional[str] = None) -> Path:
                     target_db = candidate
                     break
 
-    if target_db and target_db.exists():
+    if target_db and target_db.is_file():
+        if expected_sha256:
+            actual_sha256 = database_file_sha256(target_db)
+            if actual_sha256.lower() != expected_sha256.lower():
+                raise ValueError(
+                    "Explicit SQLite database SHA-256 does not match the run identity: "
+                    f"expected {expected_sha256}, got {actual_sha256}"
+                )
         config.data["db_path"] = str(target_db)
         container._graph_repo = None
         container._vector_repo = None
+    elif expected_sha256:
+        raise FileNotFoundError("A database SHA-256 was provided without a resolvable database file")
 
     return Path(config.db_path)
+
+
+def database_path_cli_args(
+    database_path: Path | str,
+    expected_sha256: Optional[str] = None,
+) -> list[str]:
+    """Return an absolute database path and optional immutable identity for child processes."""
+    target_db = Path(database_path).expanduser().resolve(strict=True)
+    if not target_db.is_file():
+        raise FileNotFoundError(f"SQLite database path is not a regular file: {target_db}")
+    args = ["--db-path", str(target_db)]
+    if expected_sha256:
+        args.extend(["--db-sha256", expected_sha256])
+    return args
 

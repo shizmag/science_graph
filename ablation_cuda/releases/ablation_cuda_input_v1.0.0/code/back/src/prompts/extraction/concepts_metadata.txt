@@ -1,0 +1,42 @@
+You are a strict scientific text analyzer. Analyze the following paper text (abstract and introduction).
+
+CRITICAL INSTRUCTIONS TO PREVENT HALLUCINATIONS AND LOOPS:
+- Do NOT repeat the same author, concept, tag, or institution name in your lists. Keep all entries in any list unique.
+- Do NOT get stuck in infinite repetition loops. If there is no more information to extract, simply close the JSON arrays.
+- Do NOT guess, hallucinate, or invent values (e.g., fake GitHub URLs). If a value is not explicitly mentioned (such as "code_repositories" or "sponsored_by"), return an empty list [] or null.
+- LANGUAGE RULE: You must perform the analysis and output all extracted values (concepts, descriptions, aliases, tags, etc.) in English. EXCEPT: If the provided Paper text contains Russian language (Cyrillic characters), you must extract and describe concepts, aliases, and tags in Russian.
+
+Extract the following scientific entities, properties, and relationships:
+1. Authors: A list of ONLY actual human names of the paper's authors (e.g. "Jane Doe", "John Smith"). Do NOT include paper titles, citations, locations, cities, countries, or institutions (like "MIT", "Stanford", "Google", "San Francisco"). Verify that each entry in this list represents a person, not an organization, technology, or concept. Max 15 names.
+2. Concepts: A list of scientific concepts, algorithms, frameworks, and key formulas. These MUST be short noun phrases (1-3 words max, e.g. "Self-Attention", "Transformer"). For each concept, extract a list of synonyms and abbreviations as 'aliases' (e.g., ["LLM", "Large Language Model"]).
+3. Tags: A list of 3-7 high-level topic tags/keywords (e.g., "statistics", "deep learning").
+4. Institutions: A list of organizations, universities, or companies mentioned in the text (e.g., "MIT", "Google DeepMind").
+5. Author Institutions: Mapping of extracted authors to their affiliated institutions, formatted as a list of {"author": "Author Name", "institution": "Institution Name"}.
+6. Sponsored By: List of institutions or companies that sponsored, funded, or supported the paper.
+7. Datasets: List of benchmarks or datasets mentioned in the text, formatted as a list of {"name": "Dataset Name", "relation": "USED_DATASET" or "INTRODUCED_DATASET"}.
+8. Code Repositories: List of code repository URLs (like GitHub links) implementing the paper. Return [] if not mentioned.
+9. Journal or Conference: The name of the journal or conference where the paper was published (e.g., "NeurIPS", "ICML", "Nature").
+10. Citation Intents: List of referenced papers/authors mentioned in the text, and classify their citation intent, formatted as a list of {"target_title": "Cited Paper Title", "intent": "USES_METHOD" or "EXTENDS" or "COMPARES_WITH" or "DISPUTES" or "BACKGROUND"}.
+11. Concept Relations: List of relationships between extracted concepts, formatted as a list of {"source": "Concept A", "target": "Concept B", "relation_type": "SUBCLASS_OF" or "IS_A" or "PREREQUISITE_FOR"}.
+
+You MUST format the output as a valid JSON object with the following schema:
+{
+  "authors": ["Author Name 1", "Author Name 2"],
+  "concepts": [
+    {"name": "Concept Name", "description": "1 concise sentence description", "aliases": ["alias1", "alias2"]}
+  ],
+  "tags": ["tag1", "tag2"],
+  "institutions": ["MIT", "Google DeepMind"],
+  "author_institutions": [{"author": "John Doe", "institution": "MIT"}],
+  "sponsored_by": ["Google DeepMind"],
+  "datasets": [{"name": "GSM8k", "relation": "USED_DATASET"}],
+  "code_repositories": ["https://github.com/..."],
+  "journal_or_conference": "NeurIPS",
+  "citation_intents": [{"target_title": "Attention Is All You Need", "intent": "USES_METHOD"}],
+  "concept_relations": [{"source": "Self-Attention", "target": "Transformer", "relation_type": "PREREQUISITE_FOR"}]
+}
+
+Do NOT include any markdown code blocks, text outside JSON, or conversational filler. Output ONLY the raw JSON string.
+
+Paper text:
+{{safe_text}}

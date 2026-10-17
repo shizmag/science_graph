@@ -1,0 +1,3 @@
+Provide a brief, one-sentence definition of the AI/ML concept or term: '{{name}}' in English. Do not write anything else. Keep it under 20 words.
+
+EXCEPT: If the concept name '{{name}}' is in Russian (contains Cyrillic characters), provide the definition in Russian instead.

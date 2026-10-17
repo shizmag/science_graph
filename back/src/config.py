@@ -108,6 +108,8 @@ DEFAULT_CONFIG = {
         "enabled": False,
         "concept_retrieval_enabled": False,
         "bridge_retrieval_enabled": False,
+        "subbranch_policy": "auto",
+        "intra_paper_candidate_augmentation_enabled": True,
         "selected_sources_card_enabled": False,
         "trace_enabled": False,
         "chunks_per_graph_paper": 1,
@@ -984,6 +986,12 @@ hyperparameters:
     @property
     def graph_bridge_retrieval_enabled(self) -> bool:
         return self.is_component_enabled("graph_bridge_retrieval") or self.data.get("graph_retrieval", {}).get("bridge_retrieval_enabled", False)
+
+    @property
+    def graph_intra_paper_candidate_augmentation_enabled(self) -> bool:
+        return bool(self.data.get("graph_retrieval", {}).get(
+            "intra_paper_candidate_augmentation_enabled", True
+        ))
 
     @property
     def graph_selected_sources_card_enabled(self) -> bool:

@@ -25,6 +25,9 @@ def LLMEngine(use_cloud: bool = False, purpose: str = "index", *args, **kwargs) 
                 if provider == "gguf":
                     from src.llm_engine import GgufLLMEngine
                     src.llm_engine._local_rag_engine_singleton = GgufLLMEngine(model_path=model_path, *args, **kwargs)
+                elif provider == "cuda_torch":
+                    from src.llm_engine import CudaTorchLLMEngine
+                    src.llm_engine._local_rag_engine_singleton = CudaTorchLLMEngine(model_path=model_path, *args, **kwargs)
                 elif provider in ("openai", "openai-compatible"):
                     from src.llm_engine import OpenAILLMEngine
                     from pathlib import Path
@@ -53,6 +56,9 @@ def LLMEngine(use_cloud: bool = False, purpose: str = "index", *args, **kwargs) 
                 if provider == "gguf":
                     from src.llm_engine import GgufLLMEngine
                     src.llm_engine._local_engine_singleton = GgufLLMEngine(model_path=model_path, *args, **kwargs)
+                elif provider == "cuda_torch":
+                    from src.llm_engine import CudaTorchLLMEngine
+                    src.llm_engine._local_engine_singleton = CudaTorchLLMEngine(model_path=model_path, *args, **kwargs)
                 elif provider in ("openai", "openai-compatible"):
                     from src.llm_engine import OpenAILLMEngine
                     from pathlib import Path

@@ -1,0 +1,10 @@
+{
+  "error": "mapping values are not allowed here\n  in \"<unicode string>\", line 40, column 34:\n          documents: prepend \"passage: \" unless already present\n                                     ^",
+  "error_type": "ScannerError",
+  "failed_stage": "preflight",
+  "process_exit_code": null,
+  "query_id": "pubmedqa_21084567",
+  "schema_version": "1.0",
+  "started_at_utc": "2026-10-17T06:57:03.107013+00:00",
+  "status": "BLOCKED"
+}

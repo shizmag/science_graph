@@ -6,6 +6,7 @@ Orchestrates the individual stages via subprocesses for optimal VRAM isolation.
 
 import sys
 import argparse
+import hashlib
 import time
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,8 @@ from core.config import (
     build_custom_config,
     add_custom_config_arguments,
     resolve_project_db_path,
+    database_path_cli_args,
+    database_file_sha256,
 )
 
 
@@ -97,8 +100,9 @@ def main():
     add_custom_config_arguments(parser)
     args = parser.parse_args()
 
-    active_db = resolve_project_db_path(args.db_path)
-    con.info(f"Using database path: {active_db}")
+    active_db = resolve_project_db_path(args.db_path, args.db_sha256)
+    active_db_sha256 = database_file_sha256(active_db)
+    con.info(f"Using database path: {active_db} (sha256={active_db_sha256})")
 
 
     # Determine paths relative to this script
@@ -316,6 +320,10 @@ def main():
             "query_count": num_cases,
             "dataset_hash": dataset_hash
         },
+        "database": {
+            "path": str(active_db.resolve()),
+            "sha256": active_db_sha256,
+        },
         "output_dir": str(run_dir),
         "trace_dir": str(run_dir / "traces"),
         "env_overrides": {
@@ -382,10 +390,7 @@ def main():
                 "--no-unique-dir"
             ]
             retrieve_cmd.extend(["--limit", str(num_cases)])
-            if args.db_path:
-                retrieve_cmd.extend(["--db-path", str(args.db_path)])
-            elif active_db:
-                retrieve_cmd.extend(["--db-path", str(active_db)])
+            retrieve_cmd.extend(database_path_cli_args(active_db, active_db_sha256))
             if args.unanswerable_limit is not None:
                 retrieve_cmd.extend(["--unanswerable-limit", str(args.unanswerable_limit)])
             if args.cloud:
@@ -515,6 +520,7 @@ def main():
                 "--no-unique-dir"
             ]
             gen_cmd.extend(["--limit", str(num_cases)])
+            gen_cmd.extend(database_path_cli_args(active_db, active_db_sha256))
             if args.unanswerable_limit is not None:
                 gen_cmd.extend(["--unanswerable-limit", str(args.unanswerable_limit)])
             if args.cloud:

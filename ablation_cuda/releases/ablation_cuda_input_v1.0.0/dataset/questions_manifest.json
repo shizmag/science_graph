@@ -1,0 +1,51 @@
+{
+  "answerability_semantics": {
+    "answerable": "source is_answerable=true",
+    "designated_negative": "source is_answerable=false; negative category preserved from archive/golden source",
+    "negative_gold_serialization": "preserve archived string; source null normalized to empty string only when archived field is null",
+    "positive_gold_crosscheck": "archived and golden text preserved verbatim; sampled_300 cross-check is exact '<Final_decision>. <long_answer>' serialization using original source fields"
+  },
+  "answerable_count": 300,
+  "canonical_sources": [
+    {
+      "path": "graphs/run_20260729_211324_OCC-RAG-1.7B/retrieved_contexts.yaml",
+      "role": "historical_population_authority",
+      "sha256": "738b9d45c5049f49c6944807ac829846c42b4955f052c8af42439312ce7612cc"
+    },
+    {
+      "path": "back/benchmarks/rag/dataset/pubmedqa/pubmedqa_golden.yaml",
+      "role": "gold_reference_and_category_crosscheck",
+      "sha256": "7091a67d0a8edd2a971ccb65e26f0bf33f26a06c5453005ec893f6791809b85f"
+    },
+    {
+      "path": "back/benchmarks/rag/dataset/pubmedqa/sampled_300.json",
+      "role": "source_pmid_crosscheck",
+      "sha256": "ee1dd17b220169497b35413a194aa42198df2c171939c703a50fe127068db146"
+    },
+    {
+      "path": "graphs/run_20260729_211324_OCC-RAG-1.7B/metrics_details.csv",
+      "role": "historical_run_membership_crosscheck",
+      "sha256": "a2010645d14f50826bc34491fa0efb9d451096640327c548bdc896f764db4e5e"
+    },
+    {
+      "path": "revision_release/dataset_provenance/synthetic_negative_trace.csv",
+      "role": "synthetic_negative_provenance_audit",
+      "sha256": "22149ae449e20ff8576019ebe6e79ac3587c019c40b4b81e600bc259ccc59697"
+    }
+  ],
+  "dataset_sha256": "d2820ced7c2994218245887ad753700923262fb91ec983eeacc01b217ec43b6b",
+  "designated_negative_count": 75,
+  "duplicate_question_text_count": 0,
+  "evidence_level": "EXACT_SOURCE_RECOVERED",
+  "generation_script": {
+    "module": "ablation_portability.scripts.freeze_dataset",
+    "sha256": "b8bfde6718759d7c5e02abef2d29ad11b0034db8ac5a813f22767a9d8c0ce184"
+  },
+  "historical_run_id": "run_20260729_211324_OCC-RAG-1.7B",
+  "ordering": "exact row order of canonical archived retrieved_contexts.yaml; row_index is one-based",
+  "questions_provenance_sha256": "66399b54b2ba81950caecd8a2368334191aa3282038b025caaf3a18df6bcb0be",
+  "row_count": 375,
+  "schema_version": "1.0",
+  "serialization": "UTF-8 JSONL; one compact sorted-key JSON object per line; ensure_ascii=false; LF terminator",
+  "unique_query_id_count": 375
+}

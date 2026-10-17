@@ -1,0 +1,11 @@
+{
+  "candidates_considered": [
+    "external_db",
+    "repo_db"
+  ],
+  "decision_statement": "Author-selected new baseline: external_db, the recommended graph-enabled candidate with citation/concept relations and a broader corpus; this does not claim July database identity.",
+  "recorded_at_utc": "2026-10-16T19:54:57.331982+00:00",
+  "schema_version": "1.0",
+  "selected_candidate": "external_db",
+  "selected_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0"
+}

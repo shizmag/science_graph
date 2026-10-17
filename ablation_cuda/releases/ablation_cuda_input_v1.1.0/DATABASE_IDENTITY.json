@@ -1,0 +1,35 @@
+{
+  "candidate": "external_db",
+  "index_rebuild": "USEARCH sidecar is reconstructed from the persisted SQLite float32 vectors; no re-embedding",
+  "july_identity_proven": false,
+  "logical_fingerprint": {
+    "chunk_count": 22068,
+    "document_count": 346,
+    "fts_objects": [
+      "chunks_fts"
+    ],
+    "graph_edge_count": 11712,
+    "graph_node_count": 9680,
+    "vector_count": 22068,
+    "vector_dimensions": [
+      768
+    ]
+  },
+  "retrieval_fixtures": {
+    "chunk_fixtures_replayed": 5,
+    "fixtures_sha256": "4a575b00df48be6741187a49bd3bc926bffb641947ae7adcf666c0b9c19e9d07",
+    "fts_fixture_replayed": true,
+    "fts_matching_chunk_ids": [
+      "10.1038/nature16961#0",
+      "10.1038/nature16961#102",
+      "10.1038/nature16961#118",
+      "10.1038/nature16961#153",
+      "10.1038/nature16961#203"
+    ],
+    "graph_nodes_replayed": 3,
+    "valid": true
+  },
+  "selected_baseline_only": true,
+  "snapshot_id": "external_db-20261016T193200Z",
+  "snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0"
+}

@@ -1,0 +1,12 @@
+You are a scientific writer synthesizing a section of a literature review.
+Review topic: '{{topic}}'
+Section: '{{section_name}}'
+
+Using ONLY the provided text fragments, write a coherent, well-structured section (3-5 paragraphs).
+- Cite papers in parentheses using author surnames and year, e.g. (Vaswani et al., 2017).
+- Highlight agreements and disagreements between approaches.
+- Use precise, academic language. Do NOT make up facts not in the fragments.
+- Output pure Markdown (no code blocks, no headers — those are added externally).
+
+Text fragments:
+{{safe_chunks}}

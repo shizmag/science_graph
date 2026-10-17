@@ -1,0 +1,155 @@
+{
+  "chunk_count": 2331,
+  "chunk_samples": [
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "788d45619d45c12bdfd9172c821a818ee228ac85ba8bbd7cf54a979af914f268",
+      "vector_sha256": "c95cfba2d87886c14ca3cb00193db40784f861b2193ecae9d3679b485f17afe5"
+    },
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "579829b0b6cde41ba581ea51545d203947ffc1b1a39fdf74d0d4e4b68c05f28e",
+      "vector_sha256": "658dd64822c72205a1ab5a9d050eb246f989f0b36fb94857fafb2005ca8263d5"
+    },
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "a2cb06692e915ac95a035ba2961e173588b53bed2f48f4a3bbc18e7f3c12fcf1",
+      "vector_sha256": "45c55468c5ffe13c870080853c9cd6bd5909b465d0ddd548704d60b2a3940d39"
+    },
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "598234b9642c72737e9e6a595f7cfed0e230368f573a8e1c24b2506221b6e4c7",
+      "vector_sha256": "7639f6c1ecc1f2e6ffb3ba8b2441667568b42d480544a6b84a86a6dfcf9c612e"
+    },
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "f3f1ad0cc1f2a9a1d910ec042b44d00f8c6be4d2acb248bbab0a505434c6aa1b",
+      "vector_sha256": "1da67f19e53cc09fab6db34d36252bef6858586b4eaaf3e387860c2526b759d5"
+    },
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "8e29c24723e2b345e6840a25600cbcf8f7fa348559b2e22a51fef44ccc0998f5",
+      "vector_sha256": "a8951ae6f52629090630a36dbb06c7d116371b102fff5d2388871a692a57f368"
+    },
+    {
+      "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+      "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+      "text_sha256": "4629639602fecfb34a0be25973c1f519f056d1f96ae23ddd036dfb218ee4257b",
+      "vector_sha256": "26c8d13fb06a413e03cb6cccf30d3cf27f9bcfec9a673549e23335a834563d73"
+    },
+    {
+      "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#0",
+      "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+      "text_sha256": "5caa69226aaba0152bbb725f97b14dc4f8d575cc24d531e56832fc2acbd87169",
+      "vector_sha256": "b72e99bb750aa964e4ef8a4cd4512a418bcee1380c020ee3a75fdb1914058956"
+    },
+    {
+      "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#1",
+      "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+      "text_sha256": "5befc8b632c3ee537dfb53abf8941e2b1c9c30b05a75a8b13cc9d8f60390857c",
+      "vector_sha256": "7300337a043da3e53ab552d88635f922fb099c062c9631938c0337b671ac843d"
+    },
+    {
+      "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#2",
+      "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+      "text_sha256": "9b43838bffd23a66db4cb6cc4dcff5c320705f39d80618756b1ffa88c2de954a",
+      "vector_sha256": "61c43bac6e4a68b8731b33acd6acd169d9ea92747b6ef14366c58b1b9e5508c4"
+    },
+    {
+      "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#3",
+      "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+      "text_sha256": "79802efc7b282b249392805b721ea0a498590266f04df02da78e100f6af62715",
+      "vector_sha256": "a83ec4f863edc777ddcae905b55512514412202d301e1705887cc041b6652e45"
+    },
+    {
+      "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#4",
+      "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+      "text_sha256": "35950266dddacb2aacf9c685d7a88ab852422343675f73e02b72fc0489248380",
+      "vector_sha256": "a45bfd00802a8f8afe4efba683b30ac27b096ffb09ed420eb107bc11e9364aa2"
+    },
+    {
+      "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#5",
+      "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+      "text_sha256": "c4389c21fd5f184e3addbe2ebe838824b135bf1af5be21148f7da79522fe902b",
+      "vector_sha256": "1593ba996ee08d62e4be6dee889ec5405164f6429cefe75c9a2602332db9d0ec"
+    },
+    {
+      "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#0",
+      "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+      "text_sha256": "e101d39e70e5ad08e70014e9f62da9216a0d19da497e70d32fa5e41ac6010db7",
+      "vector_sha256": "50c62115f8bcf8f25854f6d8f1fc186a3486439195426dcde372e49c725063be"
+    },
+    {
+      "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#1",
+      "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+      "text_sha256": "3dfc9e74ec3db932f1c7954a81894caebc46bf31237d197cda40a69f851af6f8",
+      "vector_sha256": "dcc4b5dc63d0f040a6138f9d05dd08e848cccff26645cd1203a642ce018f1c0a"
+    },
+    {
+      "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#2",
+      "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+      "text_sha256": "ad3e981ca5b7a8968eee7b75e0f14e47a4f36b3b8499eeb33d325837fc378f8e",
+      "vector_sha256": "edb1c80992e025bd38e40490bb7ba7f42e96dbea2d37040eac29bf917760eb7d"
+    }
+  ],
+  "document_count": 300,
+  "edge_types": {
+    "HAS_TAG": 615
+  },
+  "foreign_key_violation_count": 0,
+  "fts_objects": [
+    "chunks_fts"
+  ],
+  "graph_edge_count": 615,
+  "graph_node_count": 307,
+  "journal_mode": "delete",
+  "node_labels": {
+    "Concept": 7,
+    "UserNote": 300
+  },
+  "parent_count": 312,
+  "quick_check": "ok",
+  "sqlite_version": "3.50.4",
+  "table_counts": {
+    "bridge_only_paper_projection": 0,
+    "chunk_availability_mapping": 2331,
+    "chunk_reference_mentions": 0,
+    "chunks": 2331,
+    "chunks_fts": 2331,
+    "derived_local_to_local_bridge_edges": 0,
+    "edges": 615,
+    "local_paper_projection": 300,
+    "nodes": 307,
+    "paper_reference_vector": 0,
+    "paper_usability_metadata": 300,
+    "parent_chunks": 312,
+    "reference_corpus_stats": 0
+  },
+  "user_version": 0,
+  "vector": {
+    "blob_lengths": [
+      {
+        "blob_bytes": 3072,
+        "rows": 2331
+      }
+    ],
+    "dimensions": [
+      768
+    ],
+    "dtype": "float32",
+    "rows": 2331
+  },
+  "views": [
+    "bridge_only_paper_projection",
+    "chunk_availability_mapping",
+    "derived_local_to_local_bridge_edges",
+    "local_paper_projection",
+    "paper_usability_metadata"
+  ]
+}

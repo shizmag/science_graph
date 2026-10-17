@@ -1,0 +1,123 @@
+archive_dir: /var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-b6-smoke-rl5kajlf/home/.local/share/pdf-graph-analyzer/archive
+db_path: /private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-b6-smoke-rl5kajlf/restored_snapshot/database.db
+embedding:
+  child_chunk_overlap: 50
+  child_chunk_size: 300
+  chunk_overlap: 200
+  chunk_size: 1000
+  model_name: /Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base
+  parent_chunk_overlap: 200
+  parent_chunk_size: 2500
+graph_retrieval:
+  allowed_retrieval_edge_types:
+  - CITES
+  - CITED_BY
+  - MENTIONS_CONCEPT
+  - RELATED_TO
+  - HAS_TAG
+  bridge_retrieval_enabled: false
+  candidate_budget_mode: fixed
+  chunks_per_graph_paper: 1
+  concept_retrieval_enabled: false
+  enabled: false
+  max_graph_candidate_papers: auto
+  max_graph_chunk_candidates: null
+  selected_sources_card_enabled: false
+  single_token_concept_policy: idf_if_no_multitoken
+  trace_enabled: false
+  use_author_edges_for_retrieval: false
+  use_concept_idf: true
+hf_token: ''
+hyperparameters:
+  bm25:
+    k1: 1.5
+  graph:
+    b6_graph_neighbors_order: 2
+    crawl_stop_threshold: 1.0
+    essential_fact_threshold: 0.5
+    gamma: 0.5
+    p_base: 0.75
+    semantic_score_threshold: 0.4
+    semantic_score_top_p: 0.9
+    sigmoid_center: 0.5
+    sigmoid_score_threshold: 0.4
+    sigmoid_score_top_p: 0.9
+    sigmoid_slope: -25.0
+    weight_authored: 0.8
+    weight_cites: 0.7
+    weight_default: 0.5
+    weight_mentions_concept: 0.6
+  rag:
+    dynamic_alpha_threshold_low: 1.0
+    dynamic_alpha_threshold_mid: 3.0
+    dynamic_alpha_val_high: 1.0
+    dynamic_alpha_val_low: 0.2
+    dynamic_alpha_val_mid: 0.5
+    rrf_k: 60.0
+    score_blend_reranker_weight: 0.7
+    score_blend_rrf_weight: 0.3
+llm:
+  auto_disable_mtp_if_missing_files: true
+  chunk_pool_size: 4
+  cloud:
+    api_key: ''
+  clustering_input_limit: 6000
+  clustering_output_limit: 1500
+  enable_mtp: true
+  evaluation:
+    concurrency: 1
+    retries: 5
+    rpm: 10
+  extraction_input_limit: 5000
+  extraction_output_limit: 2048
+  gguf:
+    n_ctx: 4096
+    n_gpu_layers: -1
+  hyde_count: 1
+  hyde_enabled: false
+  hyde_max_tokens: 300
+  local:
+    model_path: /Volumes/happy-disk/models/llm/OCC-RAG-1.7B
+    rag_model_path: /Volumes/happy-disk/models/llm/OCC-RAG-1.7B
+  max_expanded_queries: 3
+  max_tokens: 1000
+  model_max_context: 4096
+  provider: mlx
+  request_delay: 1.0
+  retry_backoff: 2.0
+  synthesis_input_limit: 5000
+  synthesis_output_limit: 1500
+  temp: 0.1
+ner:
+  model_name: dslim/bert-base-NER
+pdf_compression:
+  dpi_target: 150
+  dpi_threshold: 151
+  enabled: true
+  quality: 75
+pdf_parser: marker
+rag_components:
+  citation_repair: true
+  context_trimming: true
+  deduplicate_parent_chunks: true
+  dense_search: true
+  dynamic_alpha_blending: true
+  graph_bridge_retrieval: false
+  graph_concept_retrieval: false
+  graph_expansion: true
+  graph_neighbors_in_rrf: false
+  graph_ontology_lookup: true
+  graph_retrieval_trace: false
+  graph_selected_sources_card: false
+  hyde: true
+  intent_classifier: false
+  lexical_search: true
+  llm_query_expansion: true
+  reranker: true
+  rrf: true
+  score_blending: true
+  shannon_estimator_enabled: true
+reranker:
+  model_name: /Users/vladimirkasterin/.cache/huggingface/hub/models--cross-encoder--mmarco-mMiniLMv2-L12-H384-v1/snapshots/1427fd652930e4ba29e8149678df786c240d8825
+spacy:
+  model_name: en_core_web_sm

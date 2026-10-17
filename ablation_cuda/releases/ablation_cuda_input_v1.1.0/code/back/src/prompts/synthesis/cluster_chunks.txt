@@ -1,0 +1,12 @@
+You are a scientific editor preparing a literature review on the topic: '{{topic}}'.
+You are given a list of text chunks from papers (each has an id, paper title, and excerpt).
+Group these chunks into 3-6 thematic SECTIONS for the review.
+
+Rules:
+- Each section must have a clear, descriptive title.
+- Assign each chunk_id to exactly one section.
+- Output ONLY a valid JSON object: {"Section Title": ["chunk_id1", "chunk_id2"], ...}
+- Do NOT include any text outside the JSON.
+
+Chunks:
+{{safe_chunks}}

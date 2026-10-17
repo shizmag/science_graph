@@ -1,0 +1,14 @@
+asset_id,type,purpose,required_for,local_source,remote_source,revision,format,size_bytes,sha256,download,license_auth,available,status
+source_code,Source,Runner,All,Git checkout,Repository URL unresolved,f53b1999bf006d826e6284b006bb7081b4581f36,Git,UNKNOWN,UNKNOWN,Git/package,License not audited,Yes,Package source
+runtime_image,OCI,CUDA closure,All,None,Not published,UNKNOWN,OCI,UNKNOWN,UNKNOWN,Registry/archive,SBOM needed,No,Author staging
+generator,Model,Generation,All,Local external model path,https://huggingface.co/occ-ai/OCC-RAG-1.7B,e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c,BF16 safetensors,3441185608 plus tokenizer 11425566,913448d005d2af695a738da177120c9e741dc8a5b2328f717d7ed108c1fd2e4f,HF pinned,MIT public,Local/public,Full size unknown
+embedder,Model,Retrieval,All,Local external model path,https://huggingface.co/intfloat/multilingual-e5-base,d128750597153bb5987e10b1c3493a34e5,SentenceTransformer,1112201288; local all formats ~3.9GB,a18a44fad1d0b46ded15928144138cff1135d5cc8233bdd90be5f18822de09a7,HF pinned,MIT public,Local/public,Portable
+cross_encoder,Model,Rerank/graph scoring,Full B6,HF local snapshot,https://huggingface.co/cross-encoder/mmarco-mMiniLMv2-L12-H384-v1,1427fd652930e4ba29e8149678df786c240d8825,Safetensors,470592698,5daeca2481a76b5976a2bdc32f0a78532b6716da4f8cd3ff59460ef8d2f359b4,HF pinned,Apache public,Local/public,Portable
+spacy,Model,Query NLP,Conditional,Exact local source unknown,UNKNOWN,UNKNOWN,en_core_web_sm,UNKNOWN,UNKNOWN,Unknown,License/revision unknown,Unverified,Pin or disable
+question_manifest,Dataset,Exact 375,All,Extract historical archive,Author staging,Run commit b4f3322d8cae3395bcbf0b5a1f2e47a904d1591a,JSONL TBD,UNKNOWN,UNKNOWN,Author package,Source terms unknown,Archive exists,Thin file absent
+notes,Dataset,Rebuild,Optional,back/benchmarks/rag/dataset/pubmedqa/notes/,Author stage,Source revision unknown,Markdown,About 3.1MB,UNKNOWN,Object store,Terms pending,Yes,Hash/map needed
+parquet,Dataset,Source/rebuild,Optional,back/benchmarks/rag/dataset/pubmedqa/pubmedqf.parquet,Upstream unknown,UNKNOWN,Parquet,1075513,UNKNOWN,Author stage,License unknown,Yes,Provenance missing
+database,SQLite,Corpus/vector/graph,All,Local candidates; July unknown,Author stage,UNKNOWN,SQLite backup,Repo 14065664; external 185470976; backups 147177472,UNKNOWN,Online backup,Terms pending,Candidates only,Historical identity unresolved
+usearch,Index,Dense search,Dense arms,Adjacent sidecar,Rebuild target-side,Version unknown,Binary,Repo 3926936; external 37180228,UNKNOWN,Pinned rebuild,Review license,Yes,Rebuild preferred
+pdf_archive,Corpus,Conditional rebuild,If mapped,External archive,Unknown,UNKNOWN,PDF,About 86736 KiB,UNKNOWN,Stage if mapped,Redistribution unknown,Yes,Not mapped
+fixtures,Validation,Smoke,All,Not frozen,Author package,UNKNOWN,JSON,UNKNOWN,UNKNOWN,Create from query,Inherit source,No,Next phase

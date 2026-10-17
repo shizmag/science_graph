@@ -1,0 +1,1305 @@
+{
+  "approximate_fixture_rankings": [
+    {
+      "overlap_count": 9,
+      "overlap_fraction": 0.9,
+      "query_chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+      "same_order": false,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+      "same_order": true,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+      "same_order": true,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+      "same_order": true,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+      "same_order": true,
+      "top_k": 10
+    }
+  ],
+  "approximate_order_identical_for_all_fixtures": false,
+  "approximate_top_k_overlap_mean": 0.9800000000000001,
+  "consistent_identifiers_and_exact_retrieval": true,
+  "exact_fixture_rankings_identical": true,
+  "fixture_file": "/Users/vladimirkasterin/python/graph/ablation_portability/snapshots/candidates/repo_db/v1/validation_fixtures.json",
+  "fixture_sha256": "ff7b43b9209ca97ce0fcb6313cf6cd02526d69e374a179aa5a4986984afcec23",
+  "independent_restores": 2,
+  "restores": [
+    {
+      "database_sha256": "3b79a60b285577f54cdef20ded8a342b5db647876c61c5e9e46d912ebb6ecf43",
+      "label": "restore_a",
+      "retrieval_approximate": {
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.053945109248161316
+          },
+          {
+            "chunk_id": "pubmed_22491528_combining_process_indicators_to_evaluate_quality_of_care_for_surgical_patients_with_colorectal_cancer_are_scores_consistent_with_short_term_outcome#0",
+            "cosine_distance": 0.11959435045719147
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#0",
+            "cosine_distance": 0.1295596808195114
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#0",
+            "cosine_distance": 0.1310330182313919
+          },
+          {
+            "chunk_id": "pubmed_28056802_is_non_hdl_cholesterol_a_better_predictor_of_long_term_outcome_in_patients_after_acute_myocardial_infarction_compared_to_ldl_cholesterol#0",
+            "cosine_distance": 0.1336861252784729
+          },
+          {
+            "chunk_id": "pubmed_17355582_does_ambulatory_process_of_care_predict_health_related_quality_of_life_outcomes_for_patients_with_chronic_disease#0",
+            "cosine_distance": 0.13397078216075897
+          },
+          {
+            "chunk_id": "pubmed_22532370_are_increased_carotid_artery_pulsatility_and_resistance_indexes_early_signs_of_vascular_abnormalities_in_young_obese_males#0",
+            "cosine_distance": 0.13611751794815063
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#0",
+            "cosine_distance": 0.13671287894248962
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#0",
+            "cosine_distance": 0.13770319521427155
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+            "cosine_distance": 2.2920687570149312e-10
+          },
+          {
+            "chunk_id": "pubmed_11138995_is_alexithymia_a_risk_factor_for_unexplained_physical_symptoms_in_general_medical_outpatients#3",
+            "cosine_distance": 0.12533988058567047
+          },
+          {
+            "chunk_id": "pubmed_10381996_clinician_assessment_for_acute_chest_syndrome_in_febrile_patients_with_sickle_cell_disease_is_it_accurate_enough#3",
+            "cosine_distance": 0.12951593101024628
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#3",
+            "cosine_distance": 0.12999416887760162
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#3",
+            "cosine_distance": 0.13027063012123108
+          },
+          {
+            "chunk_id": "pubmed_16678696_continuity_of_care_experience_of_residents_in_an_academic_vascular_department_are_trainees_learning_complete_surgical_care#4",
+            "cosine_distance": 0.13078171014785767
+          },
+          {
+            "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#3",
+            "cosine_distance": 0.13521580398082733
+          },
+          {
+            "chunk_id": "pubmed_15151701_profiling_quality_of_care_is_there_a_role_for_peer_review#2",
+            "cosine_distance": 0.137498140335083
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#4",
+            "cosine_distance": 0.13760408759117126
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#1",
+            "cosine_distance": 0.14045633375644684
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 1.7635613858146826e-08
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+            "cosine_distance": 0.1101127564907074
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#2",
+            "cosine_distance": 0.13534702360630035
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#2",
+            "cosine_distance": 0.1371772587299347
+          },
+          {
+            "chunk_id": "pubmed_16097998_is_coeliac_disease_screening_in_risk_groups_justified#3",
+            "cosine_distance": 0.1404067426919937
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.14289331436157227
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#2",
+            "cosine_distance": 0.14548078179359436
+          },
+          {
+            "chunk_id": "pubmed_22303473_does_a_family_meetings_intervention_prevent_depression_and_anxiety_in_family_caregivers_of_dementia_patients#5",
+            "cosine_distance": 0.14796863496303558
+          },
+          {
+            "chunk_id": "pubmed_23568387_is_bicompartmental_knee_arthroplasty_more_favourable_to_knee_muscle_strength_and_physical_performance_compared_to_total_knee_arthroplasty#3",
+            "cosine_distance": 0.15192440152168274
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#4",
+            "cosine_distance": 0.15458878874778748
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 0.14289334416389465
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#2",
+            "cosine_distance": 0.1460820436477661
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.1472376585006714
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.15197855234146118
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.16236931085586548
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#1",
+            "cosine_distance": 0.16335298120975494
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.16464035212993622
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#5",
+            "cosine_distance": 0.1660405993461609
+          },
+          {
+            "chunk_id": "pubmed_18926458_are_octogenarians_at_high_risk_for_carotid_endarterectomy#2",
+            "cosine_distance": 0.16810189187526703
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_21198823_can_dobutamine_stress_echocardiography_induce_cardiac_troponin_elevation#3",
+            "cosine_distance": 0.0938965305685997
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.09556487947702408
+          },
+          {
+            "chunk_id": "pubmed_22186742_does_a_colonoscopy_after_acute_diverticulitis_affect_its_management#2",
+            "cosine_distance": 0.10168347507715225
+          },
+          {
+            "chunk_id": "pubmed_12095973_chemoradiation_instead_of_surgery_to_treat_mid_and_low_rectal_tumors_is_it_safe#2",
+            "cosine_distance": 0.11356563866138458
+          },
+          {
+            "chunk_id": "pubmed_22683044_does_open_access_publishing_increase_the_impact_of_scientific_articles#4",
+            "cosine_distance": 0.11398658901453018
+          },
+          {
+            "chunk_id": "pubmed_21550158_can_autologous_platelet_rich_plasma_gel_enhance_healing_after_surgical_extraction_of_mandibular_third_molars#6",
+            "cosine_distance": 0.11544504761695862
+          },
+          {
+            "chunk_id": "pubmed_17971187_cholesterol_screening_in_school_children_is_family_history_reliable_to_choose_the_ones_to_screen#1",
+            "cosine_distance": 0.11614439636468887
+          },
+          {
+            "chunk_id": "pubmed_26079501_does_base_deficit_predict_mortality_in_patients_with_severe_traumatic_brain_injury#4",
+            "cosine_distance": 0.11789970099925995
+          },
+          {
+            "chunk_id": "pubmed_21361755_laminoplasty_outcomes_is_there_a_difference_between_patients_with_degenerative_stenosis_and_those_with_ossification_of_the_posterior_longitudinal_ligament#5",
+            "cosine_distance": 0.12120852619409561
+          }
+        ]
+      },
+      "retrieval_exact": {
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.053945109248161316
+          },
+          {
+            "chunk_id": "pubmed_22491528_combining_process_indicators_to_evaluate_quality_of_care_for_surgical_patients_with_colorectal_cancer_are_scores_consistent_with_short_term_outcome#0",
+            "cosine_distance": 0.11959435045719147
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#0",
+            "cosine_distance": 0.1295596808195114
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#0",
+            "cosine_distance": 0.1310330182313919
+          },
+          {
+            "chunk_id": "pubmed_28056802_is_non_hdl_cholesterol_a_better_predictor_of_long_term_outcome_in_patients_after_acute_myocardial_infarction_compared_to_ldl_cholesterol#0",
+            "cosine_distance": 0.1336861252784729
+          },
+          {
+            "chunk_id": "pubmed_17355582_does_ambulatory_process_of_care_predict_health_related_quality_of_life_outcomes_for_patients_with_chronic_disease#0",
+            "cosine_distance": 0.13397078216075897
+          },
+          {
+            "chunk_id": "pubmed_22532370_are_increased_carotid_artery_pulsatility_and_resistance_indexes_early_signs_of_vascular_abnormalities_in_young_obese_males#0",
+            "cosine_distance": 0.13611751794815063
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#0",
+            "cosine_distance": 0.13671287894248962
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#0",
+            "cosine_distance": 0.13770319521427155
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+            "cosine_distance": 2.2920687570149312e-10
+          },
+          {
+            "chunk_id": "pubmed_11138995_is_alexithymia_a_risk_factor_for_unexplained_physical_symptoms_in_general_medical_outpatients#3",
+            "cosine_distance": 0.12533988058567047
+          },
+          {
+            "chunk_id": "pubmed_10381996_clinician_assessment_for_acute_chest_syndrome_in_febrile_patients_with_sickle_cell_disease_is_it_accurate_enough#3",
+            "cosine_distance": 0.12951593101024628
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#3",
+            "cosine_distance": 0.12999416887760162
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#3",
+            "cosine_distance": 0.13027063012123108
+          },
+          {
+            "chunk_id": "pubmed_16678696_continuity_of_care_experience_of_residents_in_an_academic_vascular_department_are_trainees_learning_complete_surgical_care#4",
+            "cosine_distance": 0.13078171014785767
+          },
+          {
+            "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#3",
+            "cosine_distance": 0.13521580398082733
+          },
+          {
+            "chunk_id": "pubmed_15151701_profiling_quality_of_care_is_there_a_role_for_peer_review#2",
+            "cosine_distance": 0.137498140335083
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#4",
+            "cosine_distance": 0.13760408759117126
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#1",
+            "cosine_distance": 0.14045633375644684
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 1.7635613858146826e-08
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+            "cosine_distance": 0.1101127564907074
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#2",
+            "cosine_distance": 0.13534702360630035
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#2",
+            "cosine_distance": 0.1371772587299347
+          },
+          {
+            "chunk_id": "pubmed_16097998_is_coeliac_disease_screening_in_risk_groups_justified#3",
+            "cosine_distance": 0.1404067426919937
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.14289331436157227
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#2",
+            "cosine_distance": 0.14548078179359436
+          },
+          {
+            "chunk_id": "pubmed_22303473_does_a_family_meetings_intervention_prevent_depression_and_anxiety_in_family_caregivers_of_dementia_patients#5",
+            "cosine_distance": 0.14796863496303558
+          },
+          {
+            "chunk_id": "pubmed_23568387_is_bicompartmental_knee_arthroplasty_more_favourable_to_knee_muscle_strength_and_physical_performance_compared_to_total_knee_arthroplasty#3",
+            "cosine_distance": 0.15192440152168274
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#4",
+            "cosine_distance": 0.15458878874778748
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 0.14289334416389465
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#2",
+            "cosine_distance": 0.1460820436477661
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.1472376585006714
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.15197855234146118
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.16236931085586548
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#1",
+            "cosine_distance": 0.16335298120975494
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.16464035212993622
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#5",
+            "cosine_distance": 0.1660405993461609
+          },
+          {
+            "chunk_id": "pubmed_18926458_are_octogenarians_at_high_risk_for_carotid_endarterectomy#2",
+            "cosine_distance": 0.16810189187526703
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_21198823_can_dobutamine_stress_echocardiography_induce_cardiac_troponin_elevation#3",
+            "cosine_distance": 0.0938965305685997
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.09556487947702408
+          },
+          {
+            "chunk_id": "pubmed_22186742_does_a_colonoscopy_after_acute_diverticulitis_affect_its_management#2",
+            "cosine_distance": 0.10168347507715225
+          },
+          {
+            "chunk_id": "pubmed_12095973_chemoradiation_instead_of_surgery_to_treat_mid_and_low_rectal_tumors_is_it_safe#2",
+            "cosine_distance": 0.11356563866138458
+          },
+          {
+            "chunk_id": "pubmed_22683044_does_open_access_publishing_increase_the_impact_of_scientific_articles#4",
+            "cosine_distance": 0.11398658901453018
+          },
+          {
+            "chunk_id": "pubmed_21550158_can_autologous_platelet_rich_plasma_gel_enhance_healing_after_surgical_extraction_of_mandibular_third_molars#6",
+            "cosine_distance": 0.11544504761695862
+          },
+          {
+            "chunk_id": "pubmed_17971187_cholesterol_screening_in_school_children_is_family_history_reliable_to_choose_the_ones_to_screen#1",
+            "cosine_distance": 0.11614439636468887
+          },
+          {
+            "chunk_id": "pubmed_26079501_does_base_deficit_predict_mortality_in_patients_with_severe_traumatic_brain_injury#4",
+            "cosine_distance": 0.11789970099925995
+          },
+          {
+            "chunk_id": "pubmed_21361755_laminoplasty_outcomes_is_there_a_difference_between_patients_with_degenerative_stenosis_and_those_with_ossification_of_the_posterior_longitudinal_ligament#5",
+            "cosine_distance": 0.12120852619409561
+          }
+        ]
+      },
+      "usearch": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-8mtgnc28/restore_a/database.db",
+        "dimensions": 768,
+        "index": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-8mtgnc28/restore_a/database.usearch",
+        "index_bytes": 3928364,
+        "index_sha256": "aa8236d33ad61c23a7dc907570875b2b6ad2c96c104b6a34860371b97e5e371c",
+        "key_algorithm": "int(md5(chunk_id UTF-8).hexdigest()[:15], 16)",
+        "metric": "cos",
+        "recomputed_embeddings": false,
+        "rows": 2331,
+        "vector_source": "SQLite chunks.embedding float32 blobs"
+      },
+      "validation": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-8mtgnc28/restore_a/database.db",
+        "database_sha256": "3b79a60b285577f54cdef20ded8a342b5db647876c61c5e9e46d912ebb6ecf43",
+        "foreign_key_violation_count": 0,
+        "fts": {
+          "match_count_at_most_five": 5,
+          "matching_chunk_ids": [
+            "pubmed_22453060_does_a_4_diagram_manual_enable_laypersons_to_operate_the_laryngeal_mask_supreme#0",
+            "pubmed_24019262_does_high_blood_pressure_reduce_the_risk_of_chronic_low_back_pain#0",
+            "pubmed_17483607_does_topical_n_acetylcysteine_application_after_myringotomy_cause_severe_otorrhea#0",
+            "pubmed_11888773_stage_i_non_small_cell_lung_carcinoma_really_an_early_stage#0",
+            "pubmed_19444061_does_ossification_of_the_posterior_longitudinal_ligament_affect_the_neurological_outcome_after_traumatic_cervical_cord_injury#0"
+          ],
+          "query": "PubMed"
+        },
+        "integrity_check": [
+          "ok"
+        ],
+        "logical": {
+          "chunk_count": 2331,
+          "chunk_samples": [
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "788d45619d45c12bdfd9172c821a818ee228ac85ba8bbd7cf54a979af914f268",
+              "vector_sha256": "c95cfba2d87886c14ca3cb00193db40784f861b2193ecae9d3679b485f17afe5"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "579829b0b6cde41ba581ea51545d203947ffc1b1a39fdf74d0d4e4b68c05f28e",
+              "vector_sha256": "658dd64822c72205a1ab5a9d050eb246f989f0b36fb94857fafb2005ca8263d5"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "a2cb06692e915ac95a035ba2961e173588b53bed2f48f4a3bbc18e7f3c12fcf1",
+              "vector_sha256": "45c55468c5ffe13c870080853c9cd6bd5909b465d0ddd548704d60b2a3940d39"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "598234b9642c72737e9e6a595f7cfed0e230368f573a8e1c24b2506221b6e4c7",
+              "vector_sha256": "7639f6c1ecc1f2e6ffb3ba8b2441667568b42d480544a6b84a86a6dfcf9c612e"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "f3f1ad0cc1f2a9a1d910ec042b44d00f8c6be4d2acb248bbab0a505434c6aa1b",
+              "vector_sha256": "1da67f19e53cc09fab6db34d36252bef6858586b4eaaf3e387860c2526b759d5"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "8e29c24723e2b345e6840a25600cbcf8f7fa348559b2e22a51fef44ccc0998f5",
+              "vector_sha256": "a8951ae6f52629090630a36dbb06c7d116371b102fff5d2388871a692a57f368"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "4629639602fecfb34a0be25973c1f519f056d1f96ae23ddd036dfb218ee4257b",
+              "vector_sha256": "26c8d13fb06a413e03cb6cccf30d3cf27f9bcfec9a673549e23335a834563d73"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#0",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "5caa69226aaba0152bbb725f97b14dc4f8d575cc24d531e56832fc2acbd87169",
+              "vector_sha256": "b72e99bb750aa964e4ef8a4cd4512a418bcee1380c020ee3a75fdb1914058956"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#1",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "5befc8b632c3ee537dfb53abf8941e2b1c9c30b05a75a8b13cc9d8f60390857c",
+              "vector_sha256": "7300337a043da3e53ab552d88635f922fb099c062c9631938c0337b671ac843d"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#2",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "9b43838bffd23a66db4cb6cc4dcff5c320705f39d80618756b1ffa88c2de954a",
+              "vector_sha256": "61c43bac6e4a68b8731b33acd6acd169d9ea92747b6ef14366c58b1b9e5508c4"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#3",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "79802efc7b282b249392805b721ea0a498590266f04df02da78e100f6af62715",
+              "vector_sha256": "a83ec4f863edc777ddcae905b55512514412202d301e1705887cc041b6652e45"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#4",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "35950266dddacb2aacf9c685d7a88ab852422343675f73e02b72fc0489248380",
+              "vector_sha256": "a45bfd00802a8f8afe4efba683b30ac27b096ffb09ed420eb107bc11e9364aa2"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#5",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "c4389c21fd5f184e3addbe2ebe838824b135bf1af5be21148f7da79522fe902b",
+              "vector_sha256": "1593ba996ee08d62e4be6dee889ec5405164f6429cefe75c9a2602332db9d0ec"
+            },
+            {
+              "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#0",
+              "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+              "text_sha256": "e101d39e70e5ad08e70014e9f62da9216a0d19da497e70d32fa5e41ac6010db7",
+              "vector_sha256": "50c62115f8bcf8f25854f6d8f1fc186a3486439195426dcde372e49c725063be"
+            },
+            {
+              "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#1",
+              "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+              "text_sha256": "3dfc9e74ec3db932f1c7954a81894caebc46bf31237d197cda40a69f851af6f8",
+              "vector_sha256": "dcc4b5dc63d0f040a6138f9d05dd08e848cccff26645cd1203a642ce018f1c0a"
+            },
+            {
+              "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#2",
+              "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+              "text_sha256": "ad3e981ca5b7a8968eee7b75e0f14e47a4f36b3b8499eeb33d325837fc378f8e",
+              "vector_sha256": "edb1c80992e025bd38e40490bb7ba7f42e96dbea2d37040eac29bf917760eb7d"
+            }
+          ],
+          "document_count": 300,
+          "edge_types": {
+            "HAS_TAG": 615
+          },
+          "foreign_key_violation_count": 0,
+          "fts_objects": [
+            "chunks_fts"
+          ],
+          "graph_edge_count": 615,
+          "graph_node_count": 307,
+          "journal_mode": "delete",
+          "node_labels": {
+            "Concept": 7,
+            "UserNote": 300
+          },
+          "parent_count": 312,
+          "quick_check": "ok",
+          "sqlite_version": "3.50.4",
+          "table_counts": {
+            "bridge_only_paper_projection": 0,
+            "chunk_availability_mapping": 2331,
+            "chunk_reference_mentions": 0,
+            "chunks": 2331,
+            "chunks_fts": 2331,
+            "derived_local_to_local_bridge_edges": 0,
+            "edges": 615,
+            "local_paper_projection": 300,
+            "nodes": 307,
+            "paper_reference_vector": 0,
+            "paper_usability_metadata": 300,
+            "parent_chunks": 312,
+            "reference_corpus_stats": 0
+          },
+          "user_version": 0,
+          "vector": {
+            "blob_lengths": [
+              {
+                "blob_bytes": 3072,
+                "rows": 2331
+              }
+            ],
+            "dimensions": [
+              768
+            ],
+            "dtype": "float32",
+            "rows": 2331
+          },
+          "views": [
+            "bridge_only_paper_projection",
+            "chunk_availability_mapping",
+            "derived_local_to_local_bridge_edges",
+            "local_paper_projection",
+            "paper_usability_metadata"
+          ]
+        },
+        "manifest_errors": [],
+        "valid": true,
+        "vectors": {
+          "bad_lengths_or_dimensions": [],
+          "dimensions": [
+            768
+          ],
+          "expected_dimensions": 768,
+          "nonfinite_vectors": [],
+          "rows": 2331,
+          "valid": true,
+          "zero_norm_vectors": []
+        }
+      }
+    },
+    {
+      "database_sha256": "3b79a60b285577f54cdef20ded8a342b5db647876c61c5e9e46d912ebb6ecf43",
+      "label": "restore_b",
+      "retrieval_approximate": {
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.053945109248161316
+          },
+          {
+            "chunk_id": "pubmed_22491528_combining_process_indicators_to_evaluate_quality_of_care_for_surgical_patients_with_colorectal_cancer_are_scores_consistent_with_short_term_outcome#0",
+            "cosine_distance": 0.11959435045719147
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#0",
+            "cosine_distance": 0.1310330182313919
+          },
+          {
+            "chunk_id": "pubmed_28056802_is_non_hdl_cholesterol_a_better_predictor_of_long_term_outcome_in_patients_after_acute_myocardial_infarction_compared_to_ldl_cholesterol#0",
+            "cosine_distance": 0.1336861252784729
+          },
+          {
+            "chunk_id": "pubmed_17355582_does_ambulatory_process_of_care_predict_health_related_quality_of_life_outcomes_for_patients_with_chronic_disease#0",
+            "cosine_distance": 0.13397078216075897
+          },
+          {
+            "chunk_id": "pubmed_22532370_are_increased_carotid_artery_pulsatility_and_resistance_indexes_early_signs_of_vascular_abnormalities_in_young_obese_males#0",
+            "cosine_distance": 0.13611751794815063
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#0",
+            "cosine_distance": 0.13671287894248962
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#0",
+            "cosine_distance": 0.13770319521427155
+          },
+          {
+            "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#0",
+            "cosine_distance": 0.13917917013168335
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+            "cosine_distance": 2.2920687570149312e-10
+          },
+          {
+            "chunk_id": "pubmed_11138995_is_alexithymia_a_risk_factor_for_unexplained_physical_symptoms_in_general_medical_outpatients#3",
+            "cosine_distance": 0.12533988058567047
+          },
+          {
+            "chunk_id": "pubmed_10381996_clinician_assessment_for_acute_chest_syndrome_in_febrile_patients_with_sickle_cell_disease_is_it_accurate_enough#3",
+            "cosine_distance": 0.12951593101024628
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#3",
+            "cosine_distance": 0.12999416887760162
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#3",
+            "cosine_distance": 0.13027063012123108
+          },
+          {
+            "chunk_id": "pubmed_16678696_continuity_of_care_experience_of_residents_in_an_academic_vascular_department_are_trainees_learning_complete_surgical_care#4",
+            "cosine_distance": 0.13078171014785767
+          },
+          {
+            "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#3",
+            "cosine_distance": 0.13521580398082733
+          },
+          {
+            "chunk_id": "pubmed_15151701_profiling_quality_of_care_is_there_a_role_for_peer_review#2",
+            "cosine_distance": 0.137498140335083
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#4",
+            "cosine_distance": 0.13760408759117126
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#1",
+            "cosine_distance": 0.14045633375644684
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 1.7635613858146826e-08
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+            "cosine_distance": 0.1101127564907074
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#2",
+            "cosine_distance": 0.13534702360630035
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#2",
+            "cosine_distance": 0.1371772587299347
+          },
+          {
+            "chunk_id": "pubmed_16097998_is_coeliac_disease_screening_in_risk_groups_justified#3",
+            "cosine_distance": 0.1404067426919937
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.14289331436157227
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#2",
+            "cosine_distance": 0.14548078179359436
+          },
+          {
+            "chunk_id": "pubmed_22303473_does_a_family_meetings_intervention_prevent_depression_and_anxiety_in_family_caregivers_of_dementia_patients#5",
+            "cosine_distance": 0.14796863496303558
+          },
+          {
+            "chunk_id": "pubmed_23568387_is_bicompartmental_knee_arthroplasty_more_favourable_to_knee_muscle_strength_and_physical_performance_compared_to_total_knee_arthroplasty#3",
+            "cosine_distance": 0.15192440152168274
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#4",
+            "cosine_distance": 0.15458878874778748
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 0.14289334416389465
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#2",
+            "cosine_distance": 0.1460820436477661
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.1472376585006714
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.15197855234146118
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.16236931085586548
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#1",
+            "cosine_distance": 0.16335298120975494
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.16464035212993622
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#5",
+            "cosine_distance": 0.1660405993461609
+          },
+          {
+            "chunk_id": "pubmed_18926458_are_octogenarians_at_high_risk_for_carotid_endarterectomy#2",
+            "cosine_distance": 0.16810189187526703
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_21198823_can_dobutamine_stress_echocardiography_induce_cardiac_troponin_elevation#3",
+            "cosine_distance": 0.0938965305685997
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.09556487947702408
+          },
+          {
+            "chunk_id": "pubmed_22186742_does_a_colonoscopy_after_acute_diverticulitis_affect_its_management#2",
+            "cosine_distance": 0.10168347507715225
+          },
+          {
+            "chunk_id": "pubmed_12095973_chemoradiation_instead_of_surgery_to_treat_mid_and_low_rectal_tumors_is_it_safe#2",
+            "cosine_distance": 0.11356563866138458
+          },
+          {
+            "chunk_id": "pubmed_22683044_does_open_access_publishing_increase_the_impact_of_scientific_articles#4",
+            "cosine_distance": 0.11398658901453018
+          },
+          {
+            "chunk_id": "pubmed_21550158_can_autologous_platelet_rich_plasma_gel_enhance_healing_after_surgical_extraction_of_mandibular_third_molars#6",
+            "cosine_distance": 0.11544504761695862
+          },
+          {
+            "chunk_id": "pubmed_17971187_cholesterol_screening_in_school_children_is_family_history_reliable_to_choose_the_ones_to_screen#1",
+            "cosine_distance": 0.11614439636468887
+          },
+          {
+            "chunk_id": "pubmed_26079501_does_base_deficit_predict_mortality_in_patients_with_severe_traumatic_brain_injury#4",
+            "cosine_distance": 0.11789970099925995
+          },
+          {
+            "chunk_id": "pubmed_21361755_laminoplasty_outcomes_is_there_a_difference_between_patients_with_degenerative_stenosis_and_those_with_ossification_of_the_posterior_longitudinal_ligament#5",
+            "cosine_distance": 0.12120852619409561
+          }
+        ]
+      },
+      "retrieval_exact": {
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.053945109248161316
+          },
+          {
+            "chunk_id": "pubmed_22491528_combining_process_indicators_to_evaluate_quality_of_care_for_surgical_patients_with_colorectal_cancer_are_scores_consistent_with_short_term_outcome#0",
+            "cosine_distance": 0.11959435045719147
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#0",
+            "cosine_distance": 0.1295596808195114
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#0",
+            "cosine_distance": 0.1310330182313919
+          },
+          {
+            "chunk_id": "pubmed_28056802_is_non_hdl_cholesterol_a_better_predictor_of_long_term_outcome_in_patients_after_acute_myocardial_infarction_compared_to_ldl_cholesterol#0",
+            "cosine_distance": 0.1336861252784729
+          },
+          {
+            "chunk_id": "pubmed_17355582_does_ambulatory_process_of_care_predict_health_related_quality_of_life_outcomes_for_patients_with_chronic_disease#0",
+            "cosine_distance": 0.13397078216075897
+          },
+          {
+            "chunk_id": "pubmed_22532370_are_increased_carotid_artery_pulsatility_and_resistance_indexes_early_signs_of_vascular_abnormalities_in_young_obese_males#0",
+            "cosine_distance": 0.13611751794815063
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#0",
+            "cosine_distance": 0.13671287894248962
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#0",
+            "cosine_distance": 0.13770319521427155
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+            "cosine_distance": 2.2920687570149312e-10
+          },
+          {
+            "chunk_id": "pubmed_11138995_is_alexithymia_a_risk_factor_for_unexplained_physical_symptoms_in_general_medical_outpatients#3",
+            "cosine_distance": 0.12533988058567047
+          },
+          {
+            "chunk_id": "pubmed_10381996_clinician_assessment_for_acute_chest_syndrome_in_febrile_patients_with_sickle_cell_disease_is_it_accurate_enough#3",
+            "cosine_distance": 0.12951593101024628
+          },
+          {
+            "chunk_id": "pubmed_24014276_optimism_and_survival_does_an_optimistic_outlook_predict_better_survival_at_advanced_ages#3",
+            "cosine_distance": 0.12999416887760162
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#3",
+            "cosine_distance": 0.13027063012123108
+          },
+          {
+            "chunk_id": "pubmed_16678696_continuity_of_care_experience_of_residents_in_an_academic_vascular_department_are_trainees_learning_complete_surgical_care#4",
+            "cosine_distance": 0.13078171014785767
+          },
+          {
+            "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#3",
+            "cosine_distance": 0.13521580398082733
+          },
+          {
+            "chunk_id": "pubmed_15151701_profiling_quality_of_care_is_there_a_role_for_peer_review#2",
+            "cosine_distance": 0.137498140335083
+          },
+          {
+            "chunk_id": "pubmed_25725704_can_clinical_supervision_sustain_our_workforce_in_the_current_healthcare_landscape#4",
+            "cosine_distance": 0.13760408759117126
+          },
+          {
+            "chunk_id": "pubmed_9278754_are_head_and_neck_specific_quality_of_life_measures_necessary#1",
+            "cosine_distance": 0.14045633375644684
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 1.7635613858146826e-08
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+            "cosine_distance": 0.1101127564907074
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#2",
+            "cosine_distance": 0.13534702360630035
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#2",
+            "cosine_distance": 0.1371772587299347
+          },
+          {
+            "chunk_id": "pubmed_16097998_is_coeliac_disease_screening_in_risk_groups_justified#3",
+            "cosine_distance": 0.1404067426919937
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.14289331436157227
+          },
+          {
+            "chunk_id": "pubmed_12846929_quality_of_life_in_lung_cancer_patients_does_socioeconomic_status_matter#2",
+            "cosine_distance": 0.14548078179359436
+          },
+          {
+            "chunk_id": "pubmed_22303473_does_a_family_meetings_intervention_prevent_depression_and_anxiety_in_family_caregivers_of_dementia_patients#5",
+            "cosine_distance": 0.14796863496303558
+          },
+          {
+            "chunk_id": "pubmed_23568387_is_bicompartmental_knee_arthroplasty_more_favourable_to_knee_muscle_strength_and_physical_performance_compared_to_total_knee_arthroplasty#3",
+            "cosine_distance": 0.15192440152168274
+          },
+          {
+            "chunk_id": "pubmed_9582182_does_the_scl_90_r_obsessive_compulsive_dimension_identify_cognitive_impairments#4",
+            "cosine_distance": 0.15458878874778748
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+            "cosine_distance": 0.14289334416389465
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#2",
+            "cosine_distance": 0.1460820436477661
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+            "cosine_distance": 0.1472376585006714
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+            "cosine_distance": 0.15197855234146118
+          },
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.16236931085586548
+          },
+          {
+            "chunk_id": "pubmed_18955431_treadmill_training_post_stroke_are_there_any_secondary_benefits#1",
+            "cosine_distance": 0.16335298120975494
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.16464035212993622
+          },
+          {
+            "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#5",
+            "cosine_distance": 0.1660405993461609
+          },
+          {
+            "chunk_id": "pubmed_18926458_are_octogenarians_at_high_risk_for_carotid_endarterectomy#2",
+            "cosine_distance": 0.16810189187526703
+          }
+        ],
+        "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4": [
+          {
+            "chunk_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "pubmed_21198823_can_dobutamine_stress_echocardiography_induce_cardiac_troponin_elevation#3",
+            "cosine_distance": 0.0938965305685997
+          },
+          {
+            "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#5",
+            "cosine_distance": 0.09556487947702408
+          },
+          {
+            "chunk_id": "pubmed_22186742_does_a_colonoscopy_after_acute_diverticulitis_affect_its_management#2",
+            "cosine_distance": 0.10168347507715225
+          },
+          {
+            "chunk_id": "pubmed_12095973_chemoradiation_instead_of_surgery_to_treat_mid_and_low_rectal_tumors_is_it_safe#2",
+            "cosine_distance": 0.11356563866138458
+          },
+          {
+            "chunk_id": "pubmed_22683044_does_open_access_publishing_increase_the_impact_of_scientific_articles#4",
+            "cosine_distance": 0.11398658901453018
+          },
+          {
+            "chunk_id": "pubmed_21550158_can_autologous_platelet_rich_plasma_gel_enhance_healing_after_surgical_extraction_of_mandibular_third_molars#6",
+            "cosine_distance": 0.11544504761695862
+          },
+          {
+            "chunk_id": "pubmed_17971187_cholesterol_screening_in_school_children_is_family_history_reliable_to_choose_the_ones_to_screen#1",
+            "cosine_distance": 0.11614439636468887
+          },
+          {
+            "chunk_id": "pubmed_26079501_does_base_deficit_predict_mortality_in_patients_with_severe_traumatic_brain_injury#4",
+            "cosine_distance": 0.11789970099925995
+          },
+          {
+            "chunk_id": "pubmed_21361755_laminoplasty_outcomes_is_there_a_difference_between_patients_with_degenerative_stenosis_and_those_with_ossification_of_the_posterior_longitudinal_ligament#5",
+            "cosine_distance": 0.12120852619409561
+          }
+        ]
+      },
+      "usearch": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-8mtgnc28/restore_b/database.db",
+        "dimensions": 768,
+        "index": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-8mtgnc28/restore_b/database.usearch",
+        "index_bytes": 3928364,
+        "index_sha256": "a084bc4ec8dcff89d6b89318031fa32f0770c17ac2dbefa122824e2141b2bc3f",
+        "key_algorithm": "int(md5(chunk_id UTF-8).hexdigest()[:15], 16)",
+        "metric": "cos",
+        "recomputed_embeddings": false,
+        "rows": 2331,
+        "vector_source": "SQLite chunks.embedding float32 blobs"
+      },
+      "validation": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-8mtgnc28/restore_b/database.db",
+        "database_sha256": "3b79a60b285577f54cdef20ded8a342b5db647876c61c5e9e46d912ebb6ecf43",
+        "foreign_key_violation_count": 0,
+        "fts": {
+          "match_count_at_most_five": 5,
+          "matching_chunk_ids": [
+            "pubmed_22453060_does_a_4_diagram_manual_enable_laypersons_to_operate_the_laryngeal_mask_supreme#0",
+            "pubmed_24019262_does_high_blood_pressure_reduce_the_risk_of_chronic_low_back_pain#0",
+            "pubmed_17483607_does_topical_n_acetylcysteine_application_after_myringotomy_cause_severe_otorrhea#0",
+            "pubmed_11888773_stage_i_non_small_cell_lung_carcinoma_really_an_early_stage#0",
+            "pubmed_19444061_does_ossification_of_the_posterior_longitudinal_ligament_affect_the_neurological_outcome_after_traumatic_cervical_cord_injury#0"
+          ],
+          "query": "PubMed"
+        },
+        "integrity_check": [
+          "ok"
+        ],
+        "logical": {
+          "chunk_count": 2331,
+          "chunk_samples": [
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "788d45619d45c12bdfd9172c821a818ee228ac85ba8bbd7cf54a979af914f268",
+              "vector_sha256": "c95cfba2d87886c14ca3cb00193db40784f861b2193ecae9d3679b485f17afe5"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "579829b0b6cde41ba581ea51545d203947ffc1b1a39fdf74d0d4e4b68c05f28e",
+              "vector_sha256": "658dd64822c72205a1ab5a9d050eb246f989f0b36fb94857fafb2005ca8263d5"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "a2cb06692e915ac95a035ba2961e173588b53bed2f48f4a3bbc18e7f3c12fcf1",
+              "vector_sha256": "45c55468c5ffe13c870080853c9cd6bd5909b465d0ddd548704d60b2a3940d39"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "598234b9642c72737e9e6a595f7cfed0e230368f573a8e1c24b2506221b6e4c7",
+              "vector_sha256": "7639f6c1ecc1f2e6ffb3ba8b2441667568b42d480544a6b84a86a6dfcf9c612e"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "f3f1ad0cc1f2a9a1d910ec042b44d00f8c6be4d2acb248bbab0a505434c6aa1b",
+              "vector_sha256": "1da67f19e53cc09fab6db34d36252bef6858586b4eaaf3e387860c2526b759d5"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#5",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "8e29c24723e2b345e6840a25600cbcf8f7fa348559b2e22a51fef44ccc0998f5",
+              "vector_sha256": "a8951ae6f52629090630a36dbb06c7d116371b102fff5d2388871a692a57f368"
+            },
+            {
+              "id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#6",
+              "paper_id": "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome",
+              "text_sha256": "4629639602fecfb34a0be25973c1f519f056d1f96ae23ddd036dfb218ee4257b",
+              "vector_sha256": "26c8d13fb06a413e03cb6cccf30d3cf27f9bcfec9a673549e23335a834563d73"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#0",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "5caa69226aaba0152bbb725f97b14dc4f8d575cc24d531e56832fc2acbd87169",
+              "vector_sha256": "b72e99bb750aa964e4ef8a4cd4512a418bcee1380c020ee3a75fdb1914058956"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#1",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "5befc8b632c3ee537dfb53abf8941e2b1c9c30b05a75a8b13cc9d8f60390857c",
+              "vector_sha256": "7300337a043da3e53ab552d88635f922fb099c062c9631938c0337b671ac843d"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#2",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "9b43838bffd23a66db4cb6cc4dcff5c320705f39d80618756b1ffa88c2de954a",
+              "vector_sha256": "61c43bac6e4a68b8731b33acd6acd169d9ea92747b6ef14366c58b1b9e5508c4"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#3",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "79802efc7b282b249392805b721ea0a498590266f04df02da78e100f6af62715",
+              "vector_sha256": "a83ec4f863edc777ddcae905b55512514412202d301e1705887cc041b6652e45"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#4",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "35950266dddacb2aacf9c685d7a88ab852422343675f73e02b72fc0489248380",
+              "vector_sha256": "a45bfd00802a8f8afe4efba683b30ac27b096ffb09ed420eb107bc11e9364aa2"
+            },
+            {
+              "id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic#5",
+              "paper_id": "pubmed_10331115_is_amoxapine_an_atypical_antipsychotic",
+              "text_sha256": "c4389c21fd5f184e3addbe2ebe838824b135bf1af5be21148f7da79522fe902b",
+              "vector_sha256": "1593ba996ee08d62e4be6dee889ec5405164f6429cefe75c9a2602332db9d0ec"
+            },
+            {
+              "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#0",
+              "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+              "text_sha256": "e101d39e70e5ad08e70014e9f62da9216a0d19da497e70d32fa5e41ac6010db7",
+              "vector_sha256": "50c62115f8bcf8f25854f6d8f1fc186a3486439195426dcde372e49c725063be"
+            },
+            {
+              "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#1",
+              "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+              "text_sha256": "3dfc9e74ec3db932f1c7954a81894caebc46bf31237d197cda40a69f851af6f8",
+              "vector_sha256": "dcc4b5dc63d0f040a6138f9d05dd08e848cccff26645cd1203a642ce018f1c0a"
+            },
+            {
+              "id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need#2",
+              "paper_id": "pubmed_10375486_are_variations_in_the_use_of_carotid_endarterectomy_explained_by_population_need",
+              "text_sha256": "ad3e981ca5b7a8968eee7b75e0f14e47a4f36b3b8499eeb33d325837fc378f8e",
+              "vector_sha256": "edb1c80992e025bd38e40490bb7ba7f42e96dbea2d37040eac29bf917760eb7d"
+            }
+          ],
+          "document_count": 300,
+          "edge_types": {
+            "HAS_TAG": 615
+          },
+          "foreign_key_violation_count": 0,
+          "fts_objects": [
+            "chunks_fts"
+          ],
+          "graph_edge_count": 615,
+          "graph_node_count": 307,
+          "journal_mode": "delete",
+          "node_labels": {
+            "Concept": 7,
+            "UserNote": 300
+          },
+          "parent_count": 312,
+          "quick_check": "ok",
+          "sqlite_version": "3.50.4",
+          "table_counts": {
+            "bridge_only_paper_projection": 0,
+            "chunk_availability_mapping": 2331,
+            "chunk_reference_mentions": 0,
+            "chunks": 2331,
+            "chunks_fts": 2331,
+            "derived_local_to_local_bridge_edges": 0,
+            "edges": 615,
+            "local_paper_projection": 300,
+            "nodes": 307,
+            "paper_reference_vector": 0,
+            "paper_usability_metadata": 300,
+            "parent_chunks": 312,
+            "reference_corpus_stats": 0
+          },
+          "user_version": 0,
+          "vector": {
+            "blob_lengths": [
+              {
+                "blob_bytes": 3072,
+                "rows": 2331
+              }
+            ],
+            "dimensions": [
+              768
+            ],
+            "dtype": "float32",
+            "rows": 2331
+          },
+          "views": [
+            "bridge_only_paper_projection",
+            "chunk_availability_mapping",
+            "derived_local_to_local_bridge_edges",
+            "local_paper_projection",
+            "paper_usability_metadata"
+          ]
+        },
+        "manifest_errors": [],
+        "valid": true,
+        "vectors": {
+          "bad_lengths_or_dimensions": [],
+          "dimensions": [
+            768
+          ],
+          "expected_dimensions": 768,
+          "nonfinite_vectors": [],
+          "rows": 2331,
+          "valid": true,
+          "zero_norm_vectors": []
+        }
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "snapshot": "/Users/vladimirkasterin/python/graph/ablation_portability/snapshots/candidates/repo_db/v1",
+  "snapshot_sha256": "23adc428e8f21743144ea5f0a316931bb0158ef02a8d8fc5e1d1ad408f3ac005"
+}

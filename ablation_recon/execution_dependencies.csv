@@ -1,0 +1,12 @@
+stage,entrypoint_source,dependencies,inputs,outputs,device,mutation_and_external_state
+CLI/config,run_pipeline.py:100; core/config.py:530-565,Python and YAML,Args and external config,Run path and subprocesses,CPU,May select repository-local DB
+Retrieval,run_custom_retrieve.py:76-110,"SQLite, USEARCH, SentenceTransformers","Query manifest, DB, sidecar, models",Contexts and trace,E5 MPS/CUDA/CPU,SQLite init and sidecar rebuild may write
+Query preprocessing,"rag_service.py:575-595,983-1056; normalization_pipeline.py:52-130",spaCy optional,Question text,Normalized terms/concepts,CPU,May attempt model download
+Lexical,sqlite_impl.py:1729 onward; rag_service.py:1391 onward,SQLite FTS5,Query terms and chunks_fts,Candidates and scores,CPU,Repository setup may mutate DB
+Dense,vector_search.py:14-123; sqlite_impl.py:1648-1701,"Torch, SentenceTransformers, USEARCH",Query and stored vectors,Cosine candidates,E5 MPS/CUDA/CPU,Sidecar can rebuild/save
+Graph,rag_service.py:1502-1681,SQLite graph,Question and graph DB,Graph candidates,CPU,Conditional branches may return none
+Rerank,"rag_service.py:295-306,1376,2112",Torch and Cross-Encoder,Query/candidates,Scores/order,MPS or CPU today,Shared scorer with expander
+Context/prompt,"rag_service.py:400-464,2184-2222; graph_expander.py",Graph code and Cross-Encoder,Selected evidence,Context and prompt,CPU plus CE MPS/CPU,Static/dynamic stages coupled
+Generation,mlx_impl.py:557-650; core/generation.py,MLX historically; Torch proposed,"Model, tokenizer, prompt",Answer and compact telemetry,MLX historically,No project CUDA generator
+Parse/persist,run_pipeline.py:478-525; core/generation.py,Python YAML/benchmark code,Raw answers and tokens,Parsed results/checkpoints,CPU,Writes run files
+Judge,Optional evaluator in run_pipeline.py,Provider client and credentials,Parsed results,Remote judgments,Cloud,Skip in smoke; cost/stateful

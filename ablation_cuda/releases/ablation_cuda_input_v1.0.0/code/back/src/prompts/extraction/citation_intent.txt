@@ -1,0 +1,15 @@
+Classify the citation intent of a scientific paper citing another paper based on the following context snippet.
+Cited Paper Title: {{ref_title}}
+Context Snippet:
+"""
+{{context}}
+"""
+
+Choose exactly one of the following category codes that best describes how the citing paper relates to the cited paper in this context:
+- USES_METHOD: Citing paper uses a method, algorithm, formula, or tool proposed in the cited paper.
+- EXTENDS: Citing paper extends, improves, or builds upon the approach in the cited paper.
+- COMPARES_WITH: Citing paper conducts a benchmark or comparison against the cited paper's results/method.
+- DISPUTES: Citing paper disputes, criticizes, or disagrees with the hypotheses/conclusions in the cited paper.
+- BACKGROUND: Any other general citation or background reference.
+
+Output ONLY the category code (e.g., USES_METHOD, EXTENDS, COMPARES_WITH, DISPUTES, or BACKGROUND). Do not include any explanation or other text.

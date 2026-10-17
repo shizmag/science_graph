@@ -1,0 +1,10 @@
+Summarize the following document in English. Focus on key contributions, methodologies, and findings.
+Provide a concise, professional markdown summary.
+
+EXCEPT: If the content snippet or abstract is in Russian (contains Cyrillic characters), write the summary in Russian.
+
+Title: {{title}}
+Abstract: {{abstract}}
+
+Content snippet:
+{{sample_text}}

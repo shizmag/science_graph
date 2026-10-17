@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PYTHONPATH="$ROOT${PYTHONPATH:+:$PYTHONPATH}"
+if [[ "${1:-}" == "verify-results" ]]; then
+  shift
+  exec python3 "$ROOT/ablation_cuda/author_cli.py" verify-results "$@"
+fi
+command -v uv >/dev/null 2>&1 || {
+  echo "Install uv for the author-side release tooling, or activate ablation_portability/.venv and run python ablation_cuda/author_cli.py." >&2
+  exit 2
+}
+exec uv run --project "$ROOT/ablation_portability" --frozen python "$ROOT/ablation_cuda/author_cli.py" "$@"

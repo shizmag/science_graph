@@ -1,0 +1,1343 @@
+{
+  "approximate_fixture_rankings": [
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "10.1038/nature16961#0",
+      "same_order": true,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "10.1038/nature16961#1",
+      "same_order": true,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "10.1038/nature16961#10",
+      "same_order": true,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 9,
+      "overlap_fraction": 0.9,
+      "query_chunk_id": "10.1038/nature16961#100",
+      "same_order": false,
+      "top_k": 10
+    },
+    {
+      "overlap_count": 10,
+      "overlap_fraction": 1.0,
+      "query_chunk_id": "10.1038/nature16961#101",
+      "same_order": true,
+      "top_k": 10
+    }
+  ],
+  "approximate_order_identical_for_all_fixtures": false,
+  "approximate_top_k_overlap_mean": 0.9800000000000001,
+  "consistent_identifiers_and_exact_retrieval": true,
+  "exact_fixture_rankings_identical": true,
+  "fixture_file": "/Users/vladimirkasterin/python/graph/ablation_portability/snapshots/candidates/external_db/v1/validation_fixtures.json",
+  "fixture_sha256": "4a575b00df48be6741187a49bd3bc926bffb641947ae7adcf666c0b9c19e9d07",
+  "independent_restores": 2,
+  "restores": [
+    {
+      "database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+      "label": "restore_a",
+      "retrieval_approximate": {
+        "10.1038/nature16961#0": [
+          {
+            "chunk_id": "10.1038/nature16961#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#284",
+            "cosine_distance": 0.0945712998509407
+          },
+          {
+            "chunk_id": "10.1038/nature16961#111",
+            "cosine_distance": 0.10090912133455276
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#520",
+            "cosine_distance": 0.10095644742250443
+          },
+          {
+            "chunk_id": "10.1038/nature16961#139",
+            "cosine_distance": 0.11097707599401474
+          },
+          {
+            "chunk_id": "10.1038/nature16961#277",
+            "cosine_distance": 0.11602218449115753
+          },
+          {
+            "chunk_id": "10.1038/nature16961#27",
+            "cosine_distance": 0.12025370448827744
+          },
+          {
+            "chunk_id": "10.1038/nature16961#118",
+            "cosine_distance": 0.1216171607375145
+          },
+          {
+            "chunk_id": "10.1038/nature16961#85",
+            "cosine_distance": 0.12221407145261765
+          },
+          {
+            "chunk_id": "10.1038/nature16961#136",
+            "cosine_distance": 0.12230360507965088
+          }
+        ],
+        "10.1038/nature16961#1": [
+          {
+            "chunk_id": "10.1038/nature16961#1",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#158",
+            "cosine_distance": 0.10915432125329971
+          },
+          {
+            "chunk_id": "10.1038/nature16961#61",
+            "cosine_distance": 0.14647765457630157
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#283",
+            "cosine_distance": 0.14932066202163696
+          },
+          {
+            "chunk_id": "memento_teaching_llms_to_manage_their_own_context#248",
+            "cosine_distance": 0.15560941398143768
+          },
+          {
+            "chunk_id": "the_attack_and_defense_landscape_of_agentic_ai_a_comprehensive_survey#2",
+            "cosine_distance": 0.15658943355083466
+          },
+          {
+            "chunk_id": "precise_zero_shot_dense_retrieval_without_relevance_labels#152",
+            "cosine_distance": 0.157804936170578
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#2",
+            "cosine_distance": 0.15993429720401764
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#453",
+            "cosine_distance": 0.16040965914726257
+          },
+          {
+            "chunk_id": "published_as_a_conference_paper_at_colm_2024#203",
+            "cosine_distance": 0.16147354245185852
+          }
+        ],
+        "10.1038/nature16961#10": [
+          {
+            "chunk_id": "10.1038/nature16961#10",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#9",
+            "cosine_distance": 0.08217212557792664
+          },
+          {
+            "chunk_id": "10.1038/nature16961#165",
+            "cosine_distance": 0.09501730650663376
+          },
+          {
+            "chunk_id": "10.1038/nature16961#181",
+            "cosine_distance": 0.13077346980571747
+          },
+          {
+            "chunk_id": "10.1038/nature16961#200",
+            "cosine_distance": 0.13318879902362823
+          },
+          {
+            "chunk_id": "10.1038/nature16961#6",
+            "cosine_distance": 0.13510668277740479
+          },
+          {
+            "chunk_id": "10.1038/nature16961#293",
+            "cosine_distance": 0.1372704803943634
+          },
+          {
+            "chunk_id": "10.1038/nature16961#72",
+            "cosine_distance": 0.13829532265663147
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#387",
+            "cosine_distance": 0.13887816667556763
+          },
+          {
+            "chunk_id": "exploratory_gradient_boosting_for_reinforcement_learning_in_complex_domains#71",
+            "cosine_distance": 0.14049942791461945
+          }
+        ],
+        "10.1038/nature16961#100": [
+          {
+            "chunk_id": "10.1038/nature16961#100",
+            "cosine_distance": 8.652906302586416e-08
+          },
+          {
+            "chunk_id": "10.1038/nature16961#113",
+            "cosine_distance": 0.12678800523281097
+          },
+          {
+            "chunk_id": "10.1038/nature16961#108",
+            "cosine_distance": 0.1330549269914627
+          },
+          {
+            "chunk_id": "10.1038/nature16961#120",
+            "cosine_distance": 0.13955357670783997
+          },
+          {
+            "chunk_id": "10.1038/nature16961#109",
+            "cosine_distance": 0.14137311279773712
+          },
+          {
+            "chunk_id": "10.1038/nature16961#148",
+            "cosine_distance": 0.14423297345638275
+          },
+          {
+            "chunk_id": "10.1038/nature16961#147",
+            "cosine_distance": 0.14702296257019043
+          },
+          {
+            "chunk_id": "10.1038/nature16961#96",
+            "cosine_distance": 0.14825938642024994
+          },
+          {
+            "chunk_id": "10.1038/nature16961#112",
+            "cosine_distance": 0.14978213608264923
+          },
+          {
+            "chunk_id": "10.1038/nature16961#280",
+            "cosine_distance": 0.15197217464447021
+          }
+        ],
+        "10.1038/nature16961#101": [
+          {
+            "chunk_id": "10.1038/nature16961#101",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#51",
+            "cosine_distance": 0.10698682069778442
+          },
+          {
+            "chunk_id": "10.1038/nature16961#83",
+            "cosine_distance": 0.10771672427654266
+          },
+          {
+            "chunk_id": "10.1038/nature16961#99",
+            "cosine_distance": 0.10899288952350616
+          },
+          {
+            "chunk_id": "10.1038/nature16961#98",
+            "cosine_distance": 0.11735965311527252
+          },
+          {
+            "chunk_id": "10.1038/nature16961#304",
+            "cosine_distance": 0.11742306500673294
+          },
+          {
+            "chunk_id": "10.1038/nature16961#288",
+            "cosine_distance": 0.11766106635332108
+          },
+          {
+            "chunk_id": "10.1038/nature16961#303",
+            "cosine_distance": 0.11839202791452408
+          },
+          {
+            "chunk_id": "10.1038/nature16961#55",
+            "cosine_distance": 0.1216466873884201
+          },
+          {
+            "chunk_id": "learning_transferable_visual_models_from_natural_language_supervision#776",
+            "cosine_distance": 0.12277331203222275
+          }
+        ]
+      },
+      "retrieval_exact": {
+        "10.1038/nature16961#0": [
+          {
+            "chunk_id": "10.1038/nature16961#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#284",
+            "cosine_distance": 0.0945712998509407
+          },
+          {
+            "chunk_id": "10.1038/nature16961#111",
+            "cosine_distance": 0.10090912133455276
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#520",
+            "cosine_distance": 0.10095644742250443
+          },
+          {
+            "chunk_id": "10.1038/nature16961#139",
+            "cosine_distance": 0.11097707599401474
+          },
+          {
+            "chunk_id": "10.1038/nature16961#277",
+            "cosine_distance": 0.11602218449115753
+          },
+          {
+            "chunk_id": "10.1038/nature16961#27",
+            "cosine_distance": 0.12025370448827744
+          },
+          {
+            "chunk_id": "10.1038/nature16961#118",
+            "cosine_distance": 0.1216171607375145
+          },
+          {
+            "chunk_id": "10.1038/nature16961#85",
+            "cosine_distance": 0.12221407145261765
+          },
+          {
+            "chunk_id": "10.1038/nature16961#136",
+            "cosine_distance": 0.12230360507965088
+          }
+        ],
+        "10.1038/nature16961#1": [
+          {
+            "chunk_id": "10.1038/nature16961#1",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#158",
+            "cosine_distance": 0.10915432125329971
+          },
+          {
+            "chunk_id": "10.1038/nature16961#61",
+            "cosine_distance": 0.14647765457630157
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#283",
+            "cosine_distance": 0.14932066202163696
+          },
+          {
+            "chunk_id": "memento_teaching_llms_to_manage_their_own_context#248",
+            "cosine_distance": 0.15560941398143768
+          },
+          {
+            "chunk_id": "the_attack_and_defense_landscape_of_agentic_ai_a_comprehensive_survey#2",
+            "cosine_distance": 0.15658943355083466
+          },
+          {
+            "chunk_id": "precise_zero_shot_dense_retrieval_without_relevance_labels#152",
+            "cosine_distance": 0.157804936170578
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#2",
+            "cosine_distance": 0.15993429720401764
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#453",
+            "cosine_distance": 0.16040965914726257
+          },
+          {
+            "chunk_id": "published_as_a_conference_paper_at_colm_2024#203",
+            "cosine_distance": 0.16147354245185852
+          }
+        ],
+        "10.1038/nature16961#10": [
+          {
+            "chunk_id": "10.1038/nature16961#10",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#9",
+            "cosine_distance": 0.08217212557792664
+          },
+          {
+            "chunk_id": "10.1038/nature16961#165",
+            "cosine_distance": 0.09501730650663376
+          },
+          {
+            "chunk_id": "10.1038/nature16961#181",
+            "cosine_distance": 0.13077346980571747
+          },
+          {
+            "chunk_id": "10.1038/nature16961#200",
+            "cosine_distance": 0.13318879902362823
+          },
+          {
+            "chunk_id": "10.1038/nature16961#6",
+            "cosine_distance": 0.13510668277740479
+          },
+          {
+            "chunk_id": "10.1038/nature16961#293",
+            "cosine_distance": 0.1372704803943634
+          },
+          {
+            "chunk_id": "10.1038/nature16961#72",
+            "cosine_distance": 0.13829532265663147
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#387",
+            "cosine_distance": 0.13887816667556763
+          },
+          {
+            "chunk_id": "exploratory_gradient_boosting_for_reinforcement_learning_in_complex_domains#71",
+            "cosine_distance": 0.14049942791461945
+          }
+        ],
+        "10.1038/nature16961#100": [
+          {
+            "chunk_id": "10.1038/nature16961#100",
+            "cosine_distance": 8.652906302586416e-08
+          },
+          {
+            "chunk_id": "10.1038/nature16961#113",
+            "cosine_distance": 0.12678800523281097
+          },
+          {
+            "chunk_id": "10.1038/nature16961#108",
+            "cosine_distance": 0.1330549269914627
+          },
+          {
+            "chunk_id": "10.1038/nature16961#120",
+            "cosine_distance": 0.13955357670783997
+          },
+          {
+            "chunk_id": "10.1038/nature16961#109",
+            "cosine_distance": 0.14137311279773712
+          },
+          {
+            "chunk_id": "10.1038/nature16961#282",
+            "cosine_distance": 0.14268885552883148
+          },
+          {
+            "chunk_id": "10.1038/nature16961#148",
+            "cosine_distance": 0.14423297345638275
+          },
+          {
+            "chunk_id": "10.1038/nature16961#147",
+            "cosine_distance": 0.14702296257019043
+          },
+          {
+            "chunk_id": "10.1038/nature16961#96",
+            "cosine_distance": 0.14825938642024994
+          },
+          {
+            "chunk_id": "10.1038/nature16961#112",
+            "cosine_distance": 0.14978213608264923
+          }
+        ],
+        "10.1038/nature16961#101": [
+          {
+            "chunk_id": "10.1038/nature16961#101",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#51",
+            "cosine_distance": 0.10698682069778442
+          },
+          {
+            "chunk_id": "10.1038/nature16961#83",
+            "cosine_distance": 0.10771672427654266
+          },
+          {
+            "chunk_id": "10.1038/nature16961#99",
+            "cosine_distance": 0.10899288952350616
+          },
+          {
+            "chunk_id": "10.1038/nature16961#98",
+            "cosine_distance": 0.11735965311527252
+          },
+          {
+            "chunk_id": "10.1038/nature16961#304",
+            "cosine_distance": 0.11742306500673294
+          },
+          {
+            "chunk_id": "10.1038/nature16961#288",
+            "cosine_distance": 0.11766106635332108
+          },
+          {
+            "chunk_id": "10.1038/nature16961#303",
+            "cosine_distance": 0.11839202791452408
+          },
+          {
+            "chunk_id": "10.1038/nature16961#55",
+            "cosine_distance": 0.1216466873884201
+          },
+          {
+            "chunk_id": "learning_transferable_visual_models_from_natural_language_supervision#776",
+            "cosine_distance": 0.12277331203222275
+          }
+        ]
+      },
+      "usearch": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-hwijk7lh/restore_a/database.db",
+        "dimensions": 768,
+        "index": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-hwijk7lh/restore_a/database.usearch",
+        "index_bytes": 37183832,
+        "index_sha256": "b1dd5e2e58baa1b39c356a2f9d041bed0909ee9b17f2be54520d9dd2cfaa1b60",
+        "key_algorithm": "int(md5(chunk_id UTF-8).hexdigest()[:15], 16)",
+        "metric": "cos",
+        "recomputed_embeddings": false,
+        "rows": 22068,
+        "vector_source": "SQLite chunks.embedding float32 blobs"
+      },
+      "validation": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-hwijk7lh/restore_a/database.db",
+        "database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+        "foreign_key_violation_count": 0,
+        "fts": {
+          "match_count_at_most_five": 5,
+          "matching_chunk_ids": [
+            "10.20944/preprints202301.0022.v1#0",
+            "10.20944/preprints202301.0022.v1#4",
+            "10.20944/preprints202301.0022.v1#5",
+            "the_art_of_building_verifiers_for_computer_use_agents#161",
+            "10.3390/drones9030187#2"
+          ],
+          "query": "ARTICLE"
+        },
+        "integrity_check": [
+          "ok"
+        ],
+        "logical": {
+          "chunk_count": 22068,
+          "chunk_samples": [
+            {
+              "id": "10.1038/nature16961#0",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "41bf49f967f7cb1b7a534aad53b83bc19f56393265f607938214b525d2e31acf",
+              "vector_sha256": "72140914de8ec988a57f3e254d0323848e2bd0f864ac91a18848b92c2fc4b044"
+            },
+            {
+              "id": "10.1038/nature16961#1",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "72f10a3d880c19da88a2ac0ff99df44c060379d82945d105a94f5d0eb76d1e78",
+              "vector_sha256": "2d967817cf344844cb2d5f1223e55cc8130779b14fabcb958b36a67ade836b95"
+            },
+            {
+              "id": "10.1038/nature16961#10",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "b26f9fb1bae68f7b4303362c27ac4868329b3a177840429afafe4f1e4ee611b5",
+              "vector_sha256": "d77512a71deea63d90e985d9030dd815b48a2076d6bbf4a50eb8c9b84e02f90c"
+            },
+            {
+              "id": "10.1038/nature16961#100",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "91dfcdb7b0107fde0309362053901b308032e2da4e7eb4253e387e60ba53ab67",
+              "vector_sha256": "586f465b881f0e51fced029735afef2a3e3f7ab571b518ec2cef6d2db1a209f0"
+            },
+            {
+              "id": "10.1038/nature16961#101",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "06917dc210427cc27c20cdbd2385a316e2b566c16a20ca2081cdebef99a8ebd8",
+              "vector_sha256": "8e4ebb322a28938a8fb037db34d4f89956662d9d13669eb5855e44b9652c65f9"
+            },
+            {
+              "id": "10.1038/nature16961#102",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "1936fc6d79a44aeea649cb404c17a519f147cf8ecf694b836ffa7967784982a2",
+              "vector_sha256": "31d07c4a9678da67ab566bcead4361ae5c87bac81a08c76aec099d9d2e65c5ba"
+            },
+            {
+              "id": "10.1038/nature16961#103",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "a05dc7da2a39aadeae45d9d011910431c66f2b3a1ac78c49eff5b8e0104106ad",
+              "vector_sha256": "d825a0006a9dbcf8bbee09d424f91acb3572a23998bdde7eabd2a1257054e199"
+            },
+            {
+              "id": "10.1038/nature16961#104",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "a2ff2c241423911f9faf544278b35cc7997cf04dc97a4d67661d7e2d5e3b5619",
+              "vector_sha256": "c86e4da9f6bdaad7c96782ba7864d54cc827124a891ef77b208d5b156639f80c"
+            },
+            {
+              "id": "10.1038/nature16961#105",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "9ec43ee152dca4d6b57b8517c012448bc0bd5e3497b5afee3d9a263ab434e0eb",
+              "vector_sha256": "537c0d3f99a2cbc78f98c3c21eb51471aff3b9b2c880a96ad587aa84b94519ae"
+            },
+            {
+              "id": "10.1038/nature16961#106",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "f7a5b98e0ae8bfcc26427c27a189e773dd54eb0805cf84351562e8b925b055f2",
+              "vector_sha256": "b3ae802557e1d05c2fcf73bfc4f1b97324db682d39199d5a00997da309ca3596"
+            },
+            {
+              "id": "10.1038/nature16961#107",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "1a956e6039ee88ab7af3ced2203b065574d9c50186535bed87fa3d270b747165",
+              "vector_sha256": "3b6d52233e4a40265d7eb11fa8e4f471e4a5c81f955af3716a79f8af0a37b3fc"
+            },
+            {
+              "id": "10.1038/nature16961#108",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "c1718d9ad72d6fa986e693a066fe3e645db1924df4866598ff5d441f73af40af",
+              "vector_sha256": "c30236e03a9ef29f310973140895e2b1b986069c1005d69b4eea27a7e9fc0ecf"
+            },
+            {
+              "id": "10.1038/nature16961#109",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "f1784664c0756b7df2ff8196d8e1a466db0ea6b4f8962410dbf5d5c85b46305a",
+              "vector_sha256": "37b2304a94095136c10d6d2a3f103207fd31eba60a0a90ce9f35f9b78442a4f6"
+            },
+            {
+              "id": "10.1038/nature16961#11",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "8512d43a6f2f22645c9070d702623cd999d35e57a89d86117f86e1a36dcdb360",
+              "vector_sha256": "2aaa58a442654e010e6d1cc47cf694380f876dab8518f462cf6afe45ca75bffa"
+            },
+            {
+              "id": "10.1038/nature16961#110",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "7a7a30f7b424487babc4081bdc259c2f94844a331212bcfd39cfadeec5aedc74",
+              "vector_sha256": "ff093623306806598245611b8aba63fd06f23c9acd8fc6f13453faa3d52f71ef"
+            },
+            {
+              "id": "10.1038/nature16961#111",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "93968f82b1e3450672f59a71abff5cde30ac013087c81343c32af20772fcfe20",
+              "vector_sha256": "c0dcaa592c3fc13e9fabd7c50511ef410b78f74561d65c24376de7a7c27fd804"
+            }
+          ],
+          "document_count": 346,
+          "edge_types": {
+            "AFFILIATED_WITH": 200,
+            "AUTHORED": 1164,
+            "CITES": 5132,
+            "HAS_CODE": 27,
+            "HAS_TAG": 2261,
+            "INTRODUCED_DATASET": 16,
+            "IS_A": 205,
+            "MENTIONS_CONCEPT": 2133,
+            "PREREQUISITE_FOR": 197,
+            "PUBLISHED_IN": 11,
+            "SPONSORED_BY": 42,
+            "SUBCLASS_OF": 83,
+            "USED_DATASET": 241
+          },
+          "foreign_key_violation_count": 0,
+          "fts_objects": [
+            "chunks_fts"
+          ],
+          "graph_edge_count": 11712,
+          "graph_node_count": 9680,
+          "journal_mode": "delete",
+          "node_labels": {
+            "Author": 1141,
+            "CodeRepository": 27,
+            "Concept": 2700,
+            "Dataset": 180,
+            "ExternalWork": 1327,
+            "Institution": 182,
+            "JournalConference": 9,
+            "Paper": 3814,
+            "UserNote": 300
+          },
+          "parent_count": 2845,
+          "quick_check": "ok",
+          "sqlite_version": "3.50.4",
+          "table_counts": {
+            "bridge_only_paper_projection": 3768,
+            "chunk_availability_mapping": 22068,
+            "chunk_reference_mentions": 0,
+            "chunks": 22068,
+            "chunks_fts": 22068,
+            "derived_local_to_local_bridge_edges": 1494,
+            "edges": 11712,
+            "local_paper_projection": 346,
+            "nodes": 9680,
+            "paper_reference_vector": 0,
+            "paper_usability_metadata": 4114,
+            "parent_chunks": 2845,
+            "reference_corpus_stats": 0
+          },
+          "user_version": 0,
+          "vector": {
+            "blob_lengths": [
+              {
+                "blob_bytes": 3072,
+                "rows": 22068
+              }
+            ],
+            "dimensions": [
+              768
+            ],
+            "dtype": "float32",
+            "rows": 22068
+          },
+          "views": [
+            "bridge_only_paper_projection",
+            "chunk_availability_mapping",
+            "derived_local_to_local_bridge_edges",
+            "local_paper_projection",
+            "paper_usability_metadata"
+          ]
+        },
+        "manifest_errors": [],
+        "valid": true,
+        "vectors": {
+          "bad_lengths_or_dimensions": [],
+          "dimensions": [
+            768
+          ],
+          "expected_dimensions": 768,
+          "nonfinite_vectors": [],
+          "rows": 22068,
+          "valid": true,
+          "zero_norm_vectors": []
+        }
+      }
+    },
+    {
+      "database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+      "label": "restore_b",
+      "retrieval_approximate": {
+        "10.1038/nature16961#0": [
+          {
+            "chunk_id": "10.1038/nature16961#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#284",
+            "cosine_distance": 0.0945712998509407
+          },
+          {
+            "chunk_id": "10.1038/nature16961#111",
+            "cosine_distance": 0.10090912133455276
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#520",
+            "cosine_distance": 0.10095644742250443
+          },
+          {
+            "chunk_id": "10.1038/nature16961#139",
+            "cosine_distance": 0.11097707599401474
+          },
+          {
+            "chunk_id": "10.1038/nature16961#277",
+            "cosine_distance": 0.11602218449115753
+          },
+          {
+            "chunk_id": "10.1038/nature16961#27",
+            "cosine_distance": 0.12025370448827744
+          },
+          {
+            "chunk_id": "10.1038/nature16961#118",
+            "cosine_distance": 0.1216171607375145
+          },
+          {
+            "chunk_id": "10.1038/nature16961#85",
+            "cosine_distance": 0.12221407145261765
+          },
+          {
+            "chunk_id": "10.1038/nature16961#136",
+            "cosine_distance": 0.12230360507965088
+          }
+        ],
+        "10.1038/nature16961#1": [
+          {
+            "chunk_id": "10.1038/nature16961#1",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#158",
+            "cosine_distance": 0.10915432125329971
+          },
+          {
+            "chunk_id": "10.1038/nature16961#61",
+            "cosine_distance": 0.14647765457630157
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#283",
+            "cosine_distance": 0.14932066202163696
+          },
+          {
+            "chunk_id": "memento_teaching_llms_to_manage_their_own_context#248",
+            "cosine_distance": 0.15560941398143768
+          },
+          {
+            "chunk_id": "the_attack_and_defense_landscape_of_agentic_ai_a_comprehensive_survey#2",
+            "cosine_distance": 0.15658943355083466
+          },
+          {
+            "chunk_id": "precise_zero_shot_dense_retrieval_without_relevance_labels#152",
+            "cosine_distance": 0.157804936170578
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#2",
+            "cosine_distance": 0.15993429720401764
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#453",
+            "cosine_distance": 0.16040965914726257
+          },
+          {
+            "chunk_id": "published_as_a_conference_paper_at_colm_2024#203",
+            "cosine_distance": 0.16147354245185852
+          }
+        ],
+        "10.1038/nature16961#10": [
+          {
+            "chunk_id": "10.1038/nature16961#10",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#9",
+            "cosine_distance": 0.08217212557792664
+          },
+          {
+            "chunk_id": "10.1038/nature16961#165",
+            "cosine_distance": 0.09501730650663376
+          },
+          {
+            "chunk_id": "10.1038/nature16961#181",
+            "cosine_distance": 0.13077346980571747
+          },
+          {
+            "chunk_id": "10.1038/nature16961#200",
+            "cosine_distance": 0.13318879902362823
+          },
+          {
+            "chunk_id": "10.1038/nature16961#6",
+            "cosine_distance": 0.13510668277740479
+          },
+          {
+            "chunk_id": "10.1038/nature16961#293",
+            "cosine_distance": 0.1372704803943634
+          },
+          {
+            "chunk_id": "10.1038/nature16961#72",
+            "cosine_distance": 0.13829532265663147
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#387",
+            "cosine_distance": 0.13887816667556763
+          },
+          {
+            "chunk_id": "exploratory_gradient_boosting_for_reinforcement_learning_in_complex_domains#71",
+            "cosine_distance": 0.14049942791461945
+          }
+        ],
+        "10.1038/nature16961#100": [
+          {
+            "chunk_id": "10.1038/nature16961#100",
+            "cosine_distance": 8.652906302586416e-08
+          },
+          {
+            "chunk_id": "10.1038/nature16961#113",
+            "cosine_distance": 0.12678800523281097
+          },
+          {
+            "chunk_id": "10.1038/nature16961#108",
+            "cosine_distance": 0.1330549269914627
+          },
+          {
+            "chunk_id": "10.1038/nature16961#120",
+            "cosine_distance": 0.13955357670783997
+          },
+          {
+            "chunk_id": "10.1038/nature16961#109",
+            "cosine_distance": 0.14137311279773712
+          },
+          {
+            "chunk_id": "10.1038/nature16961#282",
+            "cosine_distance": 0.14268885552883148
+          },
+          {
+            "chunk_id": "10.1038/nature16961#148",
+            "cosine_distance": 0.14423297345638275
+          },
+          {
+            "chunk_id": "10.1038/nature16961#147",
+            "cosine_distance": 0.14702296257019043
+          },
+          {
+            "chunk_id": "10.1038/nature16961#96",
+            "cosine_distance": 0.14825938642024994
+          },
+          {
+            "chunk_id": "10.1038/nature16961#112",
+            "cosine_distance": 0.14978213608264923
+          }
+        ],
+        "10.1038/nature16961#101": [
+          {
+            "chunk_id": "10.1038/nature16961#101",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#51",
+            "cosine_distance": 0.10698682069778442
+          },
+          {
+            "chunk_id": "10.1038/nature16961#83",
+            "cosine_distance": 0.10771672427654266
+          },
+          {
+            "chunk_id": "10.1038/nature16961#99",
+            "cosine_distance": 0.10899288952350616
+          },
+          {
+            "chunk_id": "10.1038/nature16961#98",
+            "cosine_distance": 0.11735965311527252
+          },
+          {
+            "chunk_id": "10.1038/nature16961#304",
+            "cosine_distance": 0.11742306500673294
+          },
+          {
+            "chunk_id": "10.1038/nature16961#288",
+            "cosine_distance": 0.11766106635332108
+          },
+          {
+            "chunk_id": "10.1038/nature16961#303",
+            "cosine_distance": 0.11839202791452408
+          },
+          {
+            "chunk_id": "10.1038/nature16961#55",
+            "cosine_distance": 0.1216466873884201
+          },
+          {
+            "chunk_id": "learning_transferable_visual_models_from_natural_language_supervision#776",
+            "cosine_distance": 0.12277331203222275
+          }
+        ]
+      },
+      "retrieval_exact": {
+        "10.1038/nature16961#0": [
+          {
+            "chunk_id": "10.1038/nature16961#0",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#284",
+            "cosine_distance": 0.0945712998509407
+          },
+          {
+            "chunk_id": "10.1038/nature16961#111",
+            "cosine_distance": 0.10090912133455276
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#520",
+            "cosine_distance": 0.10095644742250443
+          },
+          {
+            "chunk_id": "10.1038/nature16961#139",
+            "cosine_distance": 0.11097707599401474
+          },
+          {
+            "chunk_id": "10.1038/nature16961#277",
+            "cosine_distance": 0.11602218449115753
+          },
+          {
+            "chunk_id": "10.1038/nature16961#27",
+            "cosine_distance": 0.12025370448827744
+          },
+          {
+            "chunk_id": "10.1038/nature16961#118",
+            "cosine_distance": 0.1216171607375145
+          },
+          {
+            "chunk_id": "10.1038/nature16961#85",
+            "cosine_distance": 0.12221407145261765
+          },
+          {
+            "chunk_id": "10.1038/nature16961#136",
+            "cosine_distance": 0.12230360507965088
+          }
+        ],
+        "10.1038/nature16961#1": [
+          {
+            "chunk_id": "10.1038/nature16961#1",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#158",
+            "cosine_distance": 0.10915432125329971
+          },
+          {
+            "chunk_id": "10.1038/nature16961#61",
+            "cosine_distance": 0.14647765457630157
+          },
+          {
+            "chunk_id": "agent_learning_via_early_experience#283",
+            "cosine_distance": 0.14932066202163696
+          },
+          {
+            "chunk_id": "memento_teaching_llms_to_manage_their_own_context#248",
+            "cosine_distance": 0.15560941398143768
+          },
+          {
+            "chunk_id": "the_attack_and_defense_landscape_of_agentic_ai_a_comprehensive_survey#2",
+            "cosine_distance": 0.15658943355083466
+          },
+          {
+            "chunk_id": "precise_zero_shot_dense_retrieval_without_relevance_labels#152",
+            "cosine_distance": 0.157804936170578
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#2",
+            "cosine_distance": 0.15993429720401764
+          },
+          {
+            "chunk_id": "kosmos_an_ai_scientist_for_autonomous_discovery#453",
+            "cosine_distance": 0.16040965914726257
+          },
+          {
+            "chunk_id": "published_as_a_conference_paper_at_colm_2024#203",
+            "cosine_distance": 0.16147354245185852
+          }
+        ],
+        "10.1038/nature16961#10": [
+          {
+            "chunk_id": "10.1038/nature16961#10",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#9",
+            "cosine_distance": 0.08217212557792664
+          },
+          {
+            "chunk_id": "10.1038/nature16961#165",
+            "cosine_distance": 0.09501730650663376
+          },
+          {
+            "chunk_id": "10.1038/nature16961#181",
+            "cosine_distance": 0.13077346980571747
+          },
+          {
+            "chunk_id": "10.1038/nature16961#200",
+            "cosine_distance": 0.13318879902362823
+          },
+          {
+            "chunk_id": "10.1038/nature16961#6",
+            "cosine_distance": 0.13510668277740479
+          },
+          {
+            "chunk_id": "10.1038/nature16961#293",
+            "cosine_distance": 0.1372704803943634
+          },
+          {
+            "chunk_id": "10.1038/nature16961#72",
+            "cosine_distance": 0.13829532265663147
+          },
+          {
+            "chunk_id": "context_engineering_20_the_context_of_context_engineering#387",
+            "cosine_distance": 0.13887816667556763
+          },
+          {
+            "chunk_id": "exploratory_gradient_boosting_for_reinforcement_learning_in_complex_domains#71",
+            "cosine_distance": 0.14049942791461945
+          }
+        ],
+        "10.1038/nature16961#100": [
+          {
+            "chunk_id": "10.1038/nature16961#100",
+            "cosine_distance": 8.652906302586416e-08
+          },
+          {
+            "chunk_id": "10.1038/nature16961#113",
+            "cosine_distance": 0.12678800523281097
+          },
+          {
+            "chunk_id": "10.1038/nature16961#108",
+            "cosine_distance": 0.1330549269914627
+          },
+          {
+            "chunk_id": "10.1038/nature16961#120",
+            "cosine_distance": 0.13955357670783997
+          },
+          {
+            "chunk_id": "10.1038/nature16961#109",
+            "cosine_distance": 0.14137311279773712
+          },
+          {
+            "chunk_id": "10.1038/nature16961#282",
+            "cosine_distance": 0.14268885552883148
+          },
+          {
+            "chunk_id": "10.1038/nature16961#148",
+            "cosine_distance": 0.14423297345638275
+          },
+          {
+            "chunk_id": "10.1038/nature16961#147",
+            "cosine_distance": 0.14702296257019043
+          },
+          {
+            "chunk_id": "10.1038/nature16961#96",
+            "cosine_distance": 0.14825938642024994
+          },
+          {
+            "chunk_id": "10.1038/nature16961#112",
+            "cosine_distance": 0.14978213608264923
+          }
+        ],
+        "10.1038/nature16961#101": [
+          {
+            "chunk_id": "10.1038/nature16961#101",
+            "cosine_distance": 0.0
+          },
+          {
+            "chunk_id": "10.1038/nature16961#51",
+            "cosine_distance": 0.10698682069778442
+          },
+          {
+            "chunk_id": "10.1038/nature16961#83",
+            "cosine_distance": 0.10771672427654266
+          },
+          {
+            "chunk_id": "10.1038/nature16961#99",
+            "cosine_distance": 0.10899288952350616
+          },
+          {
+            "chunk_id": "10.1038/nature16961#98",
+            "cosine_distance": 0.11735965311527252
+          },
+          {
+            "chunk_id": "10.1038/nature16961#304",
+            "cosine_distance": 0.11742306500673294
+          },
+          {
+            "chunk_id": "10.1038/nature16961#288",
+            "cosine_distance": 0.11766106635332108
+          },
+          {
+            "chunk_id": "10.1038/nature16961#303",
+            "cosine_distance": 0.11839202791452408
+          },
+          {
+            "chunk_id": "10.1038/nature16961#55",
+            "cosine_distance": 0.1216466873884201
+          },
+          {
+            "chunk_id": "learning_transferable_visual_models_from_natural_language_supervision#776",
+            "cosine_distance": 0.12277331203222275
+          }
+        ]
+      },
+      "usearch": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-hwijk7lh/restore_b/database.db",
+        "dimensions": 768,
+        "index": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-hwijk7lh/restore_b/database.usearch",
+        "index_bytes": 37183832,
+        "index_sha256": "271504530be37b4bde794806238e857c7dd889ff4444ee1988bea383b799ba37",
+        "key_algorithm": "int(md5(chunk_id UTF-8).hexdigest()[:15], 16)",
+        "metric": "cos",
+        "recomputed_embeddings": false,
+        "rows": 22068,
+        "vector_source": "SQLite chunks.embedding float32 blobs"
+      },
+      "validation": {
+        "database": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-roundtrip-hwijk7lh/restore_b/database.db",
+        "database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+        "foreign_key_violation_count": 0,
+        "fts": {
+          "match_count_at_most_five": 5,
+          "matching_chunk_ids": [
+            "10.20944/preprints202301.0022.v1#0",
+            "10.20944/preprints202301.0022.v1#4",
+            "10.20944/preprints202301.0022.v1#5",
+            "the_art_of_building_verifiers_for_computer_use_agents#161",
+            "10.3390/drones9030187#2"
+          ],
+          "query": "ARTICLE"
+        },
+        "integrity_check": [
+          "ok"
+        ],
+        "logical": {
+          "chunk_count": 22068,
+          "chunk_samples": [
+            {
+              "id": "10.1038/nature16961#0",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "41bf49f967f7cb1b7a534aad53b83bc19f56393265f607938214b525d2e31acf",
+              "vector_sha256": "72140914de8ec988a57f3e254d0323848e2bd0f864ac91a18848b92c2fc4b044"
+            },
+            {
+              "id": "10.1038/nature16961#1",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "72f10a3d880c19da88a2ac0ff99df44c060379d82945d105a94f5d0eb76d1e78",
+              "vector_sha256": "2d967817cf344844cb2d5f1223e55cc8130779b14fabcb958b36a67ade836b95"
+            },
+            {
+              "id": "10.1038/nature16961#10",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "b26f9fb1bae68f7b4303362c27ac4868329b3a177840429afafe4f1e4ee611b5",
+              "vector_sha256": "d77512a71deea63d90e985d9030dd815b48a2076d6bbf4a50eb8c9b84e02f90c"
+            },
+            {
+              "id": "10.1038/nature16961#100",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "91dfcdb7b0107fde0309362053901b308032e2da4e7eb4253e387e60ba53ab67",
+              "vector_sha256": "586f465b881f0e51fced029735afef2a3e3f7ab571b518ec2cef6d2db1a209f0"
+            },
+            {
+              "id": "10.1038/nature16961#101",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "06917dc210427cc27c20cdbd2385a316e2b566c16a20ca2081cdebef99a8ebd8",
+              "vector_sha256": "8e4ebb322a28938a8fb037db34d4f89956662d9d13669eb5855e44b9652c65f9"
+            },
+            {
+              "id": "10.1038/nature16961#102",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "1936fc6d79a44aeea649cb404c17a519f147cf8ecf694b836ffa7967784982a2",
+              "vector_sha256": "31d07c4a9678da67ab566bcead4361ae5c87bac81a08c76aec099d9d2e65c5ba"
+            },
+            {
+              "id": "10.1038/nature16961#103",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "a05dc7da2a39aadeae45d9d011910431c66f2b3a1ac78c49eff5b8e0104106ad",
+              "vector_sha256": "d825a0006a9dbcf8bbee09d424f91acb3572a23998bdde7eabd2a1257054e199"
+            },
+            {
+              "id": "10.1038/nature16961#104",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "a2ff2c241423911f9faf544278b35cc7997cf04dc97a4d67661d7e2d5e3b5619",
+              "vector_sha256": "c86e4da9f6bdaad7c96782ba7864d54cc827124a891ef77b208d5b156639f80c"
+            },
+            {
+              "id": "10.1038/nature16961#105",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "9ec43ee152dca4d6b57b8517c012448bc0bd5e3497b5afee3d9a263ab434e0eb",
+              "vector_sha256": "537c0d3f99a2cbc78f98c3c21eb51471aff3b9b2c880a96ad587aa84b94519ae"
+            },
+            {
+              "id": "10.1038/nature16961#106",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "f7a5b98e0ae8bfcc26427c27a189e773dd54eb0805cf84351562e8b925b055f2",
+              "vector_sha256": "b3ae802557e1d05c2fcf73bfc4f1b97324db682d39199d5a00997da309ca3596"
+            },
+            {
+              "id": "10.1038/nature16961#107",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "1a956e6039ee88ab7af3ced2203b065574d9c50186535bed87fa3d270b747165",
+              "vector_sha256": "3b6d52233e4a40265d7eb11fa8e4f471e4a5c81f955af3716a79f8af0a37b3fc"
+            },
+            {
+              "id": "10.1038/nature16961#108",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "c1718d9ad72d6fa986e693a066fe3e645db1924df4866598ff5d441f73af40af",
+              "vector_sha256": "c30236e03a9ef29f310973140895e2b1b986069c1005d69b4eea27a7e9fc0ecf"
+            },
+            {
+              "id": "10.1038/nature16961#109",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "f1784664c0756b7df2ff8196d8e1a466db0ea6b4f8962410dbf5d5c85b46305a",
+              "vector_sha256": "37b2304a94095136c10d6d2a3f103207fd31eba60a0a90ce9f35f9b78442a4f6"
+            },
+            {
+              "id": "10.1038/nature16961#11",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "8512d43a6f2f22645c9070d702623cd999d35e57a89d86117f86e1a36dcdb360",
+              "vector_sha256": "2aaa58a442654e010e6d1cc47cf694380f876dab8518f462cf6afe45ca75bffa"
+            },
+            {
+              "id": "10.1038/nature16961#110",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "7a7a30f7b424487babc4081bdc259c2f94844a331212bcfd39cfadeec5aedc74",
+              "vector_sha256": "ff093623306806598245611b8aba63fd06f23c9acd8fc6f13453faa3d52f71ef"
+            },
+            {
+              "id": "10.1038/nature16961#111",
+              "paper_id": "10.1038/nature16961",
+              "text_sha256": "93968f82b1e3450672f59a71abff5cde30ac013087c81343c32af20772fcfe20",
+              "vector_sha256": "c0dcaa592c3fc13e9fabd7c50511ef410b78f74561d65c24376de7a7c27fd804"
+            }
+          ],
+          "document_count": 346,
+          "edge_types": {
+            "AFFILIATED_WITH": 200,
+            "AUTHORED": 1164,
+            "CITES": 5132,
+            "HAS_CODE": 27,
+            "HAS_TAG": 2261,
+            "INTRODUCED_DATASET": 16,
+            "IS_A": 205,
+            "MENTIONS_CONCEPT": 2133,
+            "PREREQUISITE_FOR": 197,
+            "PUBLISHED_IN": 11,
+            "SPONSORED_BY": 42,
+            "SUBCLASS_OF": 83,
+            "USED_DATASET": 241
+          },
+          "foreign_key_violation_count": 0,
+          "fts_objects": [
+            "chunks_fts"
+          ],
+          "graph_edge_count": 11712,
+          "graph_node_count": 9680,
+          "journal_mode": "delete",
+          "node_labels": {
+            "Author": 1141,
+            "CodeRepository": 27,
+            "Concept": 2700,
+            "Dataset": 180,
+            "ExternalWork": 1327,
+            "Institution": 182,
+            "JournalConference": 9,
+            "Paper": 3814,
+            "UserNote": 300
+          },
+          "parent_count": 2845,
+          "quick_check": "ok",
+          "sqlite_version": "3.50.4",
+          "table_counts": {
+            "bridge_only_paper_projection": 3768,
+            "chunk_availability_mapping": 22068,
+            "chunk_reference_mentions": 0,
+            "chunks": 22068,
+            "chunks_fts": 22068,
+            "derived_local_to_local_bridge_edges": 1494,
+            "edges": 11712,
+            "local_paper_projection": 346,
+            "nodes": 9680,
+            "paper_reference_vector": 0,
+            "paper_usability_metadata": 4114,
+            "parent_chunks": 2845,
+            "reference_corpus_stats": 0
+          },
+          "user_version": 0,
+          "vector": {
+            "blob_lengths": [
+              {
+                "blob_bytes": 3072,
+                "rows": 22068
+              }
+            ],
+            "dimensions": [
+              768
+            ],
+            "dtype": "float32",
+            "rows": 22068
+          },
+          "views": [
+            "bridge_only_paper_projection",
+            "chunk_availability_mapping",
+            "derived_local_to_local_bridge_edges",
+            "local_paper_projection",
+            "paper_usability_metadata"
+          ]
+        },
+        "manifest_errors": [],
+        "valid": true,
+        "vectors": {
+          "bad_lengths_or_dimensions": [],
+          "dimensions": [
+            768
+          ],
+          "expected_dimensions": 768,
+          "nonfinite_vectors": [],
+          "rows": 22068,
+          "valid": true,
+          "zero_norm_vectors": []
+        }
+      }
+    }
+  ],
+  "schema_version": "1.0",
+  "snapshot": "/Users/vladimirkasterin/python/graph/ablation_portability/snapshots/candidates/external_db/v1",
+  "snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0"
+}

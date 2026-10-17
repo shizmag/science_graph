@@ -1,0 +1,14 @@
+{
+  "candidate": "external_db",
+  "config_snapshot_database_path": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-b6-smoke-d1tf4ml3/restored_snapshot/database.db",
+  "config_snapshot_path_matches_restored_copy": true,
+  "logical_contents_match_selected_snapshot_after_worker": true,
+  "restored_database_bytes_changed_during_run": true,
+  "restored_database_sha256_after_worker": "c4884514b938ff5739bf61f72f01eb628349840c67d8ac4a47d4cc30383632ce",
+  "restored_database_sha256_at_worker_start": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+  "same_resolved_path_for_retrieval_and_generation": true,
+  "selected_snapshot_file_unchanged": true,
+  "selected_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+  "snapshot_id": "external_db-20261016T193200Z",
+  "worker_startup_log_matches_database_identity": false
+}

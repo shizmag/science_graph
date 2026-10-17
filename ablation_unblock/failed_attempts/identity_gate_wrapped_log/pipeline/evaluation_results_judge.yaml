@@ -1,0 +1,23 @@
+results:
+- id: pubmedqa_21084567
+  query: Are stroke patients' reports of home blood pressure readings reliable?
+  golden_answer: Yes. This group of elderly stroke patients were able to record their
+    BPs reliably at home. Any bias was small and would be unlikely to affect management.
+    Since BP readings in a GP surgery are often a poor indication of true BP, GPs
+    might consider using hypertensive patients' records of home BP monitoring to help
+    guide treatment decisions.
+  baselines:
+    B6:
+      generated_answer: 'Yes, stroke patients'' reports of home blood pressure readings
+        are reliable, though there is a slight bias that is unlikely to significantly
+        impact management.
+
+
+        ### Answer:
+
+        Yes, stroke patients'' reports of home blood pressure readings are reliable,
+        as the study found 90% of booklet readings matched monitor readings closely
+        and any bias was minimal.
+
+
+        [Block 1]'

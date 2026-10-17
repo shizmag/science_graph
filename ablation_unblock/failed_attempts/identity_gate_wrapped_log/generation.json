@@ -1,0 +1,18 @@
+{
+  "answerability_label": "answerable",
+  "generation_prompt_matches_captured_response": true,
+  "gold_reference_answer": "Yes. This group of elderly stroke patients were able to record their BPs reliably at home. Any bias was small and would be unlikely to affect management. Since BP readings in a GP surgery are often a poor indication of true BP, GPs might consider using hypertensive patients' records of home BP monitoring to help guide treatment decisions.",
+  "latency_sec": 15.432,
+  "parsed_answer": "Yes, stroke patients' reports of home blood pressure readings are reliable, though there is a slight bias that is unlikely to significantly impact management.\n\n### Answer:\nYes, stroke patients' reports of home blood pressure readings are reliable, as the study found 90% of booklet readings matched monitor readings closely and any bias was minimal.\n\n[Block 1]",
+  "parser_status": "ANSWERABLE",
+  "pipeline_status": "success",
+  "query_id": "pubmedqa_21084567",
+  "raw_generated_answer": "1. _analysis: The user asks whether stroke patients' reports of home blood pressure readings are reliable. The question is about the reliability of these reports.\n2. _start: The provided sources contain a specific study (PubMed 21084567) investigating this exact topic. The title and abstract explicitly state the findings regarding reliability.\n3. _reasoning: The study found that 90% of booklet readings matched monitor readings closely. It noted a slight bias (0.6 mmHg systolic and 0.3 mmHg diastolic) but concluded this was minimal and unlikely to affect treatment decisions. The authors suggested these records could be a valuable tool for GPs.\n4. _status: The sources are sufficient to answer the question.\n5. _answer: Yes, stroke patients' reports of home blood pressure readings are reliable, though there is a slight bias that is unlikely to significantly impact management.\n\n### Answer:\nYes, stroke patients' reports of home blood pressure readings are reliable, as the study found 90% of booklet readings matched monitor readings closely and any bias was minimal.\n\n[Block 1]",
+  "retrieved_papers": [
+    "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa",
+    "pubmed_10490564_hypotension_in_patients_with_coronary_disease_can_profound_hypotensive_events_cause_myocardial_ischaemic_events",
+    "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable",
+    "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree",
+    "pubmed_26163474_is_there_a_connection_between_sublingual_varices_and_hypertension"
+  ]
+}

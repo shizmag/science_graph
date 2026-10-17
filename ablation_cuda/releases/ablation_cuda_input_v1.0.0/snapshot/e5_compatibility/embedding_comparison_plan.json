@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "mean_top10_overlap_min": 0.9,
+    "per_vector_cosine_min": 0.999,
+    "relative_l2_norm_delta_max": 0.001
+  },
+  "logic": "Reuse is confident only if all dimension checks pass, every sampled vector meets cosine and norm tolerances, and mean top-10 ranking overlap meets its tolerance. Otherwise reuse remains conditional or is rejected based on the recorded failures.",
+  "model_id": "intfloat/multilingual-e5-base",
+  "model_source": "<author-local-path-redacted>",
+  "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+  "sample_count": 16,
+  "selection": "16 evenly spaced chunk IDs in lexical ID order, including endpoints",
+  "source_checkpoint_sha256": "a18a44fad1d0b46ded15928144138cff1135d5cc8233bdd90be5f18822de09a7"
+}

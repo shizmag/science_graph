@@ -26,6 +26,7 @@ from core.config import (
     build_custom_config,
     patch_config_for_custom as patch_retrieval_for_custom,
     resolve_project_db_path,
+    database_file_sha256,
 )
 from core.retrieval import (
     run_staged_retrieval,
@@ -75,8 +76,11 @@ def main():
 
     args = parser.parse_args()
 
-    active_db = resolve_project_db_path(args.db_path)
-    con.info(f"Using database path: {active_db}")
+    active_db = resolve_project_db_path(args.db_path, args.db_sha256)
+    con.info(
+        f"Using database path: {active_db} "
+        f"(sha256={database_file_sha256(active_db)})"
+    )
 
     # Load file config if specified
     file_config = None

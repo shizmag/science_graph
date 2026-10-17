@@ -28,6 +28,7 @@ from config_creator import (
 # Backward compatibility exports in case other files import them from here
 from typing import Any, Tuple
 from core.config import get_baseline_config as _get_baseline_config
+from core.config import resolve_project_db_path, database_file_sha256
 from core.generation import run_benchmarking
 from core.generation import run_query_on_baseline as _run_query_on_baseline
 
@@ -88,6 +89,12 @@ def main():
     )
     add_custom_config_arguments(parser)
     args = parser.parse_args()
+
+    active_db = resolve_project_db_path(args.db_path, args.db_sha256)
+    con.info(
+        f"Using database path: {active_db} "
+        f"(sha256={database_file_sha256(active_db)})"
+    )
 
     # Determine project root and resolve output
     script_dir = Path(__file__).resolve().parent

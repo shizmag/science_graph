@@ -1,0 +1,242 @@
+{
+  "database": {
+    "candidate": "external_db",
+    "restoration_validation": {
+      "fts_fixture": {
+        "match_count_at_most_five": 5,
+        "matching_chunk_ids": [
+          "10.20944/preprints202301.0022.v1#0",
+          "10.20944/preprints202301.0022.v1#4",
+          "10.20944/preprints202301.0022.v1#5",
+          "the_art_of_building_verifiers_for_computer_use_agents#161",
+          "10.3390/drones9030187#2"
+        ],
+        "query": "ARTICLE"
+      },
+      "logical_summary": {
+        "chunk_count": 22068,
+        "document_count": 346,
+        "edge_types": {
+          "AFFILIATED_WITH": 200,
+          "AUTHORED": 1164,
+          "CITES": 5132,
+          "HAS_CODE": 27,
+          "HAS_TAG": 2261,
+          "INTRODUCED_DATASET": 16,
+          "IS_A": 205,
+          "MENTIONS_CONCEPT": 2133,
+          "PREREQUISITE_FOR": 197,
+          "PUBLISHED_IN": 11,
+          "SPONSORED_BY": 42,
+          "SUBCLASS_OF": 83,
+          "USED_DATASET": 241
+        },
+        "fts_objects": [
+          "chunks_fts"
+        ],
+        "graph_edge_count": 11712,
+        "graph_node_count": 9680,
+        "node_labels": {
+          "Author": 1141,
+          "CodeRepository": 27,
+          "Concept": 2700,
+          "Dataset": 180,
+          "ExternalWork": 1327,
+          "Institution": 182,
+          "JournalConference": 9,
+          "Paper": 3814,
+          "UserNote": 300
+        },
+        "parent_count": 2845,
+        "table_counts": {
+          "bridge_only_paper_projection": 3768,
+          "chunk_availability_mapping": 22068,
+          "chunk_reference_mentions": 0,
+          "chunks": 22068,
+          "chunks_fts": 22068,
+          "derived_local_to_local_bridge_edges": 1494,
+          "edges": 11712,
+          "local_paper_projection": 346,
+          "nodes": 9680,
+          "paper_reference_vector": 0,
+          "paper_usability_metadata": 4114,
+          "parent_chunks": 2845,
+          "reference_corpus_stats": 0
+        },
+        "vector_count": 22068,
+        "vector_dimensions": [
+          768
+        ]
+      },
+      "method": "SQLite integrity, FTS5 fixture, vector validation, and frozen logical-summary comparison",
+      "physical_sha256_equal": false,
+      "restored_database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+      "selected_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+      "valid": true,
+      "vector_validation": {
+        "bad_lengths_or_dimensions": [],
+        "dimensions": [
+          768
+        ],
+        "expected_dimensions": 768,
+        "nonfinite_vectors": [],
+        "rows": 22068,
+        "valid": true,
+        "zero_norm_vectors": []
+      }
+    },
+    "restored_database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+    "selected_snapshot_file_unchanged": true,
+    "selected_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+    "sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+    "snapshot_id": "external_db-20261016T193200Z",
+    "source_identity_historical_july_proven": false
+  },
+  "elapsed_sec": 7.345915749989217,
+  "error": "The worker script was invoked by file path, so the project package root was not on sys.path; no pipeline stage ran.",
+  "error_type": "ModuleNotFoundError",
+  "errors": [
+    "retrieved_contexts.yaml was not persisted",
+    "evaluation_results.yaml was not persisted",
+    "B6 returned no persisted retrieval candidates",
+    "B6 did not retrieve the fixture's expected source document",
+    "B6 produced no lexical seed candidates although lexical search is enabled",
+    "B6 produced no dense seed candidates although dense search is enabled",
+    "B6 Cross-Encoder initialization/scoring evidence is incomplete",
+    "B6 dense retrieval did not include captured embedding model initialization evidence",
+    "The actual final prompt was not captured",
+    "No generated response was persisted",
+    "The generation call could not be paired with its captured prompt and response"
+  ],
+  "failed_stage": "worker_import",
+  "host": {
+    "machine": "arm64",
+    "python": "3.12.13 (main, Mar  3 2026, 15:35:03) [Clang 21.1.4 ]",
+    "system": "Darwin"
+  },
+  "log_sha256": "e205c804a5bbb69022172bc5de0a1e2936e2c8fb8c149605bae73b4863ffe5bb",
+  "models": {
+    "cross_encoder": {
+      "files": {
+        "config.json": "cc2cfe51aa3fd759d21d21acf5dfd6994aa67a3c9210636d22e143699d336c77",
+        "model.safetensors": "5daeca2481a76b5976a2bdc32f0a78532b6716da4f8cd3ff59460ef8d2f359b4",
+        "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+        "tokenizer_config.json": "e7fbfbfa6347b4e414c1cee50d142e2c2f9a895dad68b068ae83a8b564c3837e"
+      },
+      "model_id": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+      "path": "/Users/vladimirkasterin/.cache/huggingface/hub/models--cross-encoder--mmarco-mMiniLMv2-L12-H384-v1/snapshots/1427fd652930e4ba29e8149678df786c240d8825",
+      "revision": "1427fd652930e4ba29e8149678df786c240d8825",
+      "verified": true
+    },
+    "embedder": {
+      "files": {
+        "1_Pooling/config.json": "f586ab6c734af7b8d14d898bfa7faa886f23b46f86dd1730514309893af13d75",
+        "config.json": "9dab198f24c8c0879e481cf7822005d5ecbceedbacb390ffafa594e28d31bac4",
+        "model.safetensors": "a18a44fad1d0b46ded15928144138cff1135d5cc8233bdd90be5f18822de09a7",
+        "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+        "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+        "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+      },
+      "model_id": "intfloat/multilingual-e5-base",
+      "path": "/Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base",
+      "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+      "verified": true
+    },
+    "generator": {
+      "files": {
+        "chat_template.jinja": "6bc65ed570b04755c87ff9536adcd16040586175f3205e139f4a1bb66531a255",
+        "config.json": "b8c3a6571d676cc6cfc075c9e4ab21b772c42de95ea2eb71fe401c523454e750",
+        "generation_config.json": "1d962862a29ef6fde3ce4807236ded28dde2ee8ee6b7160a448ee639dc87d99f",
+        "model.safetensors": "913448d005d2af695a738da177120c9e741dc8a5b2328f717d7ed108c1fd2e4f",
+        "tokenizer.json": "672e331460a05e2ea9888810a7a37f0c775429fe05fddc6330ee0dc9147a1370",
+        "tokenizer_config.json": "b13cfd9119dfdba71731229afaf196f9a0ca3f6fd59a3f6d849db515d2468792"
+      },
+      "model_id": "occ-ai/OCC-RAG-1.7B",
+      "path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+      "revision": "e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c",
+      "verified": true
+    }
+  },
+  "process_exit_code": 1,
+  "query": {
+    "answerability_label": "answerable",
+    "gold_reference_answer": "Yes. This group of elderly stroke patients were able to record their BPs reliably at home. Any bias was small and would be unlikely to affect management. Since BP readings in a GP surgery are often a poor indication of true BP, GPs might consider using hypertensive patients' records of home BP monitoring to help guide treatment decisions.",
+    "query_id": "pubmedqa_21084567",
+    "question": "Are stroke patients' reports of home blood pressure readings reliable?"
+  },
+  "schema_version": "1.0",
+  "stages": {
+    "candidate_counts": {
+      "candidates_after_reranker": 0,
+      "candidates_before_reranker": 0,
+      "dense_seed_chunks": 0,
+      "generator_visible_evidence_chunks": 0,
+      "graph_candidate_papers": 0,
+      "lexical_seed_chunks": 0,
+      "retrieved_chunks": 0
+    },
+    "candidate_fusion_and_ranking": false,
+    "cloud_judge": false,
+    "component_execution": {},
+    "configured_graph_retrieval": {
+      "configured": false,
+      "executed": false,
+      "graph_neighbor_paper_count": 0,
+      "trace_counters": {}
+    },
+    "cross_encoder": false,
+    "cross_encoder_initialization_events": [],
+    "e5_dense_retrieval": false,
+    "embedding_model_initialization_events": [],
+    "graph_evidence": {
+      "graph_candidate_paper_ids": [],
+      "graph_candidates_produced_count": 0,
+      "graph_candidates_selected_in_final_context": [],
+      "graph_candidates_selected_in_final_context_count": 0,
+      "graph_context_characters": 0,
+      "graph_context_relationship_count": 0,
+      "graph_context_source": "context_graph",
+      "graph_expansion_component_calls": 0,
+      "graph_expansion_component_time_sec": 0.0,
+      "graph_information_inserted_in_generator_prompt": false
+    },
+    "latency_breakdown": {
+      "b6_reported_latency_sec": null,
+      "component_timings": {},
+      "generation_call_elapsed_sec": null,
+      "model_initialization_events": [],
+      "pipeline_process_wall_sec": 7.345915749989217,
+      "retrieval_reported_latency_sec": null
+    },
+    "lexical_retrieval": false,
+    "local_generation": false,
+    "prompt_assembly": false,
+    "query_preprocessing": true,
+    "response_parsing": null,
+    "worker_module_import": false
+  },
+  "started_at_utc": "2026-10-17T07:02:47.953993+00:00",
+  "status": "PARTIAL",
+  "validation_gates": {
+    "actual_generation_call_captured": false,
+    "cross_encoder_scoring_executed": false,
+    "database_hash_matches_execution_identity": true,
+    "dense_candidates_present": false,
+    "embedding_model_execution_evidenced": false,
+    "expected_source_document_retrieved": false,
+    "external_evaluator_skipped": true,
+    "final_prompt_captured": false,
+    "generation_status_success": false,
+    "lexical_candidates_present": false,
+    "llm_generation_persisted": false,
+    "process_exit_code_zero": false,
+    "required_model_stages_succeeded": false,
+    "restored_logical_contents_match_selected_snapshot": true,
+    "result_persisted": false,
+    "retrieval_candidates_present": false,
+    "retrieval_output_persisted": false,
+    "selected_snapshot_file_unchanged": true,
+    "telemetry_preserved": false
+  },
+  "warning_log": "ablation_unblock/smoke_run/execution.log"
+}

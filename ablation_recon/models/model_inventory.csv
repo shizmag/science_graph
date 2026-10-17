@@ -1,0 +1,8 @@
+asset,role,exact_id_or_path,revision,format_architecture,weight_bytes,preprocess,license_access,active_B6,download_and_device_status
+OCC-RAG-1.7B,Generator,/Volumes/happy-disk/models/llm/OCC-RAG-1.7B; occ-ai/OCC-RAG-1.7B,e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c,Qwen3ForCausalLM BF16 safetensors,3441185608,"Same-snapshot tokenizer/template; EOS 151643,151645,151683",MIT; public HF,Yes,Pinned download feasible; MLX historical; CUDA untested
+multilingual-e5-base,Query/document embedder,intfloat/multilingual-e5-base,d128750597153bb5987e10b1c3493a34e5a4502a,SentenceTransformer mean pooling,1112201288,768D; query:/passage:; max512; no explicit normalize,MIT; public HF,Yes,Pinned download feasible; CUDA untested
+mMARCO MiniLM,Cross-Encoder,cross-encoder/mmarco-mMiniLMv2-L12-H384-v1,1427fd652930e4ba29e8149678df786c240d8825,XLM-R sequence classifier,470592698,Pair input max512,Apache-2.0; public HF,Yes,Pinned download feasible; code MPS/CPU only
+en_core_web_sm,Query NLP,spaCy model,UNKNOWN,spaCy English package,UNKNOWN,Concept/lemmatization; fallback exists,Revision/license unknown,Conditional,May auto-download; pin or disable
+all-MiniLM-L6-v2,Default embedder,sentence-transformers/all-MiniLM-L6-v2,UNKNOWN,384D SentenceTransformer,UNKNOWN,Built-in default only,Public ID,No in history,Incompatible with 768D stored vectors
+bert-base-NER,Ingestion NER,dslim/bert-base-NER,UNKNOWN,BERT token classification,UNKNOWN,Author extraction,License/revision uninspected,No proven query use,Conditional indexing only
+Marker/PDF models,Ingestion,Model identifiers unresolved,UNKNOWN,OCR/layout stack,UNKNOWN,Not needed for fixed database,Package/license review pending,No,Exclude with snapshot

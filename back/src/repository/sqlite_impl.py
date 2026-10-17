@@ -47,20 +47,27 @@ class ConnectionProxy:
                 pass
 
 class SQLiteGraphRepository(GraphRepository):
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: str, read_only: bool = False):
         self.db_path = db_path
+        self.read_only = read_only
         self._local = threading.local()
-        self._init_db()
+        if not self.read_only:
+            self._init_db()
 
     def _get_connection(self):
         active_conn = getattr(self._local, "conn", None)
         if active_conn is not None:
             return ConnectionProxy(active_conn, is_transaction=True)
 
-        conn = sqlite3.connect(self.db_path, timeout=30.0)
+        if self.read_only:
+            uri = f"file:{os.path.abspath(self.db_path)}?mode=ro&immutable=1"
+            conn = sqlite3.connect(uri, uri=True, timeout=30.0)
+        else:
+            conn = sqlite3.connect(self.db_path, timeout=30.0)
         conn.execute("PRAGMA foreign_keys = ON;")
-        conn.execute("PRAGMA journal_mode = WAL;")
-        conn.execute("PRAGMA synchronous = NORMAL;")
+        if not self.read_only:
+            conn.execute("PRAGMA journal_mode = WAL;")
+            conn.execute("PRAGMA synchronous = NORMAL;")
         conn.execute("PRAGMA mmap_size = 268435456;")
         conn.execute("PRAGMA cache_size = -64000;")
         conn.row_factory = sqlite3.Row
@@ -68,6 +75,8 @@ class SQLiteGraphRepository(GraphRepository):
 
     @contextmanager
     def transaction(self):
+        if self.read_only:
+            raise RuntimeError("Read-only SQLiteGraphRepository cannot open a write transaction")
         if getattr(self._local, "conn", None) is not None:
             yield
             return
@@ -1646,16 +1655,23 @@ class SQLiteGraphRepository(GraphRepository):
             conn.commit()
 
 class SQLiteVectorRepository(VectorRepository):
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: str, read_only: bool = False):
         self.db_path = db_path
-        self._init_db()
+        self.read_only = read_only
+        if not self.read_only:
+            self._init_db()
         self._usearch_index = None
 
     def _get_connection(self):
-        conn = sqlite3.connect(self.db_path, timeout=30.0)
+        if self.read_only:
+            uri = f"file:{os.path.abspath(self.db_path)}?mode=ro&immutable=1"
+            conn = sqlite3.connect(uri, uri=True, timeout=30.0)
+        else:
+            conn = sqlite3.connect(self.db_path, timeout=30.0)
         conn.execute("PRAGMA foreign_keys = ON;")
-        conn.execute("PRAGMA journal_mode = WAL;")
-        conn.execute("PRAGMA synchronous = NORMAL;")
+        if not self.read_only:
+            conn.execute("PRAGMA journal_mode = WAL;")
+            conn.execute("PRAGMA synchronous = NORMAL;")
         conn.execute("PRAGMA mmap_size = 268435456;")
         conn.execute("PRAGMA cache_size = -64000;")
         conn.row_factory = sqlite3.Row
@@ -1679,6 +1695,9 @@ class SQLiteVectorRepository(VectorRepository):
                     self._usearch_index = Index(ndim=ndim, metric="cos")
             except Exception:
                 self._usearch_index = Index(ndim=ndim, metric="cos")
+
+        if self.read_only and (not self.index_path or not os.path.exists(self.index_path) or len(self._usearch_index) == 0):
+            raise RuntimeError("Read-only vector repository requires a validated persisted USEARCH sidecar")
                 
         # Self-healing: if SQLite has chunks, but USearch is empty, rebuild the index
         if len(self._usearch_index) == 0:
@@ -2027,6 +2046,31 @@ class SQLiteVectorRepository(VectorRepository):
             
         results.sort(key=lambda x: x[1], reverse=True)
         return results[:limit]
+
+    def get_chunks_by_ids(self, chunk_ids: List[str]) -> Dict[str, Chunk]:
+        """Materialize cached retrieval IDs from the frozen SQLite snapshot."""
+        ordered_ids = list(dict.fromkeys(str(item) for item in chunk_ids if item))
+        if not ordered_ids:
+            return {}
+        placeholders = ",".join("?" for _ in ordered_ids)
+        query = f"""
+            SELECT c.id, c.paper_id, c.text_content, c.page_number, c.embedding,
+                   c.parent_id, p.text_content AS parent_text
+            FROM chunks c
+            LEFT JOIN parent_chunks p ON c.parent_id = p.id
+            WHERE c.id IN ({placeholders})
+        """
+        with self._get_connection() as conn:
+            rows = conn.execute(query, ordered_ids).fetchall()
+        by_id = {}
+        for row in rows:
+            embedding = np.frombuffer(row["embedding"], dtype=np.float32)
+            by_id[str(row["id"])] = Chunk(
+                id=row["id"], paper_id=row["paper_id"], text_content=row["text_content"],
+                page_number=row["page_number"], embedding=embedding.tolist(),
+                parent_id=row["parent_id"], parent_text=row["parent_text"],
+            )
+        return by_id
 
     def search_text_fts5(self, query: str, limit: int = 10, filters: Optional[dict] = None) -> List[tuple[Chunk, float]]:
         import re

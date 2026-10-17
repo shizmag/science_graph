@@ -1,0 +1,12 @@
+component,role,version_constraint,Linux_x86_64,Win11_WSL2,Win10_WSL2,native_Windows,limit
+Python,Runner,>=3.12,OCI target,Same image,Same image,Wheel differences,Metadata only
+Torch,Models,2.12.0 CUDA13 candidate,Blackwell metadata,Inside image,Inside image,Not target,No RTX test
+Transformers,Generator,Root5.12/backend5.9,Resolve one lock,Inside image,Inside image,Not target,Version mismatch
+MLX,Historical backend,mlx-lm>=0.13,Exclude runtime,Exclude,Exclude,Not CUDA,Provider change required
+SentenceTransformers,Embedder/CE,Local5.5.1,CUDA feasible after fixes,Inside image,Inside image,Not validated,CE no CUDA selector
+USEARCH,Vector index,Lock2.25.2,Validate native wheel,Inside image,Inside image,Validate wheel,Untested
+SQLite FTS5,Lexical,Local3.50.4,Ensure FTS5,Inside image,Inside image,Feature may vary,Validate build
+llama-cpp-python,Alternate,Depends >=0.2.77,Exclude or CUDA build,Exclude,Exclude,Toolchain dependent,No GGUF
+Marker/PDF/OCR,Ingestion,Backend manifest,Exclude snapshot,Exclude,Exclude,Native deps,Not query runtime
+Linux NVIDIA,Host driver,CUDA13 metadata min 580.65.06,Driver and toolkit,NA,NA,NA,Official metadata
+Windows WSL2,Host,Current driver/kernel,NA,Documented route,Conditional,NA,No project test

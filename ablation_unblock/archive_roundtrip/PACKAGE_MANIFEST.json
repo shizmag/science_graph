@@ -1,0 +1,104 @@
+{
+  "database_snapshots": [],
+  "expected_files": [
+    {
+      "path": "smoke/database_identity.json",
+      "sha256": "96e2eaa687b8966ad5d431fb8ae00407e7ec606395404249cbe0700156793e2f",
+      "size_bytes": 889
+    },
+    {
+      "path": "smoke/effective_config.json",
+      "sha256": "b9bccc118bcf5e29e117bcf52fc05f2e6879a4640e28ce9931e188923da5d778",
+      "size_bytes": 8129
+    },
+    {
+      "path": "smoke/execution.log",
+      "sha256": "7549faca2fe8309ba19ae862f3985b94c742f501150693f8c513cb89fc45ff5a",
+      "size_bytes": 9953
+    },
+    {
+      "path": "smoke/generation.json",
+      "sha256": "539b384ace82557c25264534c7874df8259d158c42f6d35e8072b0bee170c78d",
+      "size_bytes": 2477
+    },
+    {
+      "path": "smoke/pipeline/.gen_checkpoint.json",
+      "sha256": "900750ad86e2802b7103b049b902da68d2b53c8ad97f998d5a93de6b8e4559c1",
+      "size_bytes": 48010
+    },
+    {
+      "path": "smoke/pipeline/baselines/evaluation_results_judge_b6.yaml",
+      "sha256": "d56aa63746b6a952028baf51bab31a9ee7be9338c508e371eb53864fb70b6ec3",
+      "size_bytes": 644
+    },
+    {
+      "path": "smoke/pipeline/config_snapshot.yaml",
+      "sha256": "deb4f163f7be8ca719735207ec7564b69b1de0ce2ba42be2c7017b3300da4ebc",
+      "size_bytes": 3373
+    },
+    {
+      "path": "smoke/pipeline/evaluation_results.yaml",
+      "sha256": "b6a6f8fe05cca25c5124a9b6fe8b9357bef0890655dcfa75a90a6d3cf9e89a2c",
+      "size_bytes": 267674
+    },
+    {
+      "path": "smoke/pipeline/evaluation_results_judge.yaml",
+      "sha256": "d56aa63746b6a952028baf51bab31a9ee7be9338c508e371eb53864fb70b6ec3",
+      "size_bytes": 644
+    },
+    {
+      "path": "smoke/pipeline/raw_logits.yaml",
+      "sha256": "a4190f8f6179ed23d2cea30df5df76d0b77d4af600cfa0f01fdd700608bdf520",
+      "size_bytes": 205624
+    },
+    {
+      "path": "smoke/pipeline/retrieved_contexts.yaml",
+      "sha256": "ad6b60fa94108de7e9cacadd8d809d944bad3e7e03b36253fde8bcdfe5336b64",
+      "size_bytes": 83584
+    },
+    {
+      "path": "smoke/pipeline/run_manifest.yaml",
+      "sha256": "4307d25fa72ba10e96a9526161f6a29007ee90b39150f7c6ce8f3702fed63528",
+      "size_bytes": 981
+    },
+    {
+      "path": "smoke/pipeline/run_retrive_20261017_102527_OCC-RAG-1.7B/retrieved_contexts.yaml",
+      "sha256": "ad6b60fa94108de7e9cacadd8d809d944bad3e7e03b36253fde8bcdfe5336b64",
+      "size_bytes": 83584
+    },
+    {
+      "path": "smoke/pipeline/run_retrive_20261017_102527_OCC-RAG-1.7B/traces/graph_retrieval_trace.jsonl",
+      "sha256": "88997beaf67b0aa9adafac566f386e56f7ae59f4f51694c5a3ef8cf1a0184671",
+      "size_bytes": 7316
+    },
+    {
+      "path": "smoke/prompt.txt",
+      "sha256": "b01dcf04da37b94264a9cd6aa0a50387e19f625417138f4c3d529d42ad30ea15",
+      "size_bytes": 4220
+    },
+    {
+      "path": "smoke/retrieval_trace.json",
+      "sha256": "374ff19fd3557feeb5a6b8543ac2173c2f6ee917c503a50a8dcf5c35a2d8dc23",
+      "size_bytes": 250259
+    },
+    {
+      "path": "smoke/run_manifest.json",
+      "sha256": "c8da3e795a4bf062e90cc6d6d1a074530675d21b922e872f9915425a1b95ea85",
+      "size_bytes": 56687
+    },
+    {
+      "path": "smoke/stage_timing_capture.json",
+      "sha256": "86cd4ec4be9115e6625ec721122b861e3c52b772a1c8645373327bce4116d8fb",
+      "size_bytes": 2219
+    },
+    {
+      "path": "smoke/telemetry.json",
+      "sha256": "3866c201085746326c13c832af41f937d84c6786dbd312d465ff5fd3454f31f0",
+      "size_bytes": 438512
+    }
+  ],
+  "optional_smoke_artifacts_present": true,
+  "package_type": "smoke_results",
+  "schema_version": "1.0",
+  "smoke_completion_status": "SUCCESS"
+}

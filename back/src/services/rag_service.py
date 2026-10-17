@@ -1,5 +1,7 @@
 import json
 import asyncio
+import hashlib
+import os
 import re
 from typing import List, Tuple, AsyncGenerator, Any, Optional, Dict
 from pathlib import Path
@@ -300,8 +302,21 @@ class RAGService:
         con.model_msg(f"Loading reranker [bold]{model_name}[/bold] …")
         with con.suppress_stderr(), con.suppress_stdout():
             import torch
-            device = "mps" if torch.backends.mps.is_available() else "cpu"
+            if os.environ.get("ABLA_CUDA_REQUIRE_DEVICE") == "1":
+                if not torch.cuda.is_available():
+                    raise RuntimeError("CUDA is required for the Cross-Encoder, but is unavailable")
+                device = "cuda"
+            elif torch.cuda.is_available():
+                device = "cuda"
+            elif torch.backends.mps.is_available():
+                device = "mps"
+            else:
+                device = "cpu"
             self._reranker = CrossEncoder(model_name, device=device)
+            if os.environ.get("ABLA_CUDA_REQUIRE_DEVICE") == "1":
+                devices = {str(parameter.device) for parameter in self._reranker.model.parameters()}
+                if not devices or not all(item.startswith("cuda") for item in devices):
+                    raise RuntimeError(f"Cross-Encoder did not load entirely on CUDA: {sorted(devices)}")
         con.success(f"Reranker ready on {device.upper()}")
         return self._reranker
 
@@ -424,14 +439,16 @@ class RAGService:
         context_text = "\n\n".join(text_blocks)
 
         # 2. Format Graph Subgraph using helper
-        if config.rag_components.get("graph_expansion", True):
+        if config.rag_components.get(
+            "static_graph_context", config.rag_components.get("graph_expansion", True)
+        ):
             scored_lines = self._get_scored_graph_lines(paper_ids, limit=limit)
             graph_lines = [line for line, _ in scored_lines]
             # _last_graph_relations already set by _get_scored_graph_lines
             context_graph = "\n".join(graph_lines) if graph_lines else "No direct graph relations found."
         else:
             self._last_graph_relations = []
-            context_graph = "Graph enrichment disabled."
+            context_graph = ""
         return context_text, context_graph
 
     def trim_context(
@@ -461,7 +478,9 @@ class RAGService:
             return current_text, current_graph, current_chunks
 
         # 1. Prune graph connections first (cut from the tail after sorting descending by score)
-        if total_tokens > tokens_limit and config.rag_components.get("graph_expansion", True):
+        if total_tokens > tokens_limit and config.rag_components.get(
+            "static_graph_context", config.rag_components.get("graph_expansion", True)
+        ):
             paper_ids = list({chunk.paper_id for chunk, _ in current_chunks})
             scored_lines = self._get_scored_graph_lines(paper_ids)
             # Sort by score descending (highest score first)
@@ -1394,6 +1413,12 @@ class RAGService:
         
         # Determine dense retrieval limit per query.
         dense_limit = limit * 2 if len(expanded_queries) == 1 else limit
+
+        if isinstance(getattr(self, "current_trace", None), dict):
+            self.current_trace["retrieval_paths"] = {
+                "dense_retrieval_enabled": bool(config.rag_components.get("dense_search", True)),
+                "lexical_retrieval_enabled": bool(config.rag_components.get("lexical_search", True)),
+            }
         
         all_dense_results = {}
         if config.rag_components.get("dense_search", True):
@@ -1618,10 +1643,15 @@ class RAGService:
         concept_enabled = config.graph_concept_retrieval_enabled
         bridge_enabled = config.graph_bridge_retrieval_enabled
 
+        subbranch_policy = config.data.get("graph_retrieval", {}).get("subbranch_policy", "auto")
+        intra_paper_enabled = (master_enabled
+                               and config.graph_intra_paper_candidate_augmentation_enabled)
+
         graph_retrieval_enabled = master_enabled or concept_enabled or bridge_enabled
 
         # If master switch is on and no sub-toggles are explicitly enabled, enable both sub-toggles
-        if master_enabled and not config.graph_concept_retrieval_enabled and not config.graph_bridge_retrieval_enabled:
+        if (subbranch_policy == "auto" and master_enabled
+                and not config.graph_concept_retrieval_enabled and not config.graph_bridge_retrieval_enabled):
             concept_enabled = True
             bridge_enabled = True
         
@@ -1656,6 +1686,16 @@ class RAGService:
             "graph_chunks_survived_final_context_count": 0,
             "graph_survival_rate": 0.0,
             "graph_retrieval_skip_reason": None,
+        }
+        telemetry["graph_branch_execution"] = {
+            "graph_retrieval_enabled": bool(graph_retrieval_enabled),
+            "graph_master_enabled": bool(master_enabled),
+            "concept_branch_enabled": bool(concept_enabled),
+            "concept_lookup_executed": False,
+            "bridge_branch_enabled": bool(bridge_enabled),
+            "bridge_lookup_executed": False,
+            "intra_paper_branch_enabled": bool(intra_paper_enabled),
+            "intra_paper_branch_executed": False,
         }
 
         # Sets to hold results and metadata for trace
@@ -1710,7 +1750,8 @@ class RAGService:
                 skip_reason = "no_local_seed_papers"
             else:
                 # --- Layer 1: Intra-paper local expansion from seed papers ---
-                if master_enabled:
+                if intra_paper_enabled:
+                    telemetry["graph_branch_execution"]["intra_paper_branch_executed"] = True
                     for p_id in local_seed_papers:
                         # Get all chunks in the same paper
                         paper_chunks = self.vector_repo.get_chunks_for_paper(p_id)
@@ -1758,6 +1799,7 @@ class RAGService:
 
                 # --- Layer 2: Local concept-linked expansion ---
                 if strong_query_concepts and concept_enabled and all_query_concepts:
+                    telemetry["graph_branch_execution"]["concept_lookup_executed"] = True
                     # Fetch concept papers
                     raw_concept_papers = self.graph_repo.get_papers_mentioning_concepts(strong_query_concepts)
                     concept_paper_ids = [p[0] for p in raw_concept_papers]
@@ -1801,6 +1843,7 @@ class RAGService:
                 # --- Layer 3: Direct local graph neighbors & Layer 4: Bridge-to-local expansion ---
                 derived_edges = []
                 if bridge_enabled and (master_enabled or all_query_concepts):
+                    telemetry["graph_branch_execution"]["bridge_lookup_executed"] = True
                     derived_edges = self.graph_repo.get_derived_bridge_edges(local_seed_papers)
                 
                 # Sets for tracking neighbor resolution statistics
@@ -2050,6 +2093,16 @@ class RAGService:
         telemetry["graph_candidate_source_breakdown"] = breakdown
 
         self._last_graph_trace = {
+            "branch_execution": telemetry["graph_branch_execution"],
+            "branch_candidate_counts": {
+                "intra_paper": telemetry["local_candidates_from_intra_paper"],
+                "concept": telemetry["local_candidates_from_concepts"],
+                "direct_edges": telemetry["local_candidates_from_direct_edges"],
+                "external_bridges": telemetry["local_candidates_from_external_bridges"],
+            },
+            "graph_neighbors_in_rrf_enabled": bool(config.rag_components.get("graph_neighbors_in_rrf", False)),
+            "graph_neighbors_in_rrf_executed": bool(config.rag_components.get("graph_neighbors_in_rrf", False)
+                                                      and not config.graph_retrieval_enabled),
             "query_concepts_all": telemetry["query_concepts_all"],
             "query_concepts_strong": telemetry["query_concepts_strong"],
             "query_concepts_dropped": telemetry["query_concepts_dropped"],
@@ -2107,6 +2160,25 @@ class RAGService:
         ]
 
         returned_chunks = []
+        self._last_ranking_trace = {
+            "stage_status": "not_started",
+            "reranker_enabled": bool(config.rag_components.get("reranker", True)),
+            "score_blending_enabled": bool(config.rag_components.get("score_blending", True)),
+            "parent_deduplication_enabled": bool(config.rag_components.get("deduplicate_parent_chunks", True)),
+            "parent_deduplication_branch_executed": False,
+            "candidate_ids_before_reranker": [str(c.id) for c in candidates],
+            "rrf_scores_before_reranker": [float(rrf_scores.get(c.id, 0.0)) for c in candidates],
+            "candidates_before_reranker": [
+                {
+                    "chunk_id": str(c.id), "paper_id": str(c.paper_id),
+                    "text_content": c.text_content,
+                    "text_sha256": hashlib.sha256((c.text_content or "").encode("utf-8")).hexdigest(),
+                    "retrieval_sources": getattr(c, "retrieval_sources", []),
+                    "rrf_score": float(rrf_scores.get(c.id, 0.0)),
+                }
+                for c in candidates
+            ],
+        }
         if config.rag_components.get("reranker", True):
             try:
                 reranker = self._get_reranker()
@@ -2123,6 +2195,19 @@ class RAGService:
                 max_rrf = max(rrf_vals)
                 range_rrf = max_rrf - min_rrf if max_rrf > min_rrf else 1.0
                 norm_rrf = [(rrf_scores.get(c.id, 0.0) - min_rrf) / range_rrf for c in candidates]
+
+                rank_cache = getattr(self, "_ablation_stage_cache", None)
+                ranking_settings = {
+                    "score_blending": bool(config.rag_components.get("score_blending", True)),
+                    "reranker_weight": _safe_float(config.score_blend_reranker_weight, 0.7),
+                    "rrf_weight": _safe_float(config.score_blend_rrf_weight, 0.3),
+                    "deduplicate_parent_chunks": bool(config.rag_components.get("deduplicate_parent_chunks", True)),
+                    "limit": int(limit),
+                }
+                cached_ranking = (rank_cache.get_final_ranking(
+                    candidates=candidates, cross_encoder_scores=[float(value) for value in scores],
+                    rrf_scores=rrf_scores, **ranking_settings,
+                ) if rank_cache is not None else None)
                 
                 scored_candidates = []
                 for idx, c in enumerate(candidates):
@@ -2131,31 +2216,133 @@ class RAGService:
                     else:
                         blended_score = float(scores[idx])
                     scored_candidates.append((c, blended_score, float(scores[idx])))
-                    
-                scored_candidates.sort(key=lambda x: x[1], reverse=True)
-                candidate_pairs = [(chunk, raw_score) for chunk, _, raw_score in scored_candidates]
-                if config.rag_components.get("deduplicate_parent_chunks", True):
-                    candidate_pairs = _deduplicate_parent_chunks(candidate_pairs)
-                returned_chunks = candidate_pairs[:limit]
+                candidate_by_id = {str(chunk.id): chunk for chunk in candidates}
+                if cached_ranking is not None:
+                    sorted_ids = cached_ranking.get("sorted_candidate_ids", [])
+                    returned_ids = cached_ranking.get("returned_candidate_ids", [])
+                    if (set(sorted_ids) != set(candidate_by_id) or any(item not in candidate_by_id for item in returned_ids)):
+                        cached_ranking = None
+                if cached_ranking is not None:
+                    service_cache_event = {
+                        "stage": "final_ranking", "cache_key": cached_ranking["cache_key"],
+                        "items": len(candidates), "hit": True,
+                    }
+                    self._ablation_cache_events.append(service_cache_event)
+                    blended_by_id = cached_ranking["blended_scores_by_candidate"]
+                    score_by_id = {str(chunk.id): float(scores[index]) for index, chunk in enumerate(candidates)}
+                    scored_candidates = [(candidate_by_id[item], float(blended_by_id[item]), score_by_id[item])
+                                         for item in sorted_ids]
+                    candidate_pairs = [(candidate_by_id[item], score_by_id[item]) for item in sorted_ids]
+                    before_deduplication_count = int(cached_ranking["candidate_count_before_parent_deduplication"])
+                    after_deduplication_count = int(cached_ranking["candidate_count_after_parent_deduplication"])
+                    returned_chunks = [(candidate_by_id[item], score_by_id[item]) for item in returned_ids]
+                    normalized_r = cached_ranking["normalized_cross_encoder_scores"]
+                    norm_rrf = cached_ranking["normalized_rrf_scores"]
+                    blended_by_id = cached_ranking["blended_scores_by_candidate"]
+                    ranking_cache_hit = True
+                else:
+                    scored_candidates.sort(key=lambda x: x[1], reverse=True)
+                    candidate_pairs = [(chunk, raw_score) for chunk, _, raw_score in scored_candidates]
+                    before_deduplication_count = len(candidate_pairs)
+                    if config.rag_components.get("deduplicate_parent_chunks", True):
+                        candidate_pairs = _deduplicate_parent_chunks(candidate_pairs)
+                    after_deduplication_count = len(candidate_pairs)
+                    returned_chunks = candidate_pairs[:limit]
+                    ranking_cache_hit = False
+                    if rank_cache is not None:
+                        rank_cache_key = rank_cache.put_final_ranking(
+                            candidates=candidates,
+                            cross_encoder_scores=[float(value) for value in scores],
+                            rrf_scores=rrf_scores, **ranking_settings,
+                            value={
+                                "candidate_ids": [str(c.id) for c in candidates],
+                                "raw_scores": [float(value) for value in scores],
+                                "normalized_cross_encoder_scores": [float(value) for value in norm_r],
+                                "normalized_rrf_scores": [float(value) for value in norm_rrf],
+                                "blended_scores_by_candidate": {
+                                    str(chunk.id): float(blended_score)
+                                    for chunk, blended_score, _ in scored_candidates
+                                },
+                                "sorted_candidate_ids": [str(chunk.id) for chunk, _, _ in scored_candidates],
+                                "returned_candidate_ids": [str(chunk.id) for chunk, _ in returned_chunks],
+                                "candidate_count_before_parent_deduplication": before_deduplication_count,
+                                "candidate_count_after_parent_deduplication": after_deduplication_count,
+                            },
+                        )
+                        self._ablation_cache_events.append({
+                            "stage": "final_ranking", "cache_key": rank_cache_key,
+                            "items": len(candidates), "hit": False,
+                        })
+                blended_by_id = {str(chunk.id): float(blended_score)
+                                 for chunk, blended_score, _ in scored_candidates}
+                self._last_ranking_trace.update({
+                    "stage_status": "complete",
+                    "cross_encoder_scores": [float(value) for value in scores],
+                    "normalized_cross_encoder_scores": [float(value) for value in norm_r],
+                    "normalized_rrf_scores": [float(value) for value in norm_rrf],
+                    "blended_scores_by_candidate": blended_by_id,
+                    "score_blending_branch_executed": True,
+                    "ranking_cache_hit": ranking_cache_hit,
+                    "ranking_computation_executed": not ranking_cache_hit,
+                    "ranking_formula": (
+                        "normalized_cross_encoder_rrf_blend"
+                        if config.rag_components.get("score_blending", True)
+                        else "raw_cross_encoder_score"
+                    ),
+                    "final_candidate_ids": [str(c.id) for c, _, _ in scored_candidates],
+                    "candidate_count_before_parent_deduplication": before_deduplication_count,
+                    "candidate_count_after_parent_deduplication": after_deduplication_count,
+                })
+                self._last_ranking_trace.update({
+                    "parent_deduplication_gate_evaluated": True,
+                    "parent_deduplication_branch_executed": bool(config.rag_components.get("deduplicate_parent_chunks", True)),
+                    "candidate_count_before_parent_deduplication": before_deduplication_count,
+                    "candidate_count_after_parent_deduplication": after_deduplication_count,
+                })
             except Exception as e:
+                self._last_ranking_trace.update({
+                    "stage_status": "error_fallback_to_rrf",
+                    "error": str(e),
+                    "score_blending_branch_executed": False,
+                })
                 con.warning(f"Reranking failed ({e}), falling back to RRF ranking.")
                 for c in candidates:
                     if c.id not in rrf_scores:
                         rrf_scores[c.id] = 0.0
                 sorted_candidates = sorted(candidates, key=lambda x: rrf_scores.get(x.id, 0.0), reverse=True)
                 candidate_pairs = [(c, rrf_scores.get(c.id, 0.0)) for c in sorted_candidates]
+                before_deduplication_count = len(candidate_pairs)
                 if config.rag_components.get("deduplicate_parent_chunks", True):
                     candidate_pairs = _deduplicate_parent_chunks(candidate_pairs)
+                self._last_ranking_trace.update({
+                    "parent_deduplication_gate_evaluated": True,
+                    "parent_deduplication_branch_executed": bool(config.rag_components.get("deduplicate_parent_chunks", True)),
+                    "candidate_count_before_parent_deduplication": before_deduplication_count,
+                    "candidate_count_after_parent_deduplication": len(candidate_pairs),
+                })
                 returned_chunks = candidate_pairs[:limit]
         else:
+            self._last_ranking_trace.update({
+                "stage_status": "reranker_disabled",
+                "score_blending_branch_executed": False,
+            })
             for c in candidates:
                 if c.id not in rrf_scores:
                     rrf_scores[c.id] = 0.0
             sorted_candidates = sorted(candidates, key=lambda x: rrf_scores.get(x.id, 0.0), reverse=True)
             candidate_pairs = [(c, rrf_scores.get(c.id, 0.0)) for c in sorted_candidates]
+            before_deduplication_count = len(candidate_pairs)
             if config.rag_components.get("deduplicate_parent_chunks", True):
                 candidate_pairs = _deduplicate_parent_chunks(candidate_pairs)
+            self._last_ranking_trace.update({
+                "parent_deduplication_gate_evaluated": True,
+                "parent_deduplication_branch_executed": bool(config.rag_components.get("deduplicate_parent_chunks", True)),
+                "candidate_count_before_parent_deduplication": before_deduplication_count,
+                "candidate_count_after_parent_deduplication": len(candidate_pairs),
+            })
             returned_chunks = candidate_pairs[:limit]
+
+        self._last_ranking_trace["returned_chunk_ids"] = [str(c.id) for c, _ in returned_chunks]
 
         if not getattr(self, "_in_ask", False):
             self._write_graph_retrieval_trace(query, returned_chunks, None)

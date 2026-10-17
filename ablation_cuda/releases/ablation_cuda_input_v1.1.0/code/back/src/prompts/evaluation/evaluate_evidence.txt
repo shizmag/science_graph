@@ -1,0 +1,17 @@
+You are a strict scientific reviewer. Evaluate the following pieces of knowledge (facts) gathered from the research graph and paper chunks.
+Determine which facts are essential/critical to answer the user query.
+
+User Query: {{query}}
+
+List of facts:
+{{facts}}
+Evaluate each fact. You must return a valid JSON object matching the following structure:
+{
+  "evidence_list": [
+    {"id": "fact_1", "score": 0.9, "is_essential": true},
+    {"id": "fact_2", "score": 0.3, "is_essential": false}
+  ]
+}
+
+Only mark "is_essential" as true if the fact contains critical, non-trivial information directly addressing the user's question.
+Do NOT include any conversational text or markdown formatting except the raw JSON.

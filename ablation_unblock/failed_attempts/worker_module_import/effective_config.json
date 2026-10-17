@@ -1,0 +1,54 @@
+{
+  "baseline": "B6",
+  "components": {},
+  "config_snapshot": null,
+  "models": {
+    "cross_encoder": {
+      "files": {
+        "config.json": "cc2cfe51aa3fd759d21d21acf5dfd6994aa67a3c9210636d22e143699d336c77",
+        "model.safetensors": "5daeca2481a76b5976a2bdc32f0a78532b6716da4f8cd3ff59460ef8d2f359b4",
+        "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+        "tokenizer_config.json": "e7fbfbfa6347b4e414c1cee50d142e2c2f9a895dad68b068ae83a8b564c3837e"
+      },
+      "model_id": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+      "path": "/Users/vladimirkasterin/.cache/huggingface/hub/models--cross-encoder--mmarco-mMiniLMv2-L12-H384-v1/snapshots/1427fd652930e4ba29e8149678df786c240d8825",
+      "revision": "1427fd652930e4ba29e8149678df786c240d8825",
+      "verified": true
+    },
+    "embedder": {
+      "files": {
+        "1_Pooling/config.json": "f586ab6c734af7b8d14d898bfa7faa886f23b46f86dd1730514309893af13d75",
+        "config.json": "9dab198f24c8c0879e481cf7822005d5ecbceedbacb390ffafa594e28d31bac4",
+        "model.safetensors": "a18a44fad1d0b46ded15928144138cff1135d5cc8233bdd90be5f18822de09a7",
+        "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+        "tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626",
+        "tokenizer_config.json": "efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15"
+      },
+      "model_id": "intfloat/multilingual-e5-base",
+      "path": "/Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base",
+      "revision": "d128750597153bb5987e10b1c3493a34e5a4502a",
+      "verified": true
+    },
+    "generator": {
+      "files": {
+        "chat_template.jinja": "6bc65ed570b04755c87ff9536adcd16040586175f3205e139f4a1bb66531a255",
+        "config.json": "b8c3a6571d676cc6cfc075c9e4ab21b772c42de95ea2eb71fe401c523454e750",
+        "generation_config.json": "1d962862a29ef6fde3ce4807236ded28dde2ee8ee6b7160a448ee639dc87d99f",
+        "model.safetensors": "913448d005d2af695a738da177120c9e741dc8a5b2328f717d7ed108c1fd2e4f",
+        "tokenizer.json": "672e331460a05e2ea9888810a7a37f0c775429fe05fddc6330ee0dc9147a1370",
+        "tokenizer_config.json": "b13cfd9119dfdba71731229afaf196f9a0ca3f6fd59a3f6d849db515d2468792"
+      },
+      "model_id": "occ-ai/OCC-RAG-1.7B",
+      "path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+      "revision": "e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c",
+      "verified": true
+    }
+  },
+  "resolved_database": {
+    "path_during_run": "/private/var/folders/bq/f_1r5c892ljfbjx7nln4k0dw0000gn/T/ablation-b6-smoke-7e_t3yxu/restored_snapshot/database.db",
+    "same_resolved_path_for_retrieval_and_generation": true,
+    "selected_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+    "sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+    "snapshot_id": "external_db-20261016T193200Z"
+  }
+}

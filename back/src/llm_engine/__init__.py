@@ -13,6 +13,7 @@ from src.llm_engine.base import (
 from src.llm_engine.mlx_impl import MlxLLMEngine, ConstrainedLogitsProcessor, build_mlx_tokenizer_data
 from src.llm_engine.gguf_impl import GgufLLMEngine
 from src.llm_engine.openai_impl import OpenAILLMEngine, AsyncRateLimiter
+from src.llm_engine.cuda_torch_impl import CudaTorchLLMEngine
 from src.llm_engine.factory import LLMEngine
 
 _local_engine_singleton = None
@@ -26,6 +27,7 @@ __all__ = [
     "MlxLLMEngine",
     "GgufLLMEngine",
     "OpenAILLMEngine",
+    "CudaTorchLLMEngine",
     "strip_thinking_tokens",
     "ResilientParser",
     "retry_with_temp_decay",

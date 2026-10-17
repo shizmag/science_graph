@@ -1,0 +1,10 @@
+{
+  "error": "[Errno 2] No such file or directory: '/Users/vladimirkasterin/python/graph/ablation_portability/dataset/questions_manifest.json'",
+  "error_type": "FileNotFoundError",
+  "failed_stage": "preflight",
+  "process_exit_code": null,
+  "query_id": "pubmedqa_19302863",
+  "schema_version": "1.0",
+  "started_at_utc": "2026-10-16T19:56:52.822294+00:00",
+  "status": "BLOCKED"
+}

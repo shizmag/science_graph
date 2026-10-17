@@ -1,0 +1,381 @@
+{
+  "artifact": "back/benchmarks/rag/graphs/smoke_test_output/retrieved_contexts.yaml",
+  "artifact_row_count": 3,
+  "baseline": "B2",
+  "candidates": {
+    "external_db": {
+      "queries": [
+        {
+          "baseline": "B2",
+          "evidence": [
+            {
+              "archived_text_sha256": "f4c8e7c5bd757f0e1d3e180bdda5f7dfa1e42368ec27758690a793c9b2a9960a",
+              "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "f4c8e7c5bd757f0e1d3e180bdda5f7dfa1e42368ec27758690a793c9b2a9960a",
+              "database_title": "PubMed 21084567: Are stroke patients' reports of home blood pressure readings reliable?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "dd45b91c0af4bfb549198dd2f051b0575e332df376f2ea3edb5515bfc60a8782",
+              "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#1",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "dd45b91c0af4bfb549198dd2f051b0575e332df376f2ea3edb5515bfc60a8782",
+              "database_title": "PubMed 21823940: Department of Transportation vs self-reported data on motor vehicle collisions and driving convictions for stroke survivors: do they agree?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "e8880a74ccc2b6b7928cc742622a942456e8e6dd64c0ff84a4762aaf1f2bfca2",
+              "chunk_id": "pubmed_26163474_is_there_a_connection_between_sublingual_varices_and_hypertension#3",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "e8880a74ccc2b6b7928cc742622a942456e8e6dd64c0ff84a4762aaf1f2bfca2",
+              "database_title": "PubMed 26163474: Is there a connection between sublingual varices and hypertension?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "155277f53e3283f3a34902a82d6e495bfbb4eaad18f471f96ba7faee8f654140",
+              "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "155277f53e3283f3a34902a82d6e495bfbb4eaad18f471f96ba7faee8f654140",
+              "database_title": "PubMed 24669960: Does the sex of acute stroke patients influence the effectiveness of rt-PA?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            }
+          ],
+          "query_id": "pubmedqa_21084567",
+          "saved_top_five_count": 4
+        },
+        {
+          "baseline": "B2",
+          "evidence": [
+            {
+              "archived_text_sha256": "56d2e7b0b59f7a12a7625496f69c5dfd2752f17e61a58b0e5c011aab2f9b6bbd",
+              "chunk_id": "pubmed_25432938_did_chiles_traffic_law_reform_push_police_enforcement#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "56d2e7b0b59f7a12a7625496f69c5dfd2752f17e61a58b0e5c011aab2f9b6bbd",
+              "database_title": "PubMed 25432938: Did Chile's traffic law reform push police enforcement?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "3fe838dd6e8beb878cb6546fb35271e5e2a523b06c4280122c6d080fdf3733a1",
+              "chunk_id": "pubmed_24336869_can_routinely_collected_ambulance_data_about_assaults_contribute_to_reduction_in_community_violence#9",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "3fe838dd6e8beb878cb6546fb35271e5e2a523b06c4280122c6d080fdf3733a1",
+              "database_title": "PubMed 24336869: Can routinely collected ambulance data about assaults contribute to reduction in community violence?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "aa1df4b416f7be15fa46ad2a2c16c795e606156e5a2e85b50c0b30e3e6875d84",
+              "chunk_id": "pubmed_19481382_is_the_androgen_deficiency_of_aging_men_adam_questionnaire_useful_for_the_screening_of_partial_androgenic_deficiency_of_aging_men#2",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "aa1df4b416f7be15fa46ad2a2c16c795e606156e5a2e85b50c0b30e3e6875d84",
+              "database_title": "PubMed 19481382: Is the Androgen Deficiency of Aging Men (ADAM) questionnaire useful for the screening of partial androgenic deficiency of aging men?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            }
+          ],
+          "query_id": "pubmedqa_25432938",
+          "saved_top_five_count": 3
+        },
+        {
+          "baseline": "B2",
+          "evidence": [
+            {
+              "archived_text_sha256": "4cc036798a7fd082bbeea4e1115b2fc414ee883fd5cdd2cb690792c960fe60d1",
+              "chunk_id": "pubmed_17244100_can_patient_coaching_reduce_racialethnic_disparities_in_cancer_pain_control#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "4cc036798a7fd082bbeea4e1115b2fc414ee883fd5cdd2cb690792c960fe60d1",
+              "database_title": "PubMed 17244100: Can patient coaching reduce racial/ethnic disparities in cancer pain control?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "362237531f7dfec9aa1f026c0811be347a6fe87a089398e3244fd935d61381e5",
+              "chunk_id": "pubmed_18388848_does_having_a_regular_primary_care_clinician_improve_quality_of_preventive_care_for_young_children#5",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "362237531f7dfec9aa1f026c0811be347a6fe87a089398e3244fd935d61381e5",
+              "database_title": "PubMed 18388848: Does having a regular primary care clinician improve quality of preventive care for young children?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "e98d0969c9bd2245642aa62729b4d39e1c89fd34ff7af0f8e88888615c01ef64",
+              "chunk_id": "pubmed_23412195_should_displaced_midshaft_clavicular_fractures_be_treated_surgically#5",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "e98d0969c9bd2245642aa62729b4d39e1c89fd34ff7af0f8e88888615c01ef64",
+              "database_title": "PubMed 23412195: Should displaced midshaft clavicular fractures be treated surgically?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "4a78dc21d21fd948e742abaff043ed76e5bac784a13a736a18aac7d76992fe79",
+              "chunk_id": "pubmed_11035130_do_patients_with_rheumatoid_arthritis_established_on_methotrexate_and_folic_acid_5_mg_daily_need_to_continue_folic_acid_supplements_long_term#6",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "4a78dc21d21fd948e742abaff043ed76e5bac784a13a736a18aac7d76992fe79",
+              "database_title": "PubMed 11035130: Do patients with rheumatoid arthritis established on methotrexate and folic acid 5 mg daily need to continue folic acid supplements long term?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            }
+          ],
+          "query_id": "pubmedqa_unans_17244100",
+          "saved_top_five_count": 4
+        }
+      ],
+      "totals": {
+        "chunk_text_sha256_match_known": 11,
+        "chunk_text_sha256_match_matches": 11,
+        "exact_chunk_id_match_known": 11,
+        "exact_chunk_id_match_matches": 11,
+        "paper_id_match_known": 11,
+        "paper_id_match_matches": 11,
+        "paper_node_exists_known": 11,
+        "paper_node_exists_matches": 11,
+        "parent_id_match_known": 0,
+        "parent_id_match_matches": 0,
+        "saved_chunks_compared": 11,
+        "title_match_known": 0,
+        "title_match_matches": 0
+      }
+    },
+    "repo_db": {
+      "queries": [
+        {
+          "baseline": "B2",
+          "evidence": [
+            {
+              "archived_text_sha256": "f4c8e7c5bd757f0e1d3e180bdda5f7dfa1e42368ec27758690a793c9b2a9960a",
+              "chunk_id": "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "f4c8e7c5bd757f0e1d3e180bdda5f7dfa1e42368ec27758690a793c9b2a9960a",
+              "database_title": "PubMed 21084567: Are stroke patients' reports of home blood pressure readings reliable?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "dd45b91c0af4bfb549198dd2f051b0575e332df376f2ea3edb5515bfc60a8782",
+              "chunk_id": "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree#1",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "dd45b91c0af4bfb549198dd2f051b0575e332df376f2ea3edb5515bfc60a8782",
+              "database_title": "PubMed 21823940: Department of Transportation vs self-reported data on motor vehicle collisions and driving convictions for stroke survivors: do they agree?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "e8880a74ccc2b6b7928cc742622a942456e8e6dd64c0ff84a4762aaf1f2bfca2",
+              "chunk_id": "pubmed_26163474_is_there_a_connection_between_sublingual_varices_and_hypertension#3",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "e8880a74ccc2b6b7928cc742622a942456e8e6dd64c0ff84a4762aaf1f2bfca2",
+              "database_title": "PubMed 26163474: Is there a connection between sublingual varices and hypertension?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "155277f53e3283f3a34902a82d6e495bfbb4eaad18f471f96ba7faee8f654140",
+              "chunk_id": "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "155277f53e3283f3a34902a82d6e495bfbb4eaad18f471f96ba7faee8f654140",
+              "database_title": "PubMed 24669960: Does the sex of acute stroke patients influence the effectiveness of rt-PA?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            }
+          ],
+          "query_id": "pubmedqa_21084567",
+          "saved_top_five_count": 4
+        },
+        {
+          "baseline": "B2",
+          "evidence": [
+            {
+              "archived_text_sha256": "56d2e7b0b59f7a12a7625496f69c5dfd2752f17e61a58b0e5c011aab2f9b6bbd",
+              "chunk_id": "pubmed_25432938_did_chiles_traffic_law_reform_push_police_enforcement#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "56d2e7b0b59f7a12a7625496f69c5dfd2752f17e61a58b0e5c011aab2f9b6bbd",
+              "database_title": "PubMed 25432938: Did Chile's traffic law reform push police enforcement?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "3fe838dd6e8beb878cb6546fb35271e5e2a523b06c4280122c6d080fdf3733a1",
+              "chunk_id": "pubmed_24336869_can_routinely_collected_ambulance_data_about_assaults_contribute_to_reduction_in_community_violence#9",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "3fe838dd6e8beb878cb6546fb35271e5e2a523b06c4280122c6d080fdf3733a1",
+              "database_title": "PubMed 24336869: Can routinely collected ambulance data about assaults contribute to reduction in community violence?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "aa1df4b416f7be15fa46ad2a2c16c795e606156e5a2e85b50c0b30e3e6875d84",
+              "chunk_id": "pubmed_19481382_is_the_androgen_deficiency_of_aging_men_adam_questionnaire_useful_for_the_screening_of_partial_androgenic_deficiency_of_aging_men#2",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "aa1df4b416f7be15fa46ad2a2c16c795e606156e5a2e85b50c0b30e3e6875d84",
+              "database_title": "PubMed 19481382: Is the Androgen Deficiency of Aging Men (ADAM) questionnaire useful for the screening of partial androgenic deficiency of aging men?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            }
+          ],
+          "query_id": "pubmedqa_25432938",
+          "saved_top_five_count": 3
+        },
+        {
+          "baseline": "B2",
+          "evidence": [
+            {
+              "archived_text_sha256": "4cc036798a7fd082bbeea4e1115b2fc414ee883fd5cdd2cb690792c960fe60d1",
+              "chunk_id": "pubmed_17244100_can_patient_coaching_reduce_racialethnic_disparities_in_cancer_pain_control#0",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "4cc036798a7fd082bbeea4e1115b2fc414ee883fd5cdd2cb690792c960fe60d1",
+              "database_title": "PubMed 17244100: Can patient coaching reduce racial/ethnic disparities in cancer pain control?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "362237531f7dfec9aa1f026c0811be347a6fe87a089398e3244fd935d61381e5",
+              "chunk_id": "pubmed_18388848_does_having_a_regular_primary_care_clinician_improve_quality_of_preventive_care_for_young_children#5",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "362237531f7dfec9aa1f026c0811be347a6fe87a089398e3244fd935d61381e5",
+              "database_title": "PubMed 18388848: Does having a regular primary care clinician improve quality of preventive care for young children?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "e98d0969c9bd2245642aa62729b4d39e1c89fd34ff7af0f8e88888615c01ef64",
+              "chunk_id": "pubmed_23412195_should_displaced_midshaft_clavicular_fractures_be_treated_surgically#5",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "e98d0969c9bd2245642aa62729b4d39e1c89fd34ff7af0f8e88888615c01ef64",
+              "database_title": "PubMed 23412195: Should displaced midshaft clavicular fractures be treated surgically?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            },
+            {
+              "archived_text_sha256": "4a78dc21d21fd948e742abaff043ed76e5bac784a13a736a18aac7d76992fe79",
+              "chunk_id": "pubmed_11035130_do_patients_with_rheumatoid_arthritis_established_on_methotrexate_and_folic_acid_5_mg_daily_need_to_continue_folic_acid_supplements_long_term#6",
+              "chunk_text_sha256_match": true,
+              "database_text_sha256": "4a78dc21d21fd948e742abaff043ed76e5bac784a13a736a18aac7d76992fe79",
+              "database_title": "PubMed 11035130: Do patients with rheumatoid arthritis established on methotrexate and folic acid 5 mg daily need to continue folic acid supplements long term?",
+              "exact_chunk_id_match": true,
+              "paper_id_match": true,
+              "paper_node_exists": true,
+              "parent_id_match": null,
+              "pmid_match": true,
+              "title_match": null
+            }
+          ],
+          "query_id": "pubmedqa_unans_17244100",
+          "saved_top_five_count": 4
+        }
+      ],
+      "totals": {
+        "chunk_text_sha256_match_known": 11,
+        "chunk_text_sha256_match_matches": 11,
+        "exact_chunk_id_match_known": 11,
+        "exact_chunk_id_match_matches": 11,
+        "paper_id_match_known": 11,
+        "paper_id_match_matches": 11,
+        "paper_node_exists_known": 11,
+        "paper_node_exists_matches": 11,
+        "parent_id_match_known": 0,
+        "parent_id_match_matches": 0,
+        "saved_chunks_compared": 11,
+        "title_match_known": 0,
+        "title_match_matches": 0
+      }
+    }
+  },
+  "interpretation": "This comparison only measures saved artifacts present in the input file. Artifact provenance must be independently established before calling it July evidence.",
+  "sampled_query_ids": [
+    "pubmedqa_21084567",
+    "pubmedqa_25432938",
+    "pubmedqa_unans_17244100"
+  ],
+  "sampling_rule": "evenly spaced positions in the artifact's original row order, including endpoints",
+  "schema_version": "1.0"
+}

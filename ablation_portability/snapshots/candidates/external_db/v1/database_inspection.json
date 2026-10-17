@@ -1,0 +1,174 @@
+{
+  "chunk_count": 22068,
+  "chunk_samples": [
+    {
+      "id": "10.1038/nature16961#0",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "41bf49f967f7cb1b7a534aad53b83bc19f56393265f607938214b525d2e31acf",
+      "vector_sha256": "72140914de8ec988a57f3e254d0323848e2bd0f864ac91a18848b92c2fc4b044"
+    },
+    {
+      "id": "10.1038/nature16961#1",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "72f10a3d880c19da88a2ac0ff99df44c060379d82945d105a94f5d0eb76d1e78",
+      "vector_sha256": "2d967817cf344844cb2d5f1223e55cc8130779b14fabcb958b36a67ade836b95"
+    },
+    {
+      "id": "10.1038/nature16961#10",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "b26f9fb1bae68f7b4303362c27ac4868329b3a177840429afafe4f1e4ee611b5",
+      "vector_sha256": "d77512a71deea63d90e985d9030dd815b48a2076d6bbf4a50eb8c9b84e02f90c"
+    },
+    {
+      "id": "10.1038/nature16961#100",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "91dfcdb7b0107fde0309362053901b308032e2da4e7eb4253e387e60ba53ab67",
+      "vector_sha256": "586f465b881f0e51fced029735afef2a3e3f7ab571b518ec2cef6d2db1a209f0"
+    },
+    {
+      "id": "10.1038/nature16961#101",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "06917dc210427cc27c20cdbd2385a316e2b566c16a20ca2081cdebef99a8ebd8",
+      "vector_sha256": "8e4ebb322a28938a8fb037db34d4f89956662d9d13669eb5855e44b9652c65f9"
+    },
+    {
+      "id": "10.1038/nature16961#102",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "1936fc6d79a44aeea649cb404c17a519f147cf8ecf694b836ffa7967784982a2",
+      "vector_sha256": "31d07c4a9678da67ab566bcead4361ae5c87bac81a08c76aec099d9d2e65c5ba"
+    },
+    {
+      "id": "10.1038/nature16961#103",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "a05dc7da2a39aadeae45d9d011910431c66f2b3a1ac78c49eff5b8e0104106ad",
+      "vector_sha256": "d825a0006a9dbcf8bbee09d424f91acb3572a23998bdde7eabd2a1257054e199"
+    },
+    {
+      "id": "10.1038/nature16961#104",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "a2ff2c241423911f9faf544278b35cc7997cf04dc97a4d67661d7e2d5e3b5619",
+      "vector_sha256": "c86e4da9f6bdaad7c96782ba7864d54cc827124a891ef77b208d5b156639f80c"
+    },
+    {
+      "id": "10.1038/nature16961#105",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "9ec43ee152dca4d6b57b8517c012448bc0bd5e3497b5afee3d9a263ab434e0eb",
+      "vector_sha256": "537c0d3f99a2cbc78f98c3c21eb51471aff3b9b2c880a96ad587aa84b94519ae"
+    },
+    {
+      "id": "10.1038/nature16961#106",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "f7a5b98e0ae8bfcc26427c27a189e773dd54eb0805cf84351562e8b925b055f2",
+      "vector_sha256": "b3ae802557e1d05c2fcf73bfc4f1b97324db682d39199d5a00997da309ca3596"
+    },
+    {
+      "id": "10.1038/nature16961#107",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "1a956e6039ee88ab7af3ced2203b065574d9c50186535bed87fa3d270b747165",
+      "vector_sha256": "3b6d52233e4a40265d7eb11fa8e4f471e4a5c81f955af3716a79f8af0a37b3fc"
+    },
+    {
+      "id": "10.1038/nature16961#108",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "c1718d9ad72d6fa986e693a066fe3e645db1924df4866598ff5d441f73af40af",
+      "vector_sha256": "c30236e03a9ef29f310973140895e2b1b986069c1005d69b4eea27a7e9fc0ecf"
+    },
+    {
+      "id": "10.1038/nature16961#109",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "f1784664c0756b7df2ff8196d8e1a466db0ea6b4f8962410dbf5d5c85b46305a",
+      "vector_sha256": "37b2304a94095136c10d6d2a3f103207fd31eba60a0a90ce9f35f9b78442a4f6"
+    },
+    {
+      "id": "10.1038/nature16961#11",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "8512d43a6f2f22645c9070d702623cd999d35e57a89d86117f86e1a36dcdb360",
+      "vector_sha256": "2aaa58a442654e010e6d1cc47cf694380f876dab8518f462cf6afe45ca75bffa"
+    },
+    {
+      "id": "10.1038/nature16961#110",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "7a7a30f7b424487babc4081bdc259c2f94844a331212bcfd39cfadeec5aedc74",
+      "vector_sha256": "ff093623306806598245611b8aba63fd06f23c9acd8fc6f13453faa3d52f71ef"
+    },
+    {
+      "id": "10.1038/nature16961#111",
+      "paper_id": "10.1038/nature16961",
+      "text_sha256": "93968f82b1e3450672f59a71abff5cde30ac013087c81343c32af20772fcfe20",
+      "vector_sha256": "c0dcaa592c3fc13e9fabd7c50511ef410b78f74561d65c24376de7a7c27fd804"
+    }
+  ],
+  "document_count": 346,
+  "edge_types": {
+    "AFFILIATED_WITH": 200,
+    "AUTHORED": 1164,
+    "CITES": 5132,
+    "HAS_CODE": 27,
+    "HAS_TAG": 2261,
+    "INTRODUCED_DATASET": 16,
+    "IS_A": 205,
+    "MENTIONS_CONCEPT": 2133,
+    "PREREQUISITE_FOR": 197,
+    "PUBLISHED_IN": 11,
+    "SPONSORED_BY": 42,
+    "SUBCLASS_OF": 83,
+    "USED_DATASET": 241
+  },
+  "foreign_key_violation_count": 0,
+  "fts_objects": [
+    "chunks_fts"
+  ],
+  "graph_edge_count": 11712,
+  "graph_node_count": 9680,
+  "journal_mode": "delete",
+  "node_labels": {
+    "Author": 1141,
+    "CodeRepository": 27,
+    "Concept": 2700,
+    "Dataset": 180,
+    "ExternalWork": 1327,
+    "Institution": 182,
+    "JournalConference": 9,
+    "Paper": 3814,
+    "UserNote": 300
+  },
+  "parent_count": 2845,
+  "quick_check": "ok",
+  "sqlite_version": "3.50.4",
+  "table_counts": {
+    "bridge_only_paper_projection": 3768,
+    "chunk_availability_mapping": 22068,
+    "chunk_reference_mentions": 0,
+    "chunks": 22068,
+    "chunks_fts": 22068,
+    "derived_local_to_local_bridge_edges": 1494,
+    "edges": 11712,
+    "local_paper_projection": 346,
+    "nodes": 9680,
+    "paper_reference_vector": 0,
+    "paper_usability_metadata": 4114,
+    "parent_chunks": 2845,
+    "reference_corpus_stats": 0
+  },
+  "user_version": 0,
+  "vector": {
+    "blob_lengths": [
+      {
+        "blob_bytes": 3072,
+        "rows": 22068
+      }
+    ],
+    "dimensions": [
+      768
+    ],
+    "dtype": "float32",
+    "rows": 22068
+  },
+  "views": [
+    "bridge_only_paper_projection",
+    "chunk_availability_mapping",
+    "derived_local_to_local_bridge_edges",
+    "local_paper_projection",
+    "paper_usability_metadata"
+  ]
+}

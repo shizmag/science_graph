@@ -62,6 +62,8 @@ class ExperimentalGraphExpander:
         else:
             self.limit = limit
         self.top_chunks_per_paper = top_chunks_per_paper
+        self.last_telemetry = None
+        self.last_output = None
         
         # Semaphore/lock to prevent concurrent model execution and minimize model switching overhead
         self.model_lock = threading.Semaphore(1)
@@ -651,6 +653,8 @@ class ExperimentalGraphExpander:
         if not short_to_text:
             telemetry["filtering"]["total_time"] = time.perf_counter() - t_filter_start
             telemetry["overall_time"] = time.perf_counter() - t_overall_start
+            self.last_telemetry = telemetry
+            self.last_output = "No enrichment facts gathered."
             if should_trace:
                 self._print_trace_summary(telemetry)
             return "No enrichment facts gathered."
@@ -722,6 +726,7 @@ class ExperimentalGraphExpander:
                 enrichment_lines.append(f"[Chunk] {p_title}{page_str}: {text.strip()}")
                 
         telemetry["overall_time"] = time.perf_counter() - t_overall_start
+        self.last_telemetry = telemetry
         if should_trace:
             self._print_trace_summary(telemetry)
 
@@ -730,9 +735,10 @@ class ExperimentalGraphExpander:
         logging.debug(f"ExperimentalGraphExpander.expand completed in {dt:.6f}s")
 
         if not enrichment_lines:
+            self.last_output = "No essential knowledge graph enrichment found."
             return "No essential knowledge graph enrichment found."
-            
-        return "\n".join(enrichment_lines)
+        self.last_output = "\n".join(enrichment_lines)
+        return self.last_output
 
     def _print_trace_summary(self, telemetry: Dict[str, Any]) -> None:
         table_time = Table(

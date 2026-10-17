@@ -180,3 +180,8 @@ test_reports/
 back/reports/
 reports/
 revision*
+
+# Large generated ablation release artifacts; keep local, out of Git history.
+ablation_cuda/releases/ablation_cuda_input_v*/snapshot/database.db
+ablation_cuda/releases/ablation_cuda_input_v*.tar.gz
+ablation_portability/snapshots/candidates/*/v*/database.db

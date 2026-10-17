@@ -1,0 +1,27 @@
+{
+  "configuration_isolation": "external machine YAML is not mounted; a private HOME receives this sanitized frozen file",
+  "credential_policy": "all API and HF credentials are empty and omitted from logs",
+  "generation_backend_difference": "MLX stream_generate replaced with Transformers/PyTorch SDPA and an explicit greedy token loop; backend output identity is not assumed",
+  "generator_weights": "same public OCC-RAG-1.7B BF16 safetensors revision; no quantization",
+  "historical_provider": "cuda_torch",
+  "historical_source": "graphs/run_20260729_211324_OCC-RAG-1.7B/config_snapshot.yaml",
+  "intervention": "arm 2 disables only score_blending when the B6 trace proves a blend over at least two candidates; otherwise it may disable graph_expansion only when B6 inserted its dynamic output",
+  "output_token_budget": {
+    "historical": 768,
+    "runtime": 768
+  },
+  "query_context_tokens": {
+    "historical": 12000,
+    "runtime": 12000
+  },
+  "runtime_provider": "cuda_torch",
+  "stop_token_ids": [
+    151643,
+    151645,
+    151683
+  ],
+  "temperature": {
+    "historical": 0.0,
+    "runtime": 0.0
+  }
+}

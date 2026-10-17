@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:biomedical-rag:ablation-cuda:result-schema:1.0",
+  "title": "Biomedical RAG CUDA smoke result",
+  "type": "object",
+  "required": [
+    "schema_version", "arm", "status", "query_id", "question", "raw_generated_response",
+    "parsed_answer", "parser_status", "prompt", "prompt_sha256", "retrieved_paper_ids",
+    "selected_evidence", "retrieval_candidates_and_ranking_trace", "effective_configuration",
+    "decoding", "input_identity", "stable_result_id", "model_manifest_sha256",
+    "snapshot_identity", "device_diagnostics", "generation_event", "generation_events",
+    "token_telemetry", "stage_status", "timing", "result_errors"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "arm": {"enum": ["B6", "no_score_blending", "no_graph_expansion"]},
+    "status": {"enum": ["SUCCESS", "PARTIAL", "BLOCKED"]},
+    "query_id": {"const": "pubmedqa_21084567"},
+    "question": {"type": "string", "minLength": 1},
+    "input_prompt": {"type": "string"},
+    "prompt": {"type": "string", "minLength": 1, "description": "Exact formatted text passed to the CUDA tokenizer."},
+    "prompt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "raw_generated_response": {"type": "string"},
+    "parsed_answer": {"type": "string"},
+    "token_telemetry": {"type": "array", "items": {"$ref": "#/$defs/tokenTelemetry"}},
+    "generation_events": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/generationEvent"}},
+    "stage_status": {"type": "object", "additionalProperties": {"type": "string"}},
+    "result_errors": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "tokenTelemetry": {
+      "type": "object",
+      "required": [
+        "token_id", "token_text", "logprob", "nll_nats", "nll_bits_per_token",
+        "entropy_k20_bits", "entropy_k50_bits", "entropy_k100_bits",
+        "retained_mass_k20", "retained_mass_k50", "retained_mass_k100",
+        "top1_prob_local_k20", "top1_prob_local_k50", "top1_prob_local_k100",
+        "top1_prob_full", "logit_margin", "top_logit_margins", "telemetry_device", "stop_state"
+      ],
+      "properties": {
+        "token_id": {"type": "integer", "minimum": 0},
+        "token_text": {"type": "string"},
+        "logprob": {"type": "number"},
+        "nll_nats": {"type": "number", "minimum": 0},
+        "nll_bits_per_token": {"type": "number", "minimum": 0},
+        "entropy_k20_bits": {"type": "number", "minimum": 0},
+        "entropy_k50_bits": {"type": "number", "minimum": 0},
+        "entropy_k100_bits": {"type": "number", "minimum": 0},
+        "retained_mass_k20": {"type": "number", "minimum": 0, "maximum": 1},
+        "retained_mass_k50": {"type": "number", "minimum": 0, "maximum": 1},
+        "retained_mass_k100": {"type": "number", "minimum": 0, "maximum": 1},
+        "telemetry_device": {"type": "string", "pattern": "^cuda"},
+        "stop_state": {"enum": ["continue", "eos", "max_tokens", "context_limit", "teacher_forced"]}
+      },
+      "additionalProperties": true
+    },
+    "generationEvent": {
+      "type": "object",
+      "required": ["purpose", "event", "token_telemetry"],
+      "properties": {
+        "purpose": {"enum": ["final_answer_generation", "shannon_b0_entropy_reference", "pipeline_diagnostic_generation"]},
+        "event": {"type": "object"},
+        "token_telemetry": {"type": "array", "items": {"$ref": "#/$defs/tokenTelemetry"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}

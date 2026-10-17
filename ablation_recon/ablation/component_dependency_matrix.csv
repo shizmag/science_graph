@@ -1,0 +1,19 @@
+component,current_B6,historical_B6,source_evidence,coupling,model_device,observable_intervention,classification
+Lexical retrieval,Active,Active,rag_service.py:1391+; sqlite_impl.py FTS5,Feeds fusion,None; CPU,Remove FTS candidates and log scores/context,INDEPENDENTLY_ABLATABLE
+Dense retrieval,Active,Active,vector_search.py:14-123; rag_service hybrid,Feeds fusion/blend,E5; CUDA untested,Remove dense candidates; assert no fallback,INDEPENDENTLY_ABLATABLE
+RRF fusion,Active,Active,rag_service.py:1391-1592,Needs lexical/dense sets,None,Change fusion with fixed candidate inputs,INDEPENDENTLY_ABLATABLE
+Graph neighbors in RRF,Flag forced but guarded off,Inactive,core/config.py:382-390; rag_service.py:1502-1554,Requires graph master false,None,Trace branch counter,INACTIVE_IN_REFERENCE
+Concept retrieval,Nested flags may enable,Zero candidates,rag_service.py:1617-1681; config.py:981-994,OR leakage and master auto-enable,spaCy conditional,Resolve all flags and capture candidate IDs,NO_OBSERVABLE_EFFECT
+Bridge retrieval,Nested flags may enable,Zero candidates,rag_service.py:1617-1681; config.py:981-994,Same as concepts,SQLite CPU,Capture bridge edges/candidates,NO_OBSERVABLE_EFFECT
+Ontology lookup,Partial,Unproven,"rag_service.py:576-595,983-1056",One flag covers aliases only,spaCy conditional,Split and trace ontology stages,COUPLED_NEEDS_REFACTOR
+Score blend,Active,Active,rag_service.py:1391-1592,Hold candidate/CE scores,CE currently CPU/MPS,Change formula and preserve terms,INDEPENDENTLY_ABLATABLE
+Final reranker,Active,Active,"rag_service.py:1376,2112; _get_reranker:295-306",CE shared with graph expander,MPS/CPU today,Split switches and log calls,COUPLED_NEEDS_REFACTOR
+Static graph context,Via graph_expansion,Configured,rag_service.py:400-435,Shares dynamic flag,No extra model,Separate switch and trace context,COUPLED_NEEDS_REFACTOR
+Dynamic GraphExpander,B6 enabled,Configured,"generation.py:207-216,330-385; graph_expander.py",Shares flag and CE,CE shared,Separate switch and trace input/output,COUPLED_NEEDS_REFACTOR
+Context trimming,Conditional,Per-query unknown,rag_service.py:400-464,Depends on budget,None,Log pre/post tokens and removed IDs,INDEPENDENTLY_ABLATABLE
+Source card,Nested true,Effect unknown,config.py:981-994; rag_service.py:2253-2259,Post-generation and OR leak,None,Compare returned formatting only,COUPLED_NEEDS_REFACTOR
+Parent dedup,Active paths,Effect unknown,RAGService candidate/context paths,May act at multiple stages,None,Separate controls and counts,COUPLED_NEEDS_REFACTOR
+Structured prompt,Active,Active,rag_service.py:2178-2282,Template shares assembly with context,None,Freeze evidence; vary template only,COUPLED_NEEDS_REFACTOR
+Graph expansion,Active,Active,core/config.py:382-390; generation.py:330-385,Bundles static/dynamic,CE for expander,Split controls,COUPLED_NEEDS_REFACTOR
+Citation repair,Inactive,Inactive,core config and generation,Not reference path,None proven,Log raw/repaired if enabled,INACTIVE_IN_REFERENCE
+HyDE,Forced off,Off,core/config.py:382-390,Changes retrieval query,LLM if enabled,Not a B6 main effect,INACTIVE_IN_REFERENCE

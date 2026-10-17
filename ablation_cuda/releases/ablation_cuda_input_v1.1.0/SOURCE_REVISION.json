@@ -1,0 +1,7 @@
+{
+  "branch": "main",
+  "commit": "f53b1999bf006d826e6284b006bb7081b4581f36",
+  "source_tree_policy": "packaged code files are checksummed independently; commit records their base revision",
+  "tracked_diff_sha256": "c099b44de518ce0831af51c9c7ab7b372042a317fc2561cdd3ab9fd4ef347b01",
+  "working_tree_dirty": true
+}

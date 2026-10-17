@@ -1,0 +1,133 @@
+{
+  "baseline_selection": {
+    "author_selection": "external_db",
+    "decision_file": "../../../baseline_decision.json",
+    "decision_sha256": "40d55356980fc6be4d6e63d38b598ff9664f30e6d7eae7b1e92a1b9e753438ef",
+    "status": "candidate_not_selected"
+  },
+  "code_revision": "f53b1999bf006d826e6284b006bb7081b4581f36",
+  "embedding_compatibility": {
+    "dimensions_match": true,
+    "maximum_relative_l2_norm_delta": 1.2193271358272166e-07,
+    "mean_top10_overlap": 1.0,
+    "minimum_cosine_agreement": 0.9999999999987099,
+    "report": "e5_compatibility/embedding_comparison.json",
+    "report_sha256": "681fdcacec95789b7b436aa17249a76411eb44b1bed30b8c54f516e2f753653f",
+    "sample_size": 16,
+    "status": "CONFIDENT",
+    "thresholds_predeclared": {
+      "mean_top10_overlap_min": 0.9,
+      "per_vector_cosine_min": 0.999,
+      "relative_l2_norm_delta_max": 0.001
+    }
+  },
+  "embedding_model": {
+    "lineage_status": "CONFIDENT",
+    "model_id": "intfloat/multilingual-e5-base",
+    "revision": "d128750597153bb5987e10b1c3493a34e5",
+    "stored_dimensions": [
+      768
+    ]
+  },
+  "logical_corpus": {
+    "chunk_count": 2331,
+    "document_count": 300,
+    "edge_types": {
+      "HAS_TAG": 615
+    },
+    "fts_objects": [
+      "chunks_fts"
+    ],
+    "graph_edge_count": 615,
+    "graph_node_count": 307,
+    "node_labels": {
+      "Concept": 7,
+      "UserNote": 300
+    },
+    "parent_count": 312,
+    "table_counts": {
+      "bridge_only_paper_projection": 0,
+      "chunk_availability_mapping": 2331,
+      "chunk_reference_mentions": 0,
+      "chunks": 2331,
+      "chunks_fts": 2331,
+      "derived_local_to_local_bridge_edges": 0,
+      "edges": 615,
+      "local_paper_projection": 300,
+      "nodes": 307,
+      "paper_reference_vector": 0,
+      "paper_usability_metadata": 300,
+      "parent_chunks": 312,
+      "reference_corpus_stats": 0
+    },
+    "vector_count": 2331,
+    "vector_dimensions": [
+      768
+    ]
+  },
+  "roundtrip_validation": {
+    "approximate_order_identical_for_all_fixtures": false,
+    "approximate_top_k_overlap_mean": 0.9800000000000001,
+    "exact_fixture_retrieval_order_identical": true,
+    "independent_restores": 2,
+    "usearch_rebuilt_from_persisted_vectors": true
+  },
+  "schema_version": "1.0",
+  "snapshot_id": "repo_db-20261016T193156Z",
+  "snapshot_identity": {
+    "database_file": "database.db",
+    "sha256": "23adc428e8f21743144ea5f0a316931bb0158ef02a8d8fc5e1d1ad408f3ac005",
+    "size_bytes": 14065664
+  },
+  "snapshot_method": "sqlite3.Connection.backup from mode=ro source connection; WAL-aware consistent SQLite backup",
+  "snapshot_time_utc": "2026-10-16T19:31:56.807384+00:00",
+  "source_candidate": "repo_db",
+  "source_identity": {
+    "after": {
+      "path": "/Users/vladimirkasterin/python/graph/back/science_graph.db",
+      "sha256_main_file": "242aa028bba33313155cced2512c30dae1d8a4d90234ef5635cb1507cb9ebc83",
+      "sha256_shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "sha256_wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shm_present": true,
+      "shm_size_bytes": 32768,
+      "size_bytes": 14065664,
+      "wal_present": true,
+      "wal_size_bytes": 0
+    },
+    "before": {
+      "path": "/Users/vladimirkasterin/python/graph/back/science_graph.db",
+      "sha256_main_file": "242aa028bba33313155cced2512c30dae1d8a4d90234ef5635cb1507cb9ebc83",
+      "sha256_shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "sha256_wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shm_present": true,
+      "shm_size_bytes": 32768,
+      "size_bytes": 14065664,
+      "wal_present": true,
+      "wal_size_bytes": 0
+    },
+    "capture_path": "/Users/vladimirkasterin/python/graph/back/science_graph.db",
+    "stable_during_backup": true
+  },
+  "sqlite_runtime": {
+    "python_sqlite_version": "3.50.4",
+    "quick_check": "ok",
+    "source_journal_mode": "wal",
+    "target_journal_mode": "delete"
+  },
+  "usearch": {
+    "copied": false,
+    "present_at_source": true,
+    "rebuild_command": "python -m ablation_portability.scripts.rebuild_vector_index <restored database.db>",
+    "rebuild_from_persisted_vectors": true,
+    "source_sha256": "7e3af5f14e751b0aad983cc611d904d3dea2f6798c9f51e8cb6e40d257b4f80f",
+    "source_size_bytes": 3926936
+  },
+  "validation_fixture_ids": [
+    "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#0",
+    "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#1",
+    "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#2",
+    "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#3",
+    "pubmed_10173769_longer_term_quality_of_life_and_outcome_in_stroke_patients_is_the_barthel_index_alone_an_adequate_measure_of_outcome#4"
+  ],
+  "validation_fixtures_sha256": "ff7b43b9209ca97ce0fcb6313cf6cd02526d69e374a179aa5a4986984afcec23"
+}

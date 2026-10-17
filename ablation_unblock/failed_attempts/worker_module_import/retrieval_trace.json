@@ -1,0 +1,31 @@
+{
+  "b6_retrieval": {},
+  "candidate_counts": {
+    "candidates_after_reranker": 0,
+    "candidates_before_reranker": 0,
+    "dense_seed_chunks": 0,
+    "generator_visible_evidence_chunks": 0,
+    "graph_candidate_papers": 0,
+    "lexical_seed_chunks": 0,
+    "retrieved_chunks": 0
+  },
+  "database_sha256": "bc54d962762d0ec9c150853f10a4fed7b4cec1fa42cdef064ec2d87a9fb7b79d",
+  "final_evidence": [],
+  "graph_evidence": {
+    "graph_candidate_paper_ids": [],
+    "graph_candidates_produced_count": 0,
+    "graph_candidates_selected_in_final_context": [],
+    "graph_candidates_selected_in_final_context_count": 0,
+    "graph_context_characters": 0,
+    "graph_context_relationship_count": 0,
+    "graph_context_source": "context_graph",
+    "graph_expansion_component_calls": 0,
+    "graph_expansion_component_time_sec": 0.0,
+    "graph_information_inserted_in_generator_prompt": false
+  },
+  "graph_path_counters": {},
+  "persisted_retrieval_dataset": {},
+  "query_id": "pubmedqa_21084567",
+  "question": "Are stroke patients' reports of home blood pressure readings reliable?",
+  "selected_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0"
+}

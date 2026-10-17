@@ -1,0 +1,65 @@
+# Prompts for automated benchmark dataset generation (Golden Dataset)
+# Ensures reproducibility when generating QA pairs from paper texts.
+
+single_document_generator:
+  system_prompt: |
+    You are a scientific editor and AI benchmark developer. Your task is to read a scientific paper passage and construct a high-quality question-answer pair.
+  user_prompt_template: |
+    Read the following passage from a scientific paper and generate one complex question and an accurate golden reference answer for it.
+
+    Requirements:
+    1. The question must require understanding specific details of the paper (methodology, exact metrics, conclusions).
+    2. Avoid generic questions like "What is this paper about?".
+    3. The answer must be completely self-contained, accurate, and contain specific facts from the text.
+
+    PAPER PASSAGE:
+    {text_content}
+
+    Return the output strictly in YAML format:
+    - query: "Formulated question"
+      golden_answer: "Detailed golden answer"
+      category: "single-document"
+      expected_papers:
+        - "{paper_id}"
+
+multi_hop_generator:
+  system_prompt: |
+    You are an expert in interdisciplinary research synthesis and scientific data integration. Your task is to connect information from two different paper passages.
+  user_prompt_template: |
+    You are provided with two passages from DIFFERENT scientific papers. Formulate one complex question and reference answer that can ONLY be answered by combining information from both passages.
+
+    Requirements:
+    1. The question must require comparison, synthesis, or identifying causal relationships between claims in Passage 1 and Passage 2.
+    2. The answer must clearly indicate which part of the statement comes from the first source and which from the second, and how they logically connect.
+
+    PASSAGE 1 (Paper {paper_id_1}):
+    {text_content_1}
+
+    PASSAGE 2 (Paper {paper_id_2}):
+    {text_content_2}
+
+    Return the output strictly in YAML format:
+    - query: "Formulated cross-document question"
+      golden_answer: "Detailed combined golden answer"
+      category: "multi-hop"
+      expected_papers:
+        - "{paper_id_1}"
+        - "{paper_id_2}"
+
+no_info_generator:
+  system_prompt: |
+    You are an expert in testing information system reliability and hallucination robustness.
+  user_prompt_template: |
+    You are provided with a passage from a scientific paper.
+    Formulate a question that sounds natural and scientific for this domain, but whose answer is intentionally ABSENT from the provided text (trick question).
+
+    The answer to this question must strictly state that the provided materials contain no information on this aspect.
+
+    PAPER PASSAGE:
+    {text_content}
+
+    Return the output strictly in YAML format:
+    - query: "Formulated question missing from text"
+      golden_answer: "Information missing in database."
+      category: "no-info"
+      expected_papers: []

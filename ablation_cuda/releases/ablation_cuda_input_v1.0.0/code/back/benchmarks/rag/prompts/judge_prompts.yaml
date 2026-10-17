@@ -1,0 +1,228 @@
+# Prompts for LLM Judge (LLM-as-a-Judge) RAG Quality Evaluation
+# Used to ensure reproducible scientific evaluation results.
+
+faithfulness_evaluator:
+  system_prompt: |
+    You are an impartial data validation expert for RAG systems. Your task is to evaluate the degree of factual faithfulness (Faithfulness / Groundedness) of a generated answer based on the provided context.
+  user_prompt_template: |
+    You are provided with CONTEXT (passages from scientific papers) and an ANSWER to a question.
+    Determine whether the information in the ANSWER follows exclusively from the CONTEXT, or if it contains hallucinations/external knowledge.
+
+    Instructions:
+    1. Break the ANSWER into individual factual statements.
+    2. For each statement, verify whether it is supported by the CONTEXT.
+    3. Output JSON with a list of statements, a verdict (true/false) for each, and a final score (ratio of supported facts from 0.0 to 1.0).
+
+    CONTEXT:
+    {context}
+
+    ANSWER:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "statements": [
+        {{"statement": "statement text", "supported": true/false, "explanation": "reason"}}
+      ],
+      "score": 0.0
+    }}
+
+groundedness_evaluator:
+  system_prompt: |
+    You are an impartial data validation expert for RAG systems. Your task is to evaluate the degree of factual faithfulness (Groundedness / Faithfulness) of a generated answer based on the provided context.
+  user_prompt_template: |
+    You are provided with CONTEXT (passages from scientific papers) and an ANSWER to a question.
+    Determine whether the information in the ANSWER follows exclusively from the CONTEXT, or if it contains hallucinations/external knowledge.
+
+    Instructions:
+    1. Break the ANSWER into individual factual statements.
+    2. For each statement, verify whether it is supported by the CONTEXT.
+    3. Output JSON with a list of statements, a verdict (true/false) for each, and a final score (ratio of supported facts from 0.0 to 1.0).
+
+    CONTEXT:
+    {context}
+
+    ANSWER:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "statements": [
+        {{"statement": "statement text", "supported": true/false, "explanation": "reason"}}
+      ],
+      "score": 0.0
+    }}
+
+answer_relevance_evaluator:
+  system_prompt: |
+    You are an expert in text answer quality analysis. Your task is to evaluate answer relevance to the original query.
+  user_prompt_template: |
+    Evaluate how well the provided ANSWER matches the QUERY.
+    An answer is considered non-relevant (score = 0.0) if it strays off-topic, ignores the core question, or answers a different question.
+    An answer is considered fully relevant (score = 1.0) if it directly and completely addresses the given question.
+
+    QUERY:
+    {query}
+
+    ANSWER:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "score": 0.0,
+      "explanation": "brief explanation of score"
+    }}
+
+citation_fidelity_evaluator:
+  system_prompt: |
+    You are a scientific literature auditor. Your task is to verify the correctness of citations and references in text.
+  user_prompt_template: |
+    You are provided with numbered text chunks from papers and an ANSWER containing references to these chunks (e.g., [Block 1], [Page 4], or [1]).
+    Verify every statement in the ANSWER followed by a reference against the text of the specified chunk.
+
+    Citation fidelity score is computed as: (number of valid citations) / (total citations made).
+
+    SOURCES:
+    {sources}
+
+    ANSWER:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "citations": [
+        {{"citation_reference": "[Block X]", "statement": "evaluated statement", "is_valid": true/false, "explanation": "whether fact exists in source"}}
+      ],
+      "score": 0.0
+    }}
+
+semantic_accuracy_evaluator:
+  system_prompt: |
+    You are a linguistic expert in text semantic similarity evaluation.
+  user_prompt_template: |
+    Compare the generated ANSWER with the reference GOLDEN_ANSWER.
+    Evaluate semantic similarity on a scale from 0.0 to 1.0.
+    Note:
+    - If GOLDEN_ANSWER indicates no information is available, and ANSWER contains a hallucinated fact, score must be 0.0.
+    - Differences in phrasing while preserving factual meaning should not lower the score below 0.9.
+
+    GOLDEN_ANSWER:
+    {golden_answer}
+
+    ANSWER:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "score": 0.0,
+      "explanation": "brief comparison of semantic content"
+    }}
+
+unified_with_context_evaluator:
+  system_prompt: |
+    You are an impartial data validation expert for RAG systems. Your task is to conduct a comprehensive quality evaluation of a generated answer based on provided context, user query, and golden reference answer.
+  user_prompt_template: |
+    You are provided with:
+    1. User QUERY.
+    2. CONTEXT (passages from scientific papers with block labels).
+    3. GOLDEN ANSWER (reference answer).
+    4. ANSWER (generated answer to evaluate).
+
+    Evaluate performance across the following 4 metrics:
+
+    1. Answer Relevance:
+       Evaluate how well ANSWER matches QUERY.
+       - Score = 0.0 if off-topic, ignores the question, or answers something else.
+       - Score = 1.0 if directly and completely answers the question.
+
+    2. Semantic Accuracy:
+       Compare ANSWER with GOLDEN ANSWER on a 0.0 to 1.0 scale.
+       - Score = 0.0 if GOLDEN ANSWER states no info but ANSWER hallucinates facts.
+       - Rephrasing preserving factual meaning should score at least 0.9.
+
+    3. Faithfulness / Groundedness:
+       Verify if ANSWER claims follow exclusively from CONTEXT.
+       - Break ANSWER into individual factual statements.
+       - Check each statement against CONTEXT.
+       - Final score is the ratio of supported facts (0.0 to 1.0).
+
+    4. Citation Fidelity:
+       Verify correctness of block citations in ANSWER (e.g., [Block X]).
+       - Check statements with references against specified context blocks.
+       - Score = (valid citations) / (total citations). Return 0.0 if references are missing altogether when context was provided.
+
+    EVALUATION INPUTS:
+    QUERY:
+    {query}
+
+    CONTEXT:
+    {context}
+
+    GOLDEN ANSWER:
+    {golden_answer}
+
+    ANSWER TO EVALUATE:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "answer_relevance": {{
+        "score": 0.0,
+        "explanation": "brief explanation of relevance score"
+      }},
+      "semantic_accuracy": {{
+        "score": 0.0,
+        "explanation": "brief explanation of semantic accuracy score"
+      }},
+      "faithfulness": {{
+        "statements": [
+          {{"statement": "statement from answer", "supported": true/false, "explanation": "reason"}}
+        ],
+        "score": 0.0
+      }},
+      "citation_fidelity": {{
+        "citations": [
+          {{"citation_reference": "[Block X]", "statement": "statement with reference", "is_valid": true/false, "explanation": "whether fact exists in source block"}}
+        ],
+        "score": 0.0
+      }}
+    }}
+
+unified_without_context_evaluator:
+  system_prompt: |
+    You are an impartial text answer validation expert. Your task is to evaluate generated answer quality based on user query and reference answer.
+  user_prompt_template: |
+    You are provided with:
+    1. User QUERY.
+    2. GOLDEN ANSWER (reference answer).
+    3. ANSWER (generated answer to evaluate).
+
+    Evaluate performance across 2 metrics:
+
+    1. Answer Relevance:
+       Evaluate how well ANSWER matches QUERY (0.0 to 1.0).
+
+    2. Semantic Accuracy:
+       Compare ANSWER with GOLDEN ANSWER (0.0 to 1.0).
+
+    EVALUATION INPUTS:
+    QUERY:
+    {query}
+
+    GOLDEN ANSWER:
+    {golden_answer}
+
+    ANSWER TO EVALUATE:
+    {answer}
+
+    Return the output strictly in JSON format:
+    {{
+      "answer_relevance": {{
+        "score": 0.0,
+        "explanation": "brief explanation of relevance score"
+      }},
+      "semantic_accuracy": {{
+        "score": 0.0,
+        "explanation": "brief explanation of semantic accuracy score"
+      }}
+    }}

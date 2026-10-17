@@ -1,0 +1,18 @@
+{
+  "answerability_label": "answerable",
+  "generation_prompt_matches_captured_response": true,
+  "gold_reference_answer": "Yes. This group of elderly stroke patients were able to record their BPs reliably at home. Any bias was small and would be unlikely to affect management. Since BP readings in a GP surgery are often a poor indication of true BP, GPs might consider using hypertensive patients' records of home BP monitoring to help guide treatment decisions.",
+  "latency_sec": 13.891,
+  "parsed_answer": "The study provides evidence suggesting that stroke patients can reliably record their home BP readings.",
+  "parser_status": "ANSWERABLE",
+  "pipeline_status": "success",
+  "query_id": "pubmedqa_21084567",
+  "raw_generated_answer": "1. _analysis..._ — The user's question asks for the reliability of stroke patients' home blood pressure readings. The provided text block [Chunk] PubMed 21084567: Are stroke patients' reports of home blood pressure readings reliable? (Page 1) explicitly addresses this topic. It states that the study investigated the reliability of these recordings among stroke patients.\n2. _start..._ — The sources are relevant and sufficient to answer the question directly. The text confirms the findings regarding reliability.\n3. _reasoning..._ — The text states: \"The study provides evidence suggesting that stroke patients can reliably record their home BP readings.\" It further details that 90% of booklet readings matched monitor readings closely and any bias was minimal. This directly answers the query.\n4. _status..._ — The question is ANSWERABLE.\n5. _answer..._ — The answer is that the study provides evidence suggesting that stroke patients can reliably record their home BP readings.\n\n### Final Answer:\nThe study provides evidence suggesting that stroke patients can reliably record their home BP readings.",
+  "retrieved_papers": [
+    "pubmed_21823940_department_of_transportation_vs_self_reported_data_on_motor_vehicle_collisions_and_driving_convictions_for_stroke_survivors_do_they_agree",
+    "pubmed_24669960_does_the_sex_of_acute_stroke_patients_influence_the_effectiveness_of_rt_pa",
+    "pubmed_10490564_hypotension_in_patients_with_coronary_disease_can_profound_hypotensive_events_cause_myocardial_ischaemic_events",
+    "pubmed_21084567_are_stroke_patients_reports_of_home_blood_pressure_readings_reliable",
+    "pubmed_26163474_is_there_a_connection_between_sublingual_varices_and_hypertension"
+  ]
+}

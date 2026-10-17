@@ -1,0 +1,27 @@
+evidence_id,classification,claim,evidence,method,limit
+E001,VERIFIED_FROM_RUNTIME,Checkout main at f53b1999bf006d826e6284b006bb7081b4581f36; clean at audit start,Git metadata,branch and status inspection,Checkout identity only
+E002,VERIFIED_FROM_CODE,Root workspace includes back and requires Python >=3.12,pyproject.toml:1-18,Manifest inspection,Not runtime closure
+E003,VERIFIED_FROM_ARTIFACT,July run manifest records commit b4f3322d8cae3395bcbf0b5a1f2e47a904d1591a,Historical run_manifest.yaml,Read saved YAML,No DB fingerprint
+E004,VERIFIED_FROM_CODE,Retrieval and generation commands can resolve different DB paths,"run_pipeline.py:100,342-394,478-525; core/config.py:530-565",Source tracing,CLI/config may change actual path
+E005,VERIFIED_FROM_RUNTIME,Two nonidentical SQLite databases and USEARCH sidecars exist,back/science_graph.db and external graph.db,Read-only stat and SQLite counts,Current files only
+E006,VERIFIED_FROM_RUNTIME,June DB backups pass quick_check and differ from current counts,graph.db.bak.1782851479 and .bak.1782852130,Immutable read-only SQLite queries,No July linkage
+E007,VERIFIED_FROM_ARTIFACT,"Historical population is 375 unique rows: 300 answerable, 75 negative",Historical retrieved_contexts.yaml,Parsed and cross-checked with golden YAML,Thin standalone manifest absent
+E008,VERIFIED_FROM_CODE,Dataset loader seed-42 resamples when limits are provided,core/config.py:418-499,Source inspection,Depends on unchanged source/order
+E009,VERIFIED_FROM_ARTIFACT,Generator BF16 Qwen3 checkpoint at revision e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c,Local OCC model snapshot,"Config, safetensors and cache metadata",No CUDA run
+E010,VERIFIED_FROM_UPSTREAM_METADATA,OCC model is public and MIT licensed,https://huggingface.co/occ-ai/OCC-RAG-1.7B,Public model card,Metadata is not inference proof
+E011,VERIFIED_FROM_ARTIFACT,E5 and Cross-Encoder snapshots and revisions exist locally,External E5 path and Hugging Face cache,"Configs, weights, tokenizer and cache refs",Does not prove vector lineage
+E012,VERIFIED_FROM_UPSTREAM_METADATA,"E5 documents 768D, max 512 and query/passsage prefixes",https://huggingface.co/intfloat/multilingual-e5-base,Public model card,Local preprocessing still needs pinning
+E013,VERIFIED_FROM_CODE,Reranker selects MPS if available and otherwise CPU,"rag_service.py:295-306, RAGService._get_reranker",Source inspection,No CUDA selection
+E014,VERIFIED_FROM_CODE,Same Cross-Encoder instance is used by expander and final ranking,"generation.py:192-226; graph_expander.py:435,543,667",Call-site tracing,Ablation roles are coupled
+E015,VERIFIED_FROM_ARTIFACT,B6 has 1053 graph-neighbor candidate records but zero concept/bridge and no surviving graph context,Archived graph trace and retrieval artifacts,Aggregated 375 trace rows,Candidates do not prove prompt exposure
+E016,VERIFIED_FROM_ARTIFACT,Selected query has seven pre-rerank graph candidates and none selected,Archived trace and evaluation results,Parsed query record,Diagnostic only
+E017,VERIFIED_FROM_CODE,MLX telemetry stores compact top-k data and truncated entropy,mlx_impl.py:124-305,Source inspection,Not full-vocabulary entropy
+E018,VERIFIED_FROM_ARTIFACT,Historical run folder uses about 1084832 KiB,Historical run directory,File inventory,One run only
+E019,VERIFIED_FROM_RUNTIME,Host is macOS ARM64 without nvidia-smi; selected venv misses packages,Runtime inspection,OS and package metadata,No Linux/Windows test
+E020,VERIFIED_FROM_UPSTREAM_METADATA,RTX 5090 is 32GB/CC12.0 and PyTorch 2.12 CUDA13 addresses Blackwell,NVIDIA and PyTorch official pages,Official documentation,Feasibility only
+E021,VERIFIED_FROM_UPSTREAM_METADATA,Docker Windows GPU path uses WSL2 Linux containers,Docker and Microsoft official docs,Official documentation,No project host test
+E022,INFERRED,SQLite online backup then target USEARCH rebuild is portable candidate,sqlite_impl.py:1648-1701,Architecture inference,Validate on target
+E023,UNKNOWN,Exact July database file/hash/path,Manifest and available DBs,No immutable reference found,Recover or authorize new baseline
+E024,UNKNOWN,PubMedQA source revision/license and negative constructor,Dataset directory,Metadata insufficient,Recover author/source records
+E025,UNKNOWN,RTX 5090 model execution,No matching hardware,Unavailable locally,Must test externally
+E026,BLOCKED,Safe local one-query run,Incomplete runtime and DB mutation risk,Source/runtime inspection,Use restored isolated copy

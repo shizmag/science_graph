@@ -1,0 +1,12 @@
+Analyze the following video transcription text.
+Generate a detailed structured summary in English containing:
+1. A high-level overview/summary of the video (2-3 paragraphs).
+2. A list of key themes or topics discussed, with brief explanations.
+3. A detailed outline/notes structure of the video (chronological or logical breakdown).
+
+EXCEPT: If the video transcription text (Transcript Content) is in Russian (contains Cyrillic characters), generate the summary and outline in Russian.
+
+Video Title: {{title}}
+
+Transcript Content:
+{{sample_text}}

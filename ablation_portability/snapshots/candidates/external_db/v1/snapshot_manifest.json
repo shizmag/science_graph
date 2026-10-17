@@ -1,0 +1,154 @@
+{
+  "baseline_selection": {
+    "author_selection": "external_db",
+    "decision_file": "../../../baseline_decision.json",
+    "decision_sha256": "40d55356980fc6be4d6e63d38b598ff9664f30e6d7eae7b1e92a1b9e753438ef",
+    "decision_statement": "Author-selected new baseline: external_db, the recommended graph-enabled candidate with citation/concept relations and a broader corpus; this does not claim July database identity.",
+    "selected_database_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+    "status": "author_selected"
+  },
+  "code_revision": "f53b1999bf006d826e6284b006bb7081b4581f36",
+  "embedding_compatibility": {
+    "dimensions_match": true,
+    "maximum_relative_l2_norm_delta": 1.2561539331319813e-07,
+    "mean_top10_overlap": 1.0,
+    "minimum_cosine_agreement": 0.9999999999980604,
+    "report": "e5_compatibility/embedding_comparison.json",
+    "report_sha256": "87d24f1a3bc05d209112990d417e14ea2bdd9c09cd545b08288c69a28cac264d",
+    "sample_size": 16,
+    "status": "CONFIDENT",
+    "thresholds_predeclared": {
+      "mean_top10_overlap_min": 0.9,
+      "per_vector_cosine_min": 0.999,
+      "relative_l2_norm_delta_max": 0.001
+    }
+  },
+  "embedding_model": {
+    "lineage_status": "CONFIDENT",
+    "model_id": "intfloat/multilingual-e5-base",
+    "revision": "d128750597153bb5987e10b1c3493a34e5",
+    "stored_dimensions": [
+      768
+    ]
+  },
+  "logical_corpus": {
+    "chunk_count": 22068,
+    "document_count": 346,
+    "edge_types": {
+      "AFFILIATED_WITH": 200,
+      "AUTHORED": 1164,
+      "CITES": 5132,
+      "HAS_CODE": 27,
+      "HAS_TAG": 2261,
+      "INTRODUCED_DATASET": 16,
+      "IS_A": 205,
+      "MENTIONS_CONCEPT": 2133,
+      "PREREQUISITE_FOR": 197,
+      "PUBLISHED_IN": 11,
+      "SPONSORED_BY": 42,
+      "SUBCLASS_OF": 83,
+      "USED_DATASET": 241
+    },
+    "fts_objects": [
+      "chunks_fts"
+    ],
+    "graph_edge_count": 11712,
+    "graph_node_count": 9680,
+    "node_labels": {
+      "Author": 1141,
+      "CodeRepository": 27,
+      "Concept": 2700,
+      "Dataset": 180,
+      "ExternalWork": 1327,
+      "Institution": 182,
+      "JournalConference": 9,
+      "Paper": 3814,
+      "UserNote": 300
+    },
+    "parent_count": 2845,
+    "table_counts": {
+      "bridge_only_paper_projection": 3768,
+      "chunk_availability_mapping": 22068,
+      "chunk_reference_mentions": 0,
+      "chunks": 22068,
+      "chunks_fts": 22068,
+      "derived_local_to_local_bridge_edges": 1494,
+      "edges": 11712,
+      "local_paper_projection": 346,
+      "nodes": 9680,
+      "paper_reference_vector": 0,
+      "paper_usability_metadata": 4114,
+      "parent_chunks": 2845,
+      "reference_corpus_stats": 0
+    },
+    "vector_count": 22068,
+    "vector_dimensions": [
+      768
+    ]
+  },
+  "roundtrip_validation": {
+    "approximate_order_identical_for_all_fixtures": false,
+    "approximate_top_k_overlap_mean": 0.9800000000000001,
+    "exact_fixture_retrieval_order_identical": true,
+    "independent_restores": 2,
+    "usearch_rebuilt_from_persisted_vectors": true
+  },
+  "schema_version": "1.0",
+  "snapshot_id": "external_db-20261016T193200Z",
+  "snapshot_identity": {
+    "database_file": "database.db",
+    "sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+    "size_bytes": 185470976
+  },
+  "snapshot_method": "sqlite3.Connection.backup from mode=ro source connection; WAL-aware consistent SQLite backup",
+  "snapshot_time_utc": "2026-10-16T19:32:00.523363+00:00",
+  "source_candidate": "external_db",
+  "source_identity": {
+    "after": {
+      "path": "/Users/vladimirkasterin/.local/share/pdf-graph-analyzer/graph.db",
+      "sha256_main_file": "3761be9187be7f3a2de28ac60d9058b33b42fb0ad1d1093f227bcd890ba99df6",
+      "sha256_shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "sha256_wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shm_present": true,
+      "shm_size_bytes": 32768,
+      "size_bytes": 185470976,
+      "wal_present": true,
+      "wal_size_bytes": 0
+    },
+    "before": {
+      "path": "/Users/vladimirkasterin/.local/share/pdf-graph-analyzer/graph.db",
+      "sha256_main_file": "3761be9187be7f3a2de28ac60d9058b33b42fb0ad1d1093f227bcd890ba99df6",
+      "sha256_shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "sha256_wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shm_present": true,
+      "shm_size_bytes": 32768,
+      "size_bytes": 185470976,
+      "wal_present": true,
+      "wal_size_bytes": 0
+    },
+    "capture_path": "/Users/vladimirkasterin/.local/share/pdf-graph-analyzer/graph.db",
+    "stable_during_backup": true
+  },
+  "sqlite_runtime": {
+    "python_sqlite_version": "3.50.4",
+    "quick_check": "ok",
+    "source_journal_mode": "wal",
+    "target_journal_mode": "delete"
+  },
+  "usearch": {
+    "copied": false,
+    "present_at_source": true,
+    "rebuild_command": "python -m ablation_portability.scripts.rebuild_vector_index <restored database.db>",
+    "rebuild_from_persisted_vectors": true,
+    "source_sha256": "8b031ea47265096d3f80d1e5c938f0f6d67d3d98f962078f03ba26ab2c829275",
+    "source_size_bytes": 37180228
+  },
+  "validation_fixture_ids": [
+    "10.1038/nature16961#0",
+    "10.1038/nature16961#1",
+    "10.1038/nature16961#10",
+    "10.1038/nature16961#100",
+    "10.1038/nature16961#101"
+  ],
+  "validation_fixtures_sha256": "4a575b00df48be6741187a49bd3bc926bffb641947ae7adcf666c0b9c19e9d07"
+}

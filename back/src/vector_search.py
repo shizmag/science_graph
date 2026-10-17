@@ -1,6 +1,6 @@
+import os
 import re
 import time
-import fitz
 from typing import List, Tuple, Dict, Optional
 try:
     from rank_bm25 import BM25Okapi
@@ -21,10 +21,14 @@ class EmbeddingEngine:
     def _get_device(self) -> str:
         try:
             import torch
+            if os.environ.get("ABLA_CUDA_REQUIRE_DEVICE") == "1":
+                if not torch.cuda.is_available():
+                    raise RuntimeError("CUDA is required for this run, but PyTorch cannot access a CUDA device")
+                return "cuda"
+            if torch.cuda.is_available():
+                return "cuda"
             if torch.backends.mps.is_available():
                 return "mps"
-            elif torch.cuda.is_available():
-                return "cuda"
         except (ImportError, AttributeError):
             pass
         return "cpu"
@@ -38,6 +42,10 @@ class EmbeddingEngine:
                 from sentence_transformers import SentenceTransformer
                 self.device = self._get_device()
                 self.model = SentenceTransformer(self.model_name, device=self.device)
+                if os.environ.get("ABLA_CUDA_REQUIRE_DEVICE") == "1":
+                    model_devices = {str(parameter.device) for parameter in self.model.parameters()}
+                    if not model_devices or not all(device.startswith("cuda") for device in model_devices):
+                        raise RuntimeError(f"E5 model did not load entirely on CUDA: {sorted(model_devices)}")
             con.success(f"Embeddings ready: [bold]{short}[/bold] on {self.device.upper()}")
 
     def _empty_device_cache(self, device: str):
@@ -73,11 +81,18 @@ class EmbeddingEngine:
             prefix = "query: " if is_query else "passage: "
             if not text.startswith(prefix):
                 text = prefix + text
+
+        # E5 inputs are cached under their prefixed form as well as the raw
+        # query. Check this key before inference so later B6 arms share the
+        # exact already computed embedding.
+        if is_query and text in self._query_cache:
+            return self._query_cache[text]
                 
         emb = self.model.encode(text, convert_to_numpy=True, show_progress_bar=False)
         emb_list = emb.tolist()
         if is_query:
             self._query_cache[text] = emb_list
+            self._query_cache[text.removeprefix("query: ")] = emb_list
         return emb_list
 
     def get_embeddings(self, texts: List[str], is_query: bool = False) -> List[List[float]]:
@@ -112,13 +127,30 @@ class EmbeddingEngine:
             else:
                 processed_texts = uncached_texts
 
-            embs = self.model.encode(processed_texts, convert_to_numpy=True, show_progress_bar=False)
-            embs_list = embs.tolist()
+            # Resolve prefixed cache keys before encode; otherwise raw text
+            # from another arm would trigger the same E5 CUDA inference again.
+            if is_query:
+                still_uncached = []
+                still_indices = []
+                for idx, processed in zip(uncached_indices, processed_texts):
+                    if processed in self._query_cache:
+                        results[idx] = self._query_cache[processed]
+                    else:
+                        still_indices.append(idx)
+                        still_uncached.append(processed)
+                uncached_indices = still_indices
+                processed_texts = still_uncached
+
+            embs_list = []
+            if processed_texts:
+                embs = self.model.encode(processed_texts, convert_to_numpy=True, show_progress_bar=False)
+                embs_list = embs.tolist()
             
             for idx, emb_val in zip(uncached_indices, embs_list):
                 results[idx] = emb_val
                 if is_query:
                     self._query_cache[texts[idx]] = emb_val
+                    self._query_cache[processed_texts[uncached_indices.index(idx)]] = emb_val
                     
         return results
 
@@ -245,6 +277,7 @@ def split_text_to_chunks(paper_id: str, file_path: str, chunk_size: int = None, 
     Preserves page number references and table/LaTeX structures.
     """
     import logging
+    import fitz
     t0 = time.perf_counter()
     
     parent_size = chunk_size or getattr(config, "parent_chunk_size", 2500)

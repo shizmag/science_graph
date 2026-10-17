@@ -1,0 +1,80 @@
+[
+  {
+    "device": "mlx",
+    "elapsed_sec": 88.95508983300533,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_initialization"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 9.825002052821219e-05,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.00022095799795351923,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.00014099999680183828,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.00022620902745984495,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mps",
+    "elapsed_sec": 32.53848141699564,
+    "model_name": "/Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base",
+    "stage": "embedding_model_initialization"
+  },
+  {
+    "device": "mps:0",
+    "elapsed_sec": 1.4278078330098651,
+    "model_class": "CrossEncoder",
+    "stage": "cross_encoder_initialization"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 89.16526833400712,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_initialization"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.0001042500080075115,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 7.262500002980232e-05,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.00044491601875051856,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.0002632079995237291,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  },
+  {
+    "device": "mlx",
+    "elapsed_sec": 0.00013254099758341908,
+    "model_path": "/Volumes/happy-disk/models/llm/OCC-RAG-1.7B",
+    "stage": "generator_reuse"
+  }
+]

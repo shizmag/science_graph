@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:biomedical-rag:ablation-cuda:run-manifest-schema:1.0",
+  "title": "Biomedical RAG CUDA smoke run manifest",
+  "type": "object",
+  "required": [
+    "schema_version", "status", "run_id", "query_id", "question", "answerability_label",
+    "gold_pmids", "input_package_manifest_sha256", "dataset", "database", "models",
+    "device_preflight", "software_versions", "image_identity", "arms", "intervention",
+    "pipeline_generation_call_count", "pipeline_generated_token_count", "judge", "full_matrix_started"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "status": {"enum": ["SUCCESS", "PARTIAL", "BLOCKED"]},
+    "run_id": {"type": "string", "minLength": 1},
+    "query_id": {"const": "pubmedqa_21084567"},
+    "question": {"type": "string", "minLength": 1},
+    "answerability_label": {"type": "string"},
+    "gold_pmids": {"type": "array", "items": {"type": "string"}},
+    "input_package_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "pipeline_generation_call_count": {"type": "integer", "minimum": 0},
+    "pipeline_generated_token_count": {"type": "integer", "minimum": 0},
+    "judge": {"const": "not_run"},
+    "full_matrix_started": {"const": false},
+    "intervention": {
+      "type": "object",
+      "required": ["component", "trace_rule_passed", "code_path_verified"],
+      "properties": {
+        "component": {"enum": ["score_blending", "graph_expansion", null]},
+        "trace_rule_passed": {"type": "boolean"},
+        "code_path_verified": {"type": "boolean"},
+        "selection_rule": {"type": ["string", "null"]},
+        "selection_reason": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "arms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["arm", "status", "stable_result_id", "answer", "parser_status", "prompt_sha256"],
+        "properties": {
+          "arm": {"enum": ["B6", "no_score_blending", "no_graph_expansion"]},
+          "status": {"enum": ["SUCCESS", "PARTIAL", "BLOCKED"]},
+          "prompt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "pipeline_generation_call_count": {"type": "integer", "minimum": 0},
+          "pipeline_generated_token_count": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

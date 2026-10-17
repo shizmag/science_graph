@@ -1,0 +1,14 @@
+[
+  {
+    "device": "mps",
+    "elapsed_sec": 32.56718204100616,
+    "model_name": "/Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base",
+    "stage": "embedding_model_initialization"
+  },
+  {
+    "device": "mps:0",
+    "elapsed_sec": 1.2502297500032,
+    "model_class": "CrossEncoder",
+    "stage": "cross_encoder_initialization"
+  }
+]

@@ -1,0 +1,69 @@
+# Prompts for analyzing RAG benchmarking results
+# These prompts are copied to clipboard alongside summary metrics.
+
+prompts:
+  detailed_analysis:
+    name: "Detailed RAG Benchmarking Results Analysis"
+    description: "Detailed analysis of quality metrics, identifying strengths/weaknesses of baselines and providing optimization recommendations."
+    system_prompt: "You are a lead RAG architect and Information Retrieval (IR) optimization expert."
+    user_prompt_template: |
+      Hello! I evaluated RAG system performance on a benchmark golden dataset. Here are the run results (from the metrics report):
+
+      === BEGIN REPORT DATA ===
+      {report_data}
+      === END REPORT DATA ===
+
+      Analyze these results and prepare a structured report with the following sections:
+      1. **Executive Summary**: Key findings on performance (leading baseline, underperforming baseline, general trends).
+      2. **Baseline Analysis**:
+         - Compare pure lexical (B1) and pure dense (B2) retrieval. How do metrics differ and why?
+         - What impact did HyDE (B3) have? Did it improve or degrade performance relative to dense search (B2)?
+         - How did standard hybrid search (B4) and graph-RAG (B5) perform?
+         - Analyze full pipeline behavior (B6). If its performance is lower than simpler baselines (e.g., B2 or B4), explain in detail which components (reranker, intent classifier, adaptive graph) might have introduced noise or error.
+      3. **Metrics Breakdown**:
+         - Evaluate the balance between Retrieval Recall and Context Precision. Is the context sufficiently relevant?
+         - Evaluate Faithfulness (extent to which answers are grounded in context) and Answer Relevance (alignment with query). Are there signs of hallucinations or topic drift?
+         - Analyze Citation Fidelity. Does the system cite sources accurately?
+      4. **Actionable Recommendations**: Propose 3-5 specific engineering changes to the architecture (reranker settings, thresholding, graph traversal params, generation prompts) to improve overall Semantic Accuracy.
+
+  b6_degradation_diagnostic:
+    name: "B6 Full Pipeline Degradation Diagnostic"
+    description: "Specialized prompt to diagnose why the full graph-augmented pipeline underperforms simpler baselines."
+    system_prompt: "You are an expert in debugging complex RAG pipelines and graph databases."
+    user_prompt_template: |
+      Hello! During RAG benchmark testing, we noticed that full pipeline B6 (Full Pipeline) performs worse than standard hybrid B4 or dense retrieval B2.
+
+      Here are the detailed metrics for this run:
+
+      === BEGIN REPORT DATA ===
+      {report_data}
+      === END REPORT DATA ===
+
+      Help us diagnose why B6 suffers performance degradation. Analyze the data and answer:
+      1. Which metric suffered the largest drop for B6 compared to B4/B2? (e.g., Recall, Precision, Faithfulness, or Semantic Accuracy).
+      2. Which of B6's 12 components (intent classifier, query expansion, adaptive graph traversal with geometric decay, Cross-Encoder reranker, LLM fact filtering) are most likely causing this drop and by what mechanism?
+      3. How does Latency impact this degradation? B6 takes significantly longer — is this tied to redundant LLM calls or graph traversal overhead?
+      4. Provide a 4-step Action Plan to isolate and resolve the issue.
+
+  run_comparison_ab:
+    name: "RAG Run Comparison (A/B Analysis)"
+    description: "Comparative analysis of two different runs to evaluate the impact of code or model changes."
+    system_prompt: "You are a data analysis and RAG system optimization specialist."
+    user_prompt_template: |
+      Hello! I want to compare results from two RAG benchmark runs to evaluate the impact of recent changes.
+
+      Here are the results for Run 1 (Baseline / Control):
+      === BEGIN RUN 1 DATA ===
+      {run1_data}
+      === END RUN 1 DATA ===
+
+      Here are the results for Run 2 (New / Experimental):
+      === BEGIN RUN 2 DATA ===
+      {run2_data}
+      === END RUN 2 DATA ===
+
+      Conduct a comparative analysis and address:
+      1. **Overall Progress**: Did the experimental run improve overall performance? Compare mean values across key metrics (Recall, Precision, Faithfulness, Semantic Accuracy, Latency).
+      2. **Per-Baseline Analysis**: Which baselines (B0–B6) showed the most notable gains or regressions?
+      3. **Hardest Queries**: Did performance on top hardest queries change?
+      4. **Conclusion**: Do you recommend deploying the changes from Run 2 to production? Justify your answer using metrics.

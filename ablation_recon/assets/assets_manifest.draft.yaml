@@ -1,0 +1,15 @@
+manifest_schema: 0.1-draft
+status: not_releaseable
+evidence_date: 2026-10-16
+source:
+  current_commit: f53b1999bf006d826e6284b006bb7081b4581f36
+  historical_commit: b4f3322d8cae3395bcbf0b5a1f2e47a904d1591a
+models:
+  generator: {repository: occ-ai/OCC-RAG-1.7B, revision: e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c, bytes: 3441185608, sha256: 913448d005d2af695a738da177120c9e741dc8a5b2328f717d7ed108c1fd2e4f, remote: https://huggingface.co/occ-ai/OCC-RAG-1.7B, license: MIT}
+  embedder: {repository: intfloat/multilingual-e5-base, revision: d128750597153bb5987e10b1c3493a34e5a4502a, bytes: 1112201288, sha256: a18a44fad1d0b46ded15928144138cff1135d5cc8233bdd90be5f18822de09a7, remote: https://huggingface.co/intfloat/multilingual-e5-base}
+  cross_encoder: {repository: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1, revision: 1427fd652930e4ba29e8149678df786c240d8825, bytes: 470592698, sha256: 5daeca2481a76b5976a2bdc32f0a78532b6716da4f8cd3ff59460ef8d2f359b4}
+  en_core_web_sm: {revision: UNKNOWN, size: UNKNOWN, action: pin_or_disable_auto_download}
+questions: {count: 375, answerable: 300, negative: 75, source: archived retrieved_contexts.yaml, standalone_manifest: false, sha256: UNKNOWN}
+database: {source: UNKNOWN, size: UNKNOWN, sha256: UNKNOWN, historical_july_identity: unverified, export_candidate: sqlite_online_backup, usearch: rebuild_from_vector_blobs}
+runtime: {image_digest: UNKNOWN, lock_hash: UNKNOWN, torch: "2.12.0 candidate", cuda: "13.x candidate not tested"}
+secrets: {included: false, note: "Inject separately; never serialize credentials."}

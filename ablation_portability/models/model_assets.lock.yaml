@@ -1,0 +1,87 @@
+schema_version: "1.0"
+lock_policy: >-
+  Resolve every model by exact Hugging Face commit, then verify the listed file
+  SHA-256 values. The local paths below describe this developer's pre-existing
+  files only; a collaborator downloads pinned assets into a separate cache.
+model_assets:
+  generator:
+    model_id: occ-ai/OCC-RAG-1.7B
+    revision: e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c
+    architecture: Qwen3ForCausalLM
+    weights: BF16 safetensors
+    tokenizer_identity: tokenizer.json and tokenizer_config.json at the same pinned revision
+    chat_template: chat_template.jinja at the same pinned revision
+    runtime:
+      local: mlx-lm on Apple Silicon
+      collaborator: PyTorch Transformers on CUDA; not validated in Phase 1
+    local_probe:
+      path: /Volumes/happy-disk/models/llm/OCC-RAG-1.7B
+      available_before_phase: true
+      download_required_for_this_host: false
+    license: MIT
+    files:
+      model.safetensors: 913448d005d2af695a738da177120c9e741dc8a5b2328f717d7ed108c1fd2e4f
+      config.json: b8c3a6571d676cc6cfc075c9e4ab21b772c42de95ea2eb71fe401c523454e750
+      generation_config.json: 1d962862a29ef6fde3ce4807236ded28dde2ee8ee6b7160a448ee639dc87d99f
+      tokenizer.json: 672e331460a05e2ea9888810a7a37f0c775429fe05fddc6330ee0dc9147a1370
+      tokenizer_config.json: b13cfd9119dfdba71731229afaf196f9a0ca3f6fd59a3f6d849db515d2468792
+      chat_template.jinja: 6bc65ed570b04755c87ff9536adcd16040586175f3205e139f4a1bb66531a255
+    source_availability:
+      verified: true
+      url: https://huggingface.co/occ-ai/OCC-RAG-1.7B/tree/e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c
+  embedder:
+    model_id: intfloat/multilingual-e5-base
+    requested_revision_prefix: d128750597153bb5987e10b1c3493a34e5
+    revision: d128750597153bb5987e10b1c3493a34e5a4502a
+    architecture: XLM-RoBERTa SentenceTransformer with mean-token pooling
+    dimension: 768
+    max_sequence_length: 512
+    preprocessing:
+      documents: 'prepend "passage: " unless already present'
+      queries: 'prepend "query: " unless already present'
+      normalization: encode(normalize_embeddings=false); no explicit project normalization
+    runtime:
+      local: sentence-transformers with PyTorch MPS when available, otherwise CPU
+      collaborator: sentence-transformers with PyTorch CUDA; not validated in Phase 1
+    local_probe:
+      path: /Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base
+      available_before_phase: true
+      downloaded_revision_metadata: d128750597153bb5987e10b1c3493a34e5a4502a
+      download_required_for_this_host: false
+    license: MIT
+    files:
+      model.safetensors: a18a44fad1d0b46ded15928144138cff1135d5cc8233bdd90be5f18822de09a7
+      config.json: 9dab198f24c8c0879e481cf7822005d5ecbceedbacb390ffafa594e28d31bac4
+      modules.json: c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04
+      1_Pooling/config.json: f586ab6c734af7b8d14d898bfa7faa886f23b46f86dd1730514309893af13d75
+      tokenizer.json: 62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626
+      tokenizer_config.json: efb5c0d09722e5fe59a462cd2a9976ee216d55b037597d997cd3fe833216da15
+    source_availability:
+      verified: true
+      url: https://huggingface.co/intfloat/multilingual-e5-base/tree/d128750597153bb5987e10b1c3493a34e5a4502a
+  cross_encoder:
+    model_id: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
+    revision: 1427fd652930e4ba29e8149678df786c240d8825
+    architecture: XLM-R sequence classification Cross-Encoder
+    maximum_sequence_length: 512
+    runtime:
+      local: sentence-transformers with PyTorch MPS when available, otherwise CPU
+      collaborator: sentence-transformers with PyTorch CUDA; not validated in Phase 1
+    local_probe:
+      path: ~/.cache/huggingface/hub/models--cross-encoder--mmarco-mMiniLMv2-L12-H384-v1/snapshots/1427fd652930e4ba29e8149678df786c240d8825
+      available_before_phase: true
+      download_required_for_this_host: false
+    license: Apache-2.0
+    files:
+      model.safetensors: 5daeca2481a76b5976a2bdc32f0a78532b6716da4f8cd3ff59460ef8d2f359b4
+      config.json: cc2cfe51aa3fd759d21d21acf5dfd6994aa67a3c9210636d22e143699d336c77
+      tokenizer.json: 62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626
+      tokenizer_config.json: e7fbfbfa6347b4e414c1cee50d142e2c2f9a895dad68b068ae83a8b564c3837e
+    source_availability:
+      verified: true
+      url: https://huggingface.co/cross-encoder/mmarco-mMiniLMv2-L12-H384-v1/tree/1427fd652930e4ba29e8149678df786c240d8825
+download_policy:
+  automatic_download_on_collaborator_machine: true
+  auth_required_for_these_public_revisions: false
+  download_large_checkpoints_on_this_developer_host: false
+  preserve_original_local_assets: true

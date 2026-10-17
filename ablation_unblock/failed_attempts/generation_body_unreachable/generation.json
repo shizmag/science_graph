@@ -1,0 +1,12 @@
+{
+  "answerability_label": "answerable",
+  "generation_prompt_matches_captured_response": false,
+  "gold_reference_answer": "Yes. This group of elderly stroke patients were able to record their BPs reliably at home. Any bias was small and would be unlikely to affect management. Since BP readings in a GP surgery are often a poor indication of true BP, GPs might consider using hypertensive patients' records of home BP monitoring to help guide treatment decisions.",
+  "latency_sec": null,
+  "parsed_answer": null,
+  "parser_status": null,
+  "pipeline_status": null,
+  "query_id": "pubmedqa_21084567",
+  "raw_generated_answer": null,
+  "retrieved_papers": []
+}

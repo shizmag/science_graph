@@ -1,0 +1,26 @@
+baselines:
+- B6
+config_profile: null
+config_snapshot_path: config_snapshot.yaml
+created_at: '2026-10-17T10:29:52.311789'
+dataset:
+  dataset_hash: c1e0881b37a6fc920c062c4c0adac46f1509268ba7764e114cc58f8b9024f2b3
+  name: one_query.yaml
+  query_count: 1
+embedding:
+  model_name: /Volumes/happy-disk/models/embeddings/intfloat-multilingual-e5-base
+env_overrides:
+  RAG_GRAPH_RETRIEVAL: null
+git_branch: main
+git_commit: f53b1999bf006d826e6284b006bb7081b4581f36
+model:
+  local_model_path: /Volumes/happy-disk/models/llm/OCC-RAG-1.7B
+  max_tokens: 1000
+  model_max_context: 4096
+  provider: mlx
+output_dir: /Users/vladimirkasterin/python/graph/ablation_unblock/smoke_run/pipeline
+reranker:
+  model_name: /Users/vladimirkasterin/.cache/huggingface/hub/models--cross-encoder--mmarco-mMiniLMv2-L12-H384-v1/snapshots/1427fd652930e4ba29e8149678df786c240d8825
+run_id: pipeline
+trace_dir: /Users/vladimirkasterin/python/graph/ablation_unblock/smoke_run/pipeline/traces
+working_tree_dirty: true

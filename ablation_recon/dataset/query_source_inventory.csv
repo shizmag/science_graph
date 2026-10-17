@@ -1,0 +1,6 @@
+source_id,path,size_or_count,contents,authority,revision_seed,gap,evidence
+pubmedqa_source,back/benchmarks/rag/dataset/pubmedqa/pubmedqf.parquet,1075513 bytes,PubMedQA rows,Source for note sample,Upstream revision unknown,License and revision need recovery,VERIFIED_FROM_ARTIFACT
+answerable_sample,back/benchmarks/rag/dataset/pubmedqa/sampled_300.json,585335 bytes; 300 rows,Question/context/gold,Answerable subset,Seed42 in sampler,Hash crosswalk absent,VERIFIED_FROM_ARTIFACT
+candidate_pool,back/benchmarks/rag/dataset/pubmedqa/pubmedqa_golden.yaml,271123 bytes; 400 rows,300 positive/100 negative,Parent pool,Negative selection seed42; construction unknown,Not final population,VERIFIED_FROM_ARTIFACT
+historical_population,back/benchmarks/rag/graphs/run_20260729_211324_OCC-RAG-1.7B/retrieved_contexts.yaml,68044067 bytes; 375 IDs,"Questions, gold, labels and contexts",Authority for historical membership,Run commit b4f3322d8cae3395bcbf0b5a1f2e47a904d1591a,Extract thin manifest,VERIFIED_FROM_ARTIFACT
+notes,back/benchmarks/rag/dataset/pubmedqa/notes/,300 files; about 3.1MB,Markdown notes,Rebuild source candidate,Seed42 sample,DB mapping and hashes absent,VERIFIED_FROM_ARTIFACT
