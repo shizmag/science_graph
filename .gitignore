@@ -184,4 +184,40 @@ revision*
 # Large generated ablation release artifacts; keep local, out of Git history.
 ablation_cuda/releases/ablation_cuda_input_v*/snapshot/database.db
 ablation_cuda/releases/ablation_cuda_input_v*.tar.gz
+ablation_cuda/releases/ablation_cuda_input_v1.2.0.tar.gz.sha256
+ablation_cuda/releases/ablation_cuda_input_v1.2.1.tar.gz.sha256
+ablation_cuda/releases/ablation_cuda_input_v1.2.2.tar.gz.sha256
 ablation_portability/snapshots/candidates/*/v*/database.db
+
+# Research databases, local indexes, model caches, and generated archives stay out of Git.
+*.db
+*.db-*
+*.db.bak*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.usearch
+*.tar.gz
+*.tar.zst
+*.tar.xz
+*.zip
+*.7z
+*.rar
+*.parquet
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.ckpt
+*.onnx
+**/.cache/huggingface/
+**/.cache/torch/
+**/huggingface_cache/
+**/hf_cache/
+**/models--*/
+ablation_cuda/state/
+ablation_cuda/return/
+
+# Exploded releases are reproducible from the tracked source and stay local;
+# small checksum sidecars remain eligible for Git as the release index.
+ablation_cuda/releases/ablation_cuda_input_v*/

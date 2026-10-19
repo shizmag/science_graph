@@ -4,7 +4,7 @@ requires-python = "==3.12.*"
 
 [[package]]
 name = "ablation-cuda-runtime"
-version = "1.1.0"
+version = "1.2.3"
 source = { virtual = "." }
 dependencies = [
     { name = "huggingface-hub" },

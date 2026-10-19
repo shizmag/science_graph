@@ -81,9 +81,7 @@ class YoutubeVideoParser(BaseParser):
             try:
                 from faster_whisper import WhisperModel
                 
-                model_path = "/Users/vladimirkasterin/models/audio/faster-whisper-large-v3-turbo"
-                if not os.path.exists(model_path):
-                    raise FileNotFoundError(f"Local Whisper model directory not found at {model_path}")
+                model_path = os.environ.get("FASTER_WHISPER_MODEL_PATH", "large-v3-turbo")
                 
                 con.info(f"Loading local Whisper model from {model_path} on CPU...")
                 # large-v3-turbo on CPU must run with float32 or int8

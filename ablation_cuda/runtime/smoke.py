@@ -9,6 +9,7 @@ import shutil
 import sqlite3
 import sys
 import time
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,7 @@ import yaml
 
 from ablation_cuda.identity import arm_input_identity, canonical_json, component_isolated, sha256_bytes, stable_result_identity
 from ablation_cuda.runtime.assets import acquire_models, sha256_file
+from ablation_cuda.runtime.disk_budget import preflight_disk_space
 from ablation_cuda.runtime.progress import Progress
 from ablation_portability.dataset.loader import load_frozen_dataset, select_frozen_query
 from ablation_portability.scripts.rebuild_vector_index import rebuild_index
@@ -117,24 +119,40 @@ def validate_release(release_root: Path = RELEASE_ROOT) -> dict[str, Any]:
     if sha256_file(release_root / "dataset/questions_manifest.json") != manifest.get("dataset", {}).get("manifest_sha256"):
         raise RuntimeError("Frozen question manifest does not match the package-level checksum")
     query = select_frozen_query(records, QUESTION_ID)
-    db = release_root / "snapshot/database.db"
-    db_sha = sha256_file(db)
-    if db_sha != manifest["database"]["snapshot_sha256"]:
-        raise RuntimeError("Selected external_db file fingerprint does not match package manifest")
-    source_summary = inspect_database(db, include_samples=False)
-    vectors = validate_vectors(db)
-    if not vectors["valid"] or source_summary["quick_check"] != "ok" or not source_summary.get("fts_objects"):
-        raise RuntimeError("Selected SQLite/FTS5/stored-vector validation failed")
-    if source_summary.get("graph_node_count") != 9680 or source_summary.get("graph_edge_count") != 11712:
-        raise RuntimeError("Selected external_db graph identity changed")
     snapshot_manifest = json.loads((release_root / "snapshot/snapshot_manifest.json").read_text(encoding="utf-8"))
     fixture_path = release_root / "snapshot/validation_fixtures.json"
     fixture_sha256 = sha256_file(fixture_path)
     if fixture_sha256 != snapshot_manifest.get("validation_fixtures_sha256"):
         raise RuntimeError("Frozen retrieval fixtures do not match the selected snapshot manifest")
-    fixture_validation = validate_retrieval_fixtures(db, fixture_path, fixture_sha256)
+    database = manifest["database"]
+    transport = database.get("snapshot_transport", {"mode": "bundled", "path": "snapshot/database.db"})
+    mode = transport.get("mode")
+    if mode not in {"bundled", "remote"}:
+        raise RuntimeError(f"Unsupported SQLite snapshot transport mode: {mode!r}")
+    if (snapshot_manifest.get("source_candidate") != "external_db"
+            or snapshot_manifest.get("snapshot_identity", {}).get("sha256") != database.get("snapshot_sha256")
+            or snapshot_manifest.get("snapshot_identity", {}).get("size_bytes") != database.get("snapshot_size_bytes")):
+        raise RuntimeError("Snapshot manifest does not match the canonical external_db asset identity")
+    db = (release_root / transport.get("path", "snapshot/database.db")) if mode == "bundled" else None
+    source_summary = None
+    vectors = None
+    fixture_validation = None
+    if mode == "bundled":
+        if db is None or not db.is_file():
+            raise RuntimeError(f"Bundled SQLite snapshot is missing: {db.relative_to(release_root)}")
+        if db.stat().st_size != database.get("snapshot_size_bytes") or sha256_file(db) != database.get("snapshot_sha256"):
+            raise RuntimeError("Selected external_db file fingerprint does not match package manifest")
+        source_summary = inspect_database(db, include_samples=False)
+        vectors = validate_vectors(db)
+        if not vectors["valid"] or source_summary["quick_check"] != "ok" or not source_summary.get("fts_objects"):
+            raise RuntimeError("Selected SQLite/FTS5/stored-vector validation failed")
+        if source_summary.get("graph_node_count") != 9680 or source_summary.get("graph_edge_count") != 11712:
+            raise RuntimeError("Selected external_db graph identity changed")
+        fixture_validation = validate_retrieval_fixtures(db, fixture_path, fixture_sha256)
     database_identity = json.loads((release_root / "DATABASE_IDENTITY.json").read_text(encoding="utf-8"))
-    if database_identity.get("candidate") != "external_db" or database_identity.get("snapshot_sha256") != db_sha:
+    if (database_identity.get("candidate") != "external_db"
+            or database_identity.get("snapshot_sha256") != database.get("snapshot_sha256")
+            or database_identity.get("snapshot_transport", {}).get("mode", "bundled") != mode):
         raise RuntimeError("Input package does not identify the author-selected external_db baseline")
     model_asset_manifest = release_root / "models/asset_manifest.json"
     if sha256_file(model_asset_manifest) != manifest.get("model_asset_manifest_sha256"):
@@ -148,7 +166,7 @@ def validate_release(release_root: Path = RELEASE_ROOT) -> dict[str, Any]:
     if effective.get("llm", {}).get("provider") != "cuda_torch" or effective.get("llm", {}).get("max_tokens") != 768:
         raise RuntimeError("Frozen effective configuration does not select the locked CUDA generation protocol")
     return {"manifest": manifest, "dataset_records": len(records), "selected_query": query,
-            "source_database_sha256": db_sha, "logical": source_summary, "vectors": vectors,
+            "source_database_sha256": database["snapshot_sha256"], "logical": source_summary, "vectors": vectors,
             "retrieval_fixtures": fixture_validation}
 
 
@@ -164,27 +182,114 @@ def _logical_signature(path: Path) -> dict[str, Any]:
     }
 
 
+def _resolve_snapshot_source(release_info: dict[str, Any]) -> Path:
+    database = release_info["manifest"]["database"]
+    transport = database.get("snapshot_transport", {"mode": "bundled", "path": "snapshot/database.db"})
+    if transport.get("mode") == "bundled":
+        source = RELEASE_ROOT / transport.get("path", "snapshot/database.db")
+    elif transport.get("mode") == "remote":
+        source = DB_ROOT / "downloads" / f"{database['snapshot_sha256']}.db"
+        if source.is_file():
+            try:
+                if source.stat().st_size == database["snapshot_size_bytes"] and sha256_file(source) == database["snapshot_sha256"]:
+                    return source
+            except OSError:
+                pass
+            quarantine = DB_ROOT / "quarantine"
+            quarantine.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(source), str(quarantine / f"download-{time.time_ns()}.db"))
+        url_env = transport.get("url_environment", "ABLA_SNAPSHOT_URL")
+        url = os.environ.get(url_env, "").strip()
+        if not url:
+            raise RuntimeError(
+                f"This release uses remote snapshot transport; configure its private artifact URL "
+                f"in {url_env}. No URL is embedded in the release."
+            )
+        source.parent.mkdir(parents=True, exist_ok=True)
+        temporary = source.with_name(f".{source.name}.{os.getpid()}.{time.time_ns()}.partial")
+        digest = hashlib.sha256()
+        byte_count = 0
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "ablation-cuda/1.2.3"})
+            with urllib.request.urlopen(request, timeout=120) as response, temporary.open("wb") as output:
+                while block := response.read(4 * 1024 * 1024):
+                    byte_count += len(block)
+                    if byte_count > database["snapshot_size_bytes"]:
+                        raise RuntimeError("Downloaded snapshot exceeds the frozen expected size")
+                    digest.update(block)
+                    output.write(block)
+                output.flush()
+                os.fsync(output.fileno())
+            if byte_count != database["snapshot_size_bytes"] or digest.hexdigest() != database["snapshot_sha256"]:
+                raise RuntimeError("Downloaded snapshot failed frozen size or SHA-256 validation; check the private artifact URL and retry.")
+            os.replace(temporary, source)
+        except Exception as exc:
+            temporary.unlink(missing_ok=True)
+            if isinstance(exc, RuntimeError):
+                raise
+            raise RuntimeError(
+                f"Unable to download the configured private SQLite snapshot from {url_env}; "
+                "the URL value is omitted from diagnostics."
+            ) from exc
+    else:
+        raise RuntimeError(f"Unsupported SQLite snapshot transport: {transport.get('mode')!r}")
+    if not source.is_file() or source.stat().st_size != database["snapshot_size_bytes"] or sha256_file(source) != database["snapshot_sha256"]:
+        raise RuntimeError("Input SQLite snapshot is missing or fails its canonical size/SHA-256")
+    return source
+
+
+def _restore_fresh(source: Path, destination: Path, expected_sha256: str) -> None:
+    staging = destination.parent / f".database-{os.getpid()}-{time.time_ns()}.tmp"
+    try:
+        shutil.copy2(source, staging)
+        if staging.stat().st_size != source.stat().st_size or sha256_file(staging) != expected_sha256:
+            raise RuntimeError("Temporary SQLite restoration failed its size/SHA-256 check")
+        os.replace(staging, destination)
+    finally:
+        staging.unlink(missing_ok=True)
+
+
 def _prepare_database(release_info: dict[str, Any]) -> tuple[Path, dict[str, Any]]:
     DB_ROOT.mkdir(parents=True, exist_ok=True)
+    budget_report = preflight_disk_space(
+        RELEASE_ROOT, model_root=MODEL_ROOT, database_root=DB_ROOT,
+        output_root=OUTPUT_ROOT, return_root=Path(os.environ.get("ABLA_RETURN_ROOT", "/return")),
+    )
+    downloads = DB_ROOT / "downloads"
+    if downloads.is_dir():
+        for partial in downloads.glob(".*.partial"):
+            partial.unlink(missing_ok=True)
+    source = _resolve_snapshot_source(release_info)
     db_path = DB_ROOT / "database.db"
     expected = release_info["manifest"]["database"]["logical_fingerprint"]
     expected_sha = release_info["manifest"]["database"]["snapshot_sha256"]
     expected_sig = {**expected, "quick_check": "ok"}
+    for staging in DB_ROOT.glob(".database-*.tmp"):
+        staging.unlink(missing_ok=True)
+    database_valid = False
     if db_path.is_file():
-        actual_sig = _logical_signature(db_path)
-        if (sha256_file(db_path) != expected_sha or actual_sig != expected_sig
-                or not validate_vectors(db_path)["valid"]):
-            quarantine = DB_ROOT / "quarantine"
-            quarantine.mkdir(exist_ok=True)
-            stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
-            shutil.move(str(db_path), str(quarantine / f"database-{stamp}.db"))
-            for suffix in ("-wal", "-shm", ".usearch"):
-                sidecar = Path(str(db_path) + suffix) if suffix in ("-wal", "-shm") else db_path.with_suffix(suffix)
-                if sidecar.exists():
-                    shutil.move(str(sidecar), str(quarantine / f"database-{stamp}{suffix}"))
-            _restore_fresh()
-    else:
-        _restore_fresh()
+        try:
+            database_valid = (
+                sha256_file(db_path) == expected_sha
+                and _logical_signature(db_path) == expected_sig
+                and validate_vectors(db_path)["valid"]
+                and not Path(str(db_path) + "-wal").exists()
+                and not Path(str(db_path) + "-shm").exists()
+            )
+        except Exception:
+            database_valid = False
+    if not database_valid:
+        quarantine = DB_ROOT / "quarantine"
+        quarantine.mkdir(exist_ok=True)
+        stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+        old_paths = [db_path, Path(str(db_path) + "-wal"), Path(str(db_path) + "-shm"),
+                     db_path.with_suffix(".usearch"),
+                     Path(str(db_path.with_suffix(".usearch")) + ".manifest.json"),
+                     DB_ROOT / "restore_manifest.json"]
+        for old_path in old_paths:
+            if old_path.exists():
+                shutil.move(str(old_path), str(quarantine / f"{stamp}-{old_path.name}"))
+        _restore_fresh(source, db_path, expected_sha)
     if sha256_file(db_path) != expected_sha:
         raise RuntimeError("Restored database file SHA-256 differs from the frozen external_db snapshot")
     if _logical_signature(db_path) != expected_sig:
@@ -192,37 +297,64 @@ def _prepare_database(release_info: dict[str, Any]) -> tuple[Path, dict[str, Any
     vector_report = validate_vectors(db_path)
     if not vector_report["valid"]:
         raise RuntimeError("Stored vectors failed validation; automatic re-embedding is disabled")
+    fixture_path = RELEASE_ROOT / "snapshot/validation_fixtures.json"
+    fixture_sha256 = release_info["manifest"]["database"].get("retrieval_fixtures", {}).get("fixtures_sha256")
+    fixture_validation = validate_retrieval_fixtures(db_path, fixture_path, fixture_sha256)
+    os.environ["ABLA_REQUIRED_DB_SHA256"] = expected_sha
     index_path = db_path.with_suffix(".usearch")
+    index_manifest_path = Path(str(index_path) + ".manifest.json")
     index_valid = False
-    if index_path.is_file():
+    if index_path.is_file() and index_manifest_path.is_file():
         try:
             from usearch.index import Index
+            index_manifest = json.loads(index_manifest_path.read_text(encoding="utf-8"))
             index = Index(ndim=768, metric="cos")
             index.load(str(index_path))
-            index_valid = len(index) == vector_report["rows"] and index.ndim == 768
+            index_valid = (
+                index_manifest.get("snapshot_sha256") == expected_sha
+                and index_manifest.get("database_sha256") == expected_sha
+                and index_manifest.get("rows") == vector_report["rows"]
+                and index_manifest.get("dimensions") == 768
+                and index_manifest.get("metric") == "cos"
+                and index_manifest.get("index_sha256") == sha256_file(index_path)
+                and len(index) == vector_report["rows"] and index.ndim == 768
+            )
         except Exception:
             index_valid = False
     if not index_valid:
-        if index_path.exists():
+        if index_path.exists() or index_manifest_path.exists():
             quarantine = DB_ROOT / "quarantine"
             quarantine.mkdir(exist_ok=True)
-            shutil.move(str(index_path), str(quarantine / f"database-{int(time.time())}.usearch"))
-        rebuild_index(db_path, index_path)
-    return db_path, {"snapshot_sha256": release_info["manifest"]["database"]["snapshot_sha256"],
-                     "restored_database_sha256": sha256_file(db_path),
-                     "logical_fingerprint": _logical_signature(db_path),
-                     "vector_validation": vector_report,
-                     "usearch_index_sha256": sha256_file(index_path),
+            stamp = int(time.time())
+            for old_path in (index_path, index_manifest_path):
+                if old_path.exists():
+                    shutil.move(str(old_path), str(quarantine / f"{stamp}-{old_path.name}"))
+        index_report = rebuild_index(db_path, index_path)
+        _atomic_json(index_manifest_path, {
+            "schema_version": "1.0", "snapshot_sha256": expected_sha,
+            "database_sha256": expected_sha, "rows": vector_report["rows"],
+            "dimensions": 768, "metric": "cos", "index_sha256": index_report["index_sha256"],
+            "vector_source": "SQLite chunks.embedding float32 blobs", "recomputed_embeddings": False,
+        })
+    restore_report = {
+        "schema_version": "1.0", "status": "VERIFIED",
+        "snapshot_id": release_info["manifest"]["database"]["snapshot_id"],
+        "snapshot_sha256": expected_sha, "restored_database_sha256": sha256_file(db_path),
+        "logical_fingerprint": _logical_signature(db_path), "vector_validation": vector_report,
+        "retrieval_fixtures": fixture_validation, "usearch_index_sha256": sha256_file(index_path),
+        "usearch_index_rows": vector_report["rows"], "usearch_index_dimensions": 768,
+        "usearch_rebuilt_from_persisted_vectors": not index_valid,
+        "recomputed_embeddings": False, "disk_preflight": budget_report,
+    }
+    _atomic_json(DB_ROOT / "restore_manifest.json", restore_report)
+    return db_path, {"snapshot_sha256": expected_sha,
+                     "restored_database_sha256": restore_report["restored_database_sha256"],
+                     "logical_fingerprint": restore_report["logical_fingerprint"],
+                     "vector_validation": vector_report, "retrieval_fixtures": fixture_validation,
+                     "usearch_index_sha256": restore_report["usearch_index_sha256"],
                      "snapshot_file_restored_byte_exactly": True,
                      "usearch_rebuilt_from_persisted_vectors": not index_valid,
                      "recomputed_embeddings": False}
-
-
-def _restore_fresh() -> None:
-    source = RELEASE_ROOT / "snapshot/database.db"
-    staging = DB_ROOT / f".database-{os.getpid()}-{time.time_ns()}.tmp"
-    shutil.copy2(source, staging)
-    os.replace(staging, DB_ROOT / "database.db")
 
 
 def _write_private_config(base_config_path: Path, db_path: Path,

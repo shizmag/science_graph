@@ -60,10 +60,12 @@ def _redact_author_paths(value: Any) -> Any:
 def _copy_tree(source: Path, destination: Path, *, suffixes: set[str] | None = None,
                exclude_paths: set[str] | None = None) -> None:
     for path in sorted(source.rglob("*")):
-        if not path.is_file() or path.is_symlink():
+        if not path.is_file() or path.is_symlink() or path.name in {".DS_Store", "._.DS_Store"}:
             continue
         relative = path.relative_to(source)
-        if relative.as_posix() in (exclude_paths or set()):
+        relative_text = relative.as_posix()
+        if any(relative_text == excluded or relative_text.startswith(excluded.rstrip("/") + "/")
+               for excluded in (exclude_paths or set())):
             continue
         if any(part in {".venv", "__pycache__", "releases", "imported", ".pytest_cache"} for part in relative.parts):
             continue
@@ -147,7 +149,7 @@ def _sanitized_effective_config(config_source: Path) -> tuple[dict[str, Any], di
     cfg.setdefault("ner", {})["model_name"] = "disabled_not_used_by_query_runtime"
     cfg = _redact_author_paths(cfg)
     differences = {
-        "historical_source": str(config_source.relative_to(ROOT)),
+        "historical_source": "frozen historical configuration evidence",
         "historical_provider": historical.get("llm", {}).get("provider"),
         "runtime_provider": "cuda_torch",
         "generator_weights": "same public OCC-RAG-1.7B BF16 safetensors revision; no quantization",
@@ -286,7 +288,10 @@ def _stage_artifact(archive_path: Path, store: str | None, authorize_remote: boo
 
 
 def prepare_release(output_dir: Path | None = None, artifact_store: str | None = None,
-                    authorize_remote_upload: bool = False) -> tuple[Path, Path, str]:
+                    authorize_remote_upload: bool = False,
+                    snapshot_transport_mode: str = "bundled") -> tuple[Path, Path, str]:
+    if snapshot_transport_mode not in {"bundled", "remote"}:
+        raise ValueError("snapshot_transport_mode must be 'bundled' or 'remote'")
     output_dir = (output_dir or ROOT / "ablation_cuda/releases").resolve()
     release_dir = output_dir / DEFAULT_RELEASE_NAME
     if release_dir.exists():
@@ -307,6 +312,8 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
         shutil.copy2(source, dest)
 
     _copy_tree(snapshot_dir, release_dir / "snapshot")
+    if snapshot_transport_mode == "remote":
+        (release_dir / "snapshot/database.db").unlink()
     for metadata_path in (release_dir / "snapshot").rglob("*.json"):
         try:
             metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
@@ -322,7 +329,7 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
         snapshot_json["embedding_compatibility"]["report_sha256"] = sha256_file(e5_report)
     (release_dir / "snapshot/snapshot_manifest.json").write_bytes(_json_bytes(snapshot_json))
 
-    historical_config = ROOT / "graphs/run_20260729_211324_OCC-RAG-1.7B/config_snapshot.yaml"
+    historical_config = ROOT / "ablation_cuda/source_config.yaml"
     effective_config, config_differences = _sanitized_effective_config(historical_config)
     (release_dir / "effective_config.yaml").write_text(
         yaml.safe_dump(effective_config, sort_keys=True, allow_unicode=True), encoding="utf-8")
@@ -369,7 +376,15 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
         if source.is_file():
             shutil.copy2(source, release_dir / "code/back/benchmarks/rag" / name)
     _copy_tree(ROOT / "ablation_cuda", release_dir / "code/ablation_cuda",
-               exclude_paths={"final_report.md"})
+               exclude_paths={"final_report.md", "release.py", "author_cli.py", "source_config.yaml",
+                              "README_AUTHOR.md", "tests", "models"})
+    (release_dir / "code/.dockerignore").write_text(
+        "**/*.db*\n**/*.sqlite*\n**/*.usearch\n**/*.tar*\n**/*.zip\n**/*.7z\n"
+        "**/*.parquet\n**/*.safetensors\n**/*.gguf\n**/*.pt\n**/*.pth\n**/*.ckpt\n**/*.onnx\n"
+        "**/.cache/**\n**/models--*/**\n**/models/**\n**/data/**\n**/graphs/**\n**/releases/**\n"
+        "**/__pycache__/**\n**/.venv/**\n",
+        encoding="utf-8",
+    )
     shutil.copy2(ROOT / "ablation_cuda/Dockerfile", release_dir / "Dockerfile")
     for name in ("requirements.lock", "uv.lock", "runtime-pyproject.toml", "ablation.sh", "ablation.ps1", "verify_results.py"):
         source = ROOT / "ablation_cuda" / name
@@ -393,10 +408,17 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
 
     revision = _source_revision()
     (release_dir / "SOURCE_REVISION.json").write_bytes(_json_bytes(revision))
+    snapshot_transport = {
+        "mode": snapshot_transport_mode,
+        "path": "snapshot/database.db" if snapshot_transport_mode == "bundled" else None,
+        "url_environment": "ABLA_SNAPSHOT_URL" if snapshot_transport_mode == "remote" else None,
+    }
     db_identity = {
         "candidate": "external_db",
         "snapshot_id": snapshot_json.get("snapshot_id"),
         "snapshot_sha256": snapshot_json.get("snapshot_identity", {}).get("sha256"),
+        "snapshot_size_bytes": snapshot_json.get("snapshot_identity", {}).get("size_bytes"),
+        "snapshot_transport": snapshot_transport,
         "selected_baseline_only": True,
         "july_identity_proven": False,
         "logical_fingerprint": {
@@ -412,10 +434,28 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
         "retrieval_fixtures": snapshot_evidence["retrieval_fixtures"],
     }
     (release_dir / "DATABASE_IDENTITY.json").write_bytes(_json_bytes(db_identity))
+    disk_budget = {
+        "schema_version": "1.0",
+        "release_work_bytes": 1 * 1024 ** 3,
+        "model_cache_bytes": 8 * 1024 ** 3,
+        "database_bytes": 1 * 1024 ** 3,
+        "outputs_bytes": 16 * 1024 ** 3,
+        "return_archive_bytes": 16 * 1024 ** 3,
+        "docker_build_cache_bytes": 12 * 1024 ** 3,
+        "measured_model_weight_floor_bytes": 5023979594,
+        "notes": "Conservative reserve from the measured public model weights, the 185470976-byte SQLite snapshot, 37180228-byte rebuilt index, prior 1.11-GB run evidence, one portable results archive, image layers, and archive extraction scratch space.",
+    }
+    (release_dir / "DISK_BUDGET.json").write_bytes(_json_bytes(disk_budget))
+    snapshot_delivery = (
+        "The archive bundles the exact frozen `external_db` SQLite snapshot."
+        if snapshot_transport_mode == "bundled" else
+        "This archive omits the SQLite snapshot. Set `ABLA_SNAPSHOT_URL` to the configured private artifact URL for the same immutable SHA-256 before running."
+    )
     (release_dir / "README_COLLABORATOR.md").write_text(
         "# Biomedical RAG full CUDA ablation\n\n"
-        "This self-contained distribution contains the exact frozen 375-query dataset, the selected `external_db` snapshot, "
+        "This distribution contains the exact frozen 375-query dataset, the selected `external_db` snapshot identity, "
         "runtime source, Linux and PowerShell launchers, and locked dependencies. The original July database identity remains unproven.\n\n"
+        + snapshot_delivery + "\n\n"
         "## Run the experiment\n\n"
         "Linux: `./ablation.sh run`\n\n"
         "Windows PowerShell: `./ablation.ps1 run`\n\n"
@@ -428,7 +468,11 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
         "WSL2 GPU integration and an NVIDIA RTX 5090. Host NVIDIA drivers must already be installed and working. "
         "Linux requires driver 580.65.06 or newer; Windows/WSL requires 580.88 or newer for this CUDA 13 image. "
         "The launcher reports missing prerequisites and remediation; it does not install drivers or change privileged host settings. "
-        "Ensure adequate free disk space for model caches, build layers, logs and results.\n\n"
+        "Before downloading or extracting the input archive, reserve at least 54 GiB across the release, persistent data, return, and Docker storage locations. "
+        "This includes 1 GiB of archive/extraction space, 8 GiB for pinned model cache, 1 GiB for SQLite/index restore, "
+        "16 GiB for run outputs, 16 GiB for the returned results archive, and 12 GiB for Docker image/build storage. "
+        "The measured public model-weight floor is 5,023,979,594 bytes; result and Docker reserves allow for copies, metadata, telemetry and temporary files. "
+        "The launcher checks host volumes and runtime persistent mounts before model downloads. Docker Desktop users must also leave 12 GiB free in its Linux disk image.\n\n"
         "If the smoke fails, the full workload does not start. Its diagnostic directory and archive remain available. "
         "Fix the reported host or runtime problem and run `./ablation.sh resume` (or the PowerShell equivalent).\n\n"
         "On completion, send the printed full-run `.tar.gz` archive and matching `.sha256` file to the author. "
@@ -451,6 +495,7 @@ def prepare_release(output_dir: Path | None = None, artifact_store: str | None =
             "manifest_sha256": sha256_file(release_dir / "dataset/questions_manifest.json"),
         },
         "database": db_identity,
+        "disk_budget": disk_budget,
         "model_asset_manifest_sha256": sha256_file(release_dir / "models/asset_manifest.json"),
         "effective_config_sha256": hashlib.sha256((release_dir / "effective_config.yaml").read_bytes()).hexdigest(),
         "source_revision": revision,
@@ -476,9 +521,11 @@ def main() -> None:
     parser.add_argument("--artifact-store", default=os.environ.get("ABLA_ARTIFACT_STORE"))
     parser.add_argument("--authorize-remote-upload", action="store_true",
                         help="Explicitly authorize staging to the configured remote S3 destination")
+    parser.add_argument("--snapshot-transport", choices=("bundled", "remote"), default="bundled",
+                        help="Bundle the frozen SQLite snapshot (default) or require ABLA_SNAPSHOT_URL at runtime")
     args = parser.parse_args()
     bundle, archive, staging = prepare_release(args.output_dir, args.artifact_store,
-                                               args.authorize_remote_upload)
+                                               args.authorize_remote_upload, args.snapshot_transport)
     print(json.dumps({"bundle_directory": str(bundle), "archive": str(archive),
                       "archive_sha256": sha256_file(archive), "staging": staging},
                      indent=2, ensure_ascii=False))

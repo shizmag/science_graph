@@ -9,7 +9,7 @@ if [[ -z "$COMMAND" ]]; then
 fi
 shift || true
 
-VERSION="1.1.0"
+VERSION="1.2.3"
 IMAGE="biomedical-rag-cuda:${VERSION}"
 BASE_IMAGE_DIGEST="sha256:4766d8b510c428e595d74b9cc5bbb2fae8e26316fffb4adc89908d79aacd58a2"
 STATE="${ABLA_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/ablation_cuda}"
@@ -17,8 +17,9 @@ MODELS="$STATE/models"
 DATABASE="$STATE/database"
 LOGS="$STATE/logs"
 OUTPUTS="$STATE/outputs"
-RETURN_DIR="${ABLA_RETURN_DIR:-$ROOT/return}"
-mkdir -p "$MODELS" "$DATABASE" "$LOGS" "$OUTPUTS" "$RETURN_DIR"
+HOME_DIR="$STATE/home"
+RETURN_DIR="${ABLA_RETURN_DIR:-$STATE/return}"
+mkdir -p "$MODELS" "$DATABASE" "$LOGS" "$OUTPUTS" "$HOME_DIR" "$RETURN_DIR"
 
 fail() { echo "ERROR: $*" >&2; exit 2; }
 
@@ -26,13 +27,57 @@ require_command() {
   command -v "$1" >/dev/null 2>&1 || fail "Missing '$1'. Install Docker Engine with the NVIDIA Container Toolkit, then rerun ./ablation.sh doctor."
 }
 
-host_preflight() {
+host_capacity_preflight() {
+  local -A needed=() free=() labels=()
+  local path bytes label device available row docker_root
+  add_budget() {
+    path="$1"; bytes="$2"; label="$3"
+    row="$(df -Pk "$path" | awk 'END {print $1, $4 * 1024}')"
+    read -r device available <<< "$row"
+    [[ -n "$device" && "$available" =~ ^[0-9]+$ ]] || fail "Cannot determine free space for $path. Check the filesystem manually and reserve the required Phase 3 disk budget."
+    needed["$device"]=$(( ${needed["$device"]:-0} + bytes ))
+    free["$device"]="$available"
+    labels["$device"]="${labels["$device"]:-}${labels["$device"]:+, }$label"
+  }
+  add_budget "$ROOT" $((1 * 1024 * 1024 * 1024)) "release/extraction space"
+  add_budget "$MODELS" $((8 * 1024 * 1024 * 1024)) "pinned model cache"
+  add_budget "$DATABASE" $((1 * 1024 * 1024 * 1024)) "restored SQLite and USEARCH index"
+  add_budget "$OUTPUTS" $((16 * 1024 * 1024 * 1024)) "experiment outputs"
+  add_budget "$RETURN_DIR" $((16 * 1024 * 1024 * 1024)) "portable result archive"
+  docker_root="$(docker info --format '{{.DockerRootDir}}' 2>/dev/null || true)"
+  if [[ -n "$docker_root" && -d "$docker_root" ]]; then
+    add_budget "$docker_root" $((12 * 1024 * 1024 * 1024)) "Docker image/build storage"
+  else
+    echo "Capacity check: also reserve at least 12 GiB in Docker's Linux image/build storage." >&2
+  fi
+  for device in "${!needed[@]}"; do
+    if (( free["$device"] < needed["$device"] )); then
+      fail "Disk preflight failed on $device: $(awk -v n="${free[$device]}" 'BEGIN {printf "%.2f", n/1073741824}') GiB free; $(awk -v n="${needed[$device]}" 'BEGIN {printf "%.2f", n/1073741824}') GiB required for ${labels[$device]}. Free space or move ABLA_STATE_DIR/ABLA_RETURN_DIR to larger persistent storage."
+    fi
+  done
+}
+
+host_mount_preflight() {
+  local path sentinel
+  for path in "$MODELS" "$DATABASE" "$LOGS" "$HOME_DIR" "$OUTPUTS" "$RETURN_DIR"; do
+    [[ -w "$path" ]] || fail "Persistent bind-mount directory is not writable: $path. Choose writable ABLA_STATE_DIR/ABLA_RETURN_DIR paths."
+    sentinel="$path/.ablation-write-check-$$"
+    : > "$sentinel" || fail "Cannot write to persistent bind-mount directory: $path. Check filesystem permissions."
+    rm -f "$sentinel"
+  done
+}
+
+docker_preflight() {
   [[ "$(uname -m)" == "x86_64" ]] || fail "This CUDA runtime is built for linux/amd64. Use a 64-bit x86_64 Linux host with an RTX 5090; detected '$(uname -m)'."
   require_command docker
   docker buildx version >/dev/null 2>&1 || fail "Docker Buildx is required for a local image digest. Update Docker Engine/Docker Desktop to a version that includes Buildx."
   local os_type
   os_type="$(docker info --format '{{.OSType}}' 2>/dev/null || true)"
   [[ "$os_type" == "linux" ]] || fail "Docker Engine must be running Linux containers (docker info reported '${os_type:-unavailable}'). Start the Linux Docker Engine and rerun."
+}
+
+host_preflight() {
+  docker_preflight
   require_command nvidia-smi
   require_command nvidia-ctk
   nvidia-ctk --version >/dev/null 2>&1 || fail "NVIDIA Container Toolkit CLI is installed but not responding. Reinstall/configure the toolkit for Docker Engine using NVIDIA's official instructions."
@@ -49,7 +94,7 @@ ensure_image() {
   if ! docker image inspect "$IMAGE" >/dev/null 2>&1 || [[ ! -f "$metadata_file" ]]; then
     echo "Building the pinned linux/amd64 benchmark image (first build downloads locked runtime wheels)."
     docker buildx build --platform linux/amd64 --pull --load --metadata-file "$metadata_file" \
-      -t "$IMAGE" -f "$ROOT/Dockerfile" "$ROOT"
+      -t "$IMAGE" -f "$ROOT/code/ablation_cuda/Dockerfile" "$ROOT/code"
   fi
   IMAGE_ID="$(docker image inspect --format '{{.Id}}' "$IMAGE")"
   [[ "$IMAGE_ID" == sha256:* ]] || fail "Docker did not return an immutable local image ID."
@@ -62,8 +107,12 @@ container() {
   shift
   local gpu_args=()
   local mount_args=()
+  local snapshot_args=()
+  if [[ -n "${ABLA_SNAPSHOT_URL:-}" ]]; then
+    snapshot_args+=(-e "ABLA_SNAPSHOT_URL=$ABLA_SNAPSHOT_URL")
+  fi
   case "$command" in
-    doctor|install|smoke|run|resume) gpu_args+=(--gpus all) ;;
+    doctor|smoke|run|resume) gpu_args+=(--gpus all) ;;
   esac
   if [[ "$command" == "verify" ]]; then
     [[ -n "${VERIFY_ARCHIVE:-}" ]] || fail "Internal verify archive path was not set."
@@ -74,42 +123,72 @@ container() {
   fi
   docker run --rm --platform linux/amd64 "${gpu_args[@]}" \
     -v "$ROOT:/app/release:ro" \
-    -v "$MODELS:/models" -v "$DATABASE:/db" -v "$LOGS:/logs" \
+    -v "$MODELS:/models" -v "$DATABASE:/db" -v "$LOGS:/logs" -v "$HOME_DIR:/state/home" \
     -v "$OUTPUTS:/outputs" -v "$RETURN_DIR:/return" \
     "${mount_args[@]}" \
+    "${snapshot_args[@]}" \
     -e ABLA_IMAGE_ID="$IMAGE_ID" -e ABLA_IMAGE_DIGEST="$IMAGE_DIGEST" \
     -e ABLA_BASE_IMAGE_DIGEST="$BASE_IMAGE_DIGEST" -e ABLA_UV_VERSION=0.10.9 -e HOME=/state/home \
+    -e ABLA_REQUIRE_EXPLICIT_DB=1 -e ABLA_DB_ROOT=/db -e ABLA_RETURN_ROOT=/return -e MODELS_DIR=/models \
     -e ABLA_HOST_OUTPUT_ROOT="$OUTPUTS" -e ABLA_HOST_RETURN_DIR="$RETURN_DIR" \
     "$IMAGE" "$command" "$@"
 }
 
+managed_paths_preflight() {
+  local path physical
+  for path in "$MODELS" "$DATABASE" "$LOGS" "$HOME_DIR" "$OUTPUTS" "$RETURN_DIR"; do
+    physical="$(cd "$path" && pwd -P)"
+    case "$physical" in
+      "$ROOT"|"$ROOT"/*) fail "Persistent data path must be outside the read-only input release: $physical. Choose ABLA_STATE_DIR and ABLA_RETURN_DIR outside $ROOT." ;;
+    esac
+  done
+}
+
+managed_paths_preflight
+
 case "$COMMAND" in
   doctor)
     host_preflight
+    host_capacity_preflight
+    host_mount_preflight
     ensure_image
     container doctor || fail "NVIDIA Container Toolkit is not exposing the GPU to this container. Configure Docker Engine with NVIDIA Container Toolkit, then rerun ./ablation.sh doctor."
     ;;
   install)
-    host_preflight
+    docker_preflight
+    host_capacity_preflight
+    host_mount_preflight
     ensure_image
     container install
     ;;
   smoke)
-    host_preflight
+    docker_preflight
+    host_capacity_preflight
+    host_mount_preflight
     ensure_image
+    container initialize
+    host_preflight
     container doctor || fail "CUDA operations are unavailable inside the container. Resolve the host NVIDIA driver/Container Toolkit prerequisite before downloading model assets."
     # Runtime smoke runs installation/asset verification itself before starting
     # the two-arm query, so this is a single repeatable collaborator command.
     container smoke
     ;;
   run)
-    host_preflight
+    docker_preflight
+    host_capacity_preflight
+    host_mount_preflight
     ensure_image
+    container initialize
+    host_preflight
     container run "$@"
     ;;
   resume)
-    host_preflight
+    docker_preflight
+    host_capacity_preflight
+    host_mount_preflight
     ensure_image
+    container initialize
+    host_preflight
     if [[ $# -gt 1 ]]; then fail "Usage: ./ablation.sh resume [run_directory_name]"; fi
     if [[ $# -eq 1 ]]; then
       container resume --run-id "$1"

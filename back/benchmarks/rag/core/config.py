@@ -7,6 +7,7 @@ and run directory creation utilities.
 import copy
 import argparse
 import hashlib
+import os
 import random
 from datetime import datetime
 from pathlib import Path
@@ -413,6 +414,11 @@ def get_baseline_config(baseline: str, config_rag_components: dict) -> Dict[str,
 
     if baseline not in ["B6", "CUSTOM"]:
         components["intent_classifier"] = False
+    elif os.environ.get("ABLA_REQUIRE_EXPLICIT_DB") == "1":
+        raise RuntimeError(
+            "Ablation preflight requires an explicit --db-path; implicit project and home-directory "
+            "database discovery is disabled."
+        )
     else:
         components["intent_classifier"] = config_rag_components.get("intent_classifier", False)
         
@@ -583,12 +589,20 @@ def resolve_project_db_path(
                     break
 
     if target_db and target_db.is_file():
-        if expected_sha256:
+        expected_identity = expected_sha256 or os.environ.get("ABLA_REQUIRED_DB_SHA256")
+        if expected_identity:
             actual_sha256 = database_file_sha256(target_db)
-            if actual_sha256.lower() != expected_sha256.lower():
+            if actual_sha256.lower() != expected_identity.lower():
                 raise ValueError(
                     "Explicit SQLite database SHA-256 does not match the run identity: "
-                    f"expected {expected_sha256}, got {actual_sha256}"
+                    f"expected {expected_identity}, got {actual_sha256}"
+                )
+        if os.environ.get("ABLA_REQUIRE_EXPLICIT_DB") == "1":
+            expected_db = (Path(os.environ.get("ABLA_DB_ROOT", "/db")) / "database.db").resolve()
+            if target_db != expected_db:
+                raise ValueError(
+                    "Ablation preflight database path differs from the managed restored database: "
+                    f"expected {expected_db}, got {target_db}"
                 )
         config.data["db_path"] = str(target_db)
         container._graph_repo = None

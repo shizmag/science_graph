@@ -188,7 +188,7 @@ DEFAULT_CONFIG = {
 
 
 def resolve_existing_model_path(path_str: str) -> str:
-    """Fallback resolver checking external volume paths (/Volumes/happy-disk/models) or MODELS_DIR if missing."""
+    """Resolve model assets from the configured path or managed MODELS_DIR only."""
     if not path_str:
         return path_str
     p = Path(path_str)
@@ -208,15 +208,6 @@ def resolve_existing_model_path(path_str: str) -> str:
             if candidate.exists():
                 return str(candidate)
 
-    # 2. Check /Volumes/happy-disk/models
-    happy_disk = Path("/Volumes/happy-disk/models")
-    if happy_disk.exists():
-        name = p.name
-        for sub in ["", "llm", "embeddings"]:
-            candidate = (happy_disk / sub / name) if sub else (happy_disk / name)
-            if candidate.exists():
-                return str(candidate)
-
     return path_str
 
 
@@ -231,6 +222,27 @@ class Config:
         self.data_dir.mkdir(parents=True, exist_ok=True)
         
         self.data = self._load_or_create_config()
+
+        if os.environ.get("ABLA_REQUIRE_EXPLICIT_DB") == "1":
+            configured_db = Path(str(self.data.get("db_path", ""))).expanduser().resolve()
+            expected_db = Path(os.environ.get("ABLA_DB_ROOT", "/db")).resolve() / "database.db"
+            if configured_db != expected_db or not configured_db.is_file():
+                raise RuntimeError(
+                    "Ablation preflight requires the explicitly restored SQLite database at "
+                    f"{expected_db}; configured path was {configured_db}."
+                )
+            expected_sha = os.environ.get("ABLA_REQUIRED_DB_SHA256", "")
+            if expected_sha:
+                import hashlib
+                digest = hashlib.sha256()
+                with configured_db.open("rb") as database_file:
+                    for block in iter(lambda: database_file.read(1024 * 1024), b""):
+                        digest.update(block)
+                if digest.hexdigest() != expected_sha:
+                    raise RuntimeError(
+                        "Ablation preflight database SHA-256 mismatch: "
+                        f"expected {expected_sha}, got {digest.hexdigest()}"
+                    )
         
         # Apply HF token to environment if set
         hf_token = self.data.get("hf_token", "")

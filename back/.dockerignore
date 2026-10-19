@@ -1,0 +1,24 @@
+# The generic application image needs source and config only. Local research
+# databases, indexes, downloaded model caches, and user data are runtime mounts.
+**/*.db
+**/*.db-*
+**/*.db.bak*
+**/*.sqlite
+**/*.sqlite3
+**/*.sqlite-*
+**/*.usearch
+**/*.tar.gz
+**/*.tar.zst
+**/*.zip
+**/*.7z
+**/*.parquet
+**/*.safetensors
+**/*.gguf
+**/*.pt
+**/*.pth
+**/*.ckpt
+**/*.onnx
+**/.cache/
+**/models--*/
+**/models/
+**/data/

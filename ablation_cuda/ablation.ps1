@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Version = '1.1.0'
+$Version = '1.2.3'
 $Image = "biomedical-rag-cuda:$Version"
 $BaseImageDigest = 'sha256:4766d8b510c428e595d74b9cc5bbb2fae8e26316fffb4adc89908d79aacd58a2'
 $State = if ($env:ABLA_STATE_DIR) { $env:ABLA_STATE_DIR } else { Join-Path $env:LOCALAPPDATA 'ablation_cuda' }
@@ -17,8 +17,9 @@ $Models = Join-Path $State 'models'
 $Database = Join-Path $State 'database'
 $Logs = Join-Path $State 'logs'
 $Outputs = Join-Path $State 'outputs'
-$ReturnDir = if ($env:ABLA_RETURN_DIR) { $env:ABLA_RETURN_DIR } else { Join-Path $Root 'return' }
-New-Item -ItemType Directory -Force -Path $Models, $Database, $Logs, $Outputs, $ReturnDir | Out-Null
+$HomeDir = Join-Path $State 'home'
+$ReturnDir = if ($env:ABLA_RETURN_DIR) { $env:ABLA_RETURN_DIR } else { Join-Path $State 'return' }
+New-Item -ItemType Directory -Force -Path $Models, $Database, $Logs, $Outputs, $HomeDir, $ReturnDir | Out-Null
 
 function Fail([string]$Message) {
     throw "ERROR: $Message"
@@ -27,6 +28,85 @@ function Fail([string]$Message) {
 function Invoke-Docker([string[]]$Arguments) {
     & docker @Arguments
     if ($LASTEXITCODE -ne 0) { Fail "Docker command failed with exit code $LASTEXITCODE." }
+}
+
+function Test-DockerPrerequisites {
+    if ($env:PROCESSOR_ARCHITECTURE -ne 'AMD64') {
+        Fail "This CUDA runtime is built for linux/amd64. Use 64-bit x86 Windows 11; detected '$env:PROCESSOR_ARCHITECTURE'."
+    }
+    if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+        Fail 'Docker Desktop is missing. Install Docker Desktop with its WSL2 backend.'
+    }
+    $OsType = (& docker info --format '{{.OSType}}' 2>$null | Select-Object -First 1)
+    if ($LASTEXITCODE -ne 0 -or $OsType -ne 'linux') {
+        Fail "Docker Desktop must be in Linux-container mode (docker info reported '$OsType'). Switch to Linux containers, then rerun."
+    }
+    & docker buildx version *> $null
+    if ($LASTEXITCODE -ne 0) { Fail 'Docker Buildx is required. Update Docker Desktop to a version that includes Buildx.' }
+}
+
+function Test-HostDiskCapacity {
+    $GiB = [int64]1073741824
+    $Requirements = @(
+        @{ Path = $Root; Bytes = 1 * $GiB; Label = 'release/extraction space' },
+        @{ Path = $Models; Bytes = 8 * $GiB; Label = 'pinned model cache' },
+        @{ Path = $Database; Bytes = 1 * $GiB; Label = 'restored SQLite and USEARCH index' },
+        @{ Path = $Outputs; Bytes = 16 * $GiB; Label = 'experiment outputs' },
+        @{ Path = $ReturnDir; Bytes = 16 * $GiB; Label = 'portable results archive' }
+    )
+    $DockerData = Join-Path $env:LOCALAPPDATA 'Docker\wsl\data'
+    if (Test-Path -LiteralPath $DockerData) {
+        $Requirements += @{ Path = $DockerData; Bytes = 12 * $GiB; Label = 'Docker Desktop image/build backing storage' }
+    }
+    $ByDrive = @{}
+    foreach ($Requirement in $Requirements) {
+        try {
+            $FullPath = [System.IO.Path]::GetFullPath($Requirement.Path)
+            $DriveRoot = [System.IO.Path]::GetPathRoot($FullPath)
+            $Drive = [System.IO.DriveInfo]::new($DriveRoot)
+            if (-not $Drive.IsReady) { Fail "Cannot check free disk space for '$FullPath'." }
+            if (-not $ByDrive.ContainsKey($DriveRoot)) {
+                $ByDrive[$DriveRoot] = @{ Required = [int64]0; Available = $Drive.AvailableFreeSpace; Labels = @() }
+            }
+            $ByDrive[$DriveRoot].Required += [int64]$Requirement.Bytes
+            $ByDrive[$DriveRoot].Labels += $Requirement.Label
+        } catch {
+            Fail "Cannot calculate free space for '$($Requirement.Path)'. Use a local NTFS path for the release and state directories, or check available storage manually. Details: $_"
+        }
+    }
+    foreach ($DriveRoot in $ByDrive.Keys) {
+        $Budget = $ByDrive[$DriveRoot]
+        if ($Budget.Available -lt $Budget.Required) {
+            $FreeGiB = [math]::Round($Budget.Available / $GiB, 2)
+            $NeedGiB = [math]::Round($Budget.Required / $GiB, 2)
+            Fail "Disk preflight failed on $DriveRoot`: $FreeGiB GiB free; $NeedGiB GiB required for $($Budget.Labels -join ', '). Free space or move ABLA_STATE_DIR/ABLA_RETURN_DIR to a larger drive."
+        }
+    }
+    Write-Host 'Disk preflight passed for the release, model cache, database, outputs, and return archive. The runtime also checks Docker Linux storage before model downloads.'
+}
+
+function Test-PersistentMountPermissions {
+    foreach ($Path in @($Models, $Database, $Logs, $HomeDir, $Outputs, $ReturnDir)) {
+        $Sentinel = Join-Path $Path ".ablation-write-check-$PID"
+        try {
+            [System.IO.File]::WriteAllText($Sentinel, 'ok')
+            Remove-Item -LiteralPath $Sentinel -Force
+        } catch {
+            Remove-Item -LiteralPath $Sentinel -Force -ErrorAction SilentlyContinue
+            Fail "Cannot write to persistent Docker bind-mount directory '$Path'. Check NTFS permissions or choose writable ABLA_STATE_DIR/ABLA_RETURN_DIR paths. Details: $_"
+        }
+    }
+}
+
+function Test-ManagedPathsOutsideRelease {
+    $RootFull = [System.IO.Path]::GetFullPath($Root).TrimEnd('\', '/')
+    foreach ($Path in @($Models, $Database, $Logs, $HomeDir, $Outputs, $ReturnDir)) {
+        $FullPath = [System.IO.Path]::GetFullPath($Path).TrimEnd('\', '/')
+        if ($FullPath.Equals($RootFull, [System.StringComparison]::OrdinalIgnoreCase) -or
+            $FullPath.StartsWith($RootFull + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+            Fail "Persistent data path must be outside the read-only input release: $FullPath. Choose ABLA_STATE_DIR and ABLA_RETURN_DIR outside $RootFull."
+        }
+    }
 }
 
 function Test-HostPrerequisites {
@@ -72,7 +152,8 @@ function Ensure-Image {
     if ($LASTEXITCODE -ne 0 -or -not (Test-Path $MetadataFile)) {
         Write-Host 'Building the pinned linux/amd64 benchmark image (first build downloads locked runtime wheels).'
         Invoke-Docker @('buildx', 'build', '--platform', 'linux/amd64', '--pull', '--load',
-            '--metadata-file', $MetadataFile, '-t', $Image, '-f', (Join-Path $Root 'Dockerfile'), $Root)
+            '--metadata-file', $MetadataFile, '-t', $Image,
+            '-f', (Join-Path $Root 'code\ablation_cuda\Dockerfile'), (Join-Path $Root 'code'))
     }
     $script:ImageId = (& docker image inspect --format '{{.Id}}' $Image | Select-Object -First 1)
     if ($LASTEXITCODE -ne 0 -or $script:ImageId -notmatch '^sha256:') { Fail 'Docker did not return an immutable local image ID.' }
@@ -83,49 +164,76 @@ function Ensure-Image {
 
 function Invoke-Container([string]$RuntimeCommand, [string[]]$Extra = @(), [string[]]$Mounts = @()) {
     $GpuArgs = @()
-    if ($RuntimeCommand -in @('doctor', 'install', 'smoke', 'run', 'resume')) { $GpuArgs = @('--gpus', 'all') }
+    if ($RuntimeCommand -in @('doctor', 'smoke', 'run', 'resume')) { $GpuArgs = @('--gpus', 'all') }
     $Args = @('run', '--rm', '--platform', 'linux/amd64') + $GpuArgs + @(
-        '-v', "${Root}:/app/release:ro",
-        '-v', "${Models}:/models", '-v', "${Database}:/db", '-v', "${Logs}:/logs",
-        '-v', "${Outputs}:/outputs", '-v', "${ReturnDir}:/return"
+        '--mount', "type=bind,source=$Root,target=/app/release,readonly",
+        '--mount', "type=bind,source=$Models,target=/models",
+        '--mount', "type=bind,source=$Database,target=/db",
+        '--mount', "type=bind,source=$Logs,target=/logs",
+        '--mount', "type=bind,source=$HomeDir,target=/state/home",
+        '--mount', "type=bind,source=$Outputs,target=/outputs",
+        '--mount', "type=bind,source=$ReturnDir,target=/return"
     )
     foreach ($Mount in $Mounts) { $Args += @('--mount', $Mount) }
-    $Args += @(
+    $RuntimeEnvironment = @(
         '-e', "ABLA_IMAGE_ID=$script:ImageId", '-e', "ABLA_IMAGE_DIGEST=$script:ImageDigest",
         '-e', "ABLA_BASE_IMAGE_DIGEST=$BaseImageDigest", '-e', 'ABLA_UV_VERSION=0.10.9',
+        '-e', 'ABLA_REQUIRE_EXPLICIT_DB=1', '-e', 'ABLA_DB_ROOT=/db', '-e', 'ABLA_RETURN_ROOT=/return', '-e', 'MODELS_DIR=/models',
         '-e', "ABLA_HOST_OUTPUT_ROOT=$Outputs", '-e', "ABLA_HOST_RETURN_DIR=$ReturnDir",
-        '-e', 'HOME=/state/home', $Image, $RuntimeCommand
-    ) + $Extra
+        '-e', 'HOME=/state/home'
+    )
+    if ($env:ABLA_SNAPSHOT_URL) {
+        $RuntimeEnvironment += @('-e', "ABLA_SNAPSHOT_URL=$env:ABLA_SNAPSHOT_URL")
+    }
+    $Args += $RuntimeEnvironment + @($Image, $RuntimeCommand) + $Extra
     Invoke-Docker $Args
 }
+
+Test-ManagedPathsOutsideRelease
 
 switch ($Command) {
     'doctor' {
         Test-HostPrerequisites
+        Test-HostDiskCapacity
+        Test-PersistentMountPermissions
         Ensure-Image
         try { Invoke-Container 'doctor' }
         catch { Fail 'NVIDIA GPU passthrough is not visible inside Docker Desktop. Update the compatible Windows WSL driver and enable Docker Desktop WSL2 GPU integration; no driver or system setting was changed.' }
     }
     'install' {
-        Test-HostPrerequisites
+        Test-DockerPrerequisites
+        Test-HostDiskCapacity
+        Test-PersistentMountPermissions
         Ensure-Image
         Invoke-Container 'install'
     }
     'smoke' {
-        Test-HostPrerequisites
+        Test-DockerPrerequisites
+        Test-HostDiskCapacity
+        Test-PersistentMountPermissions
         Ensure-Image
+        Invoke-Container 'initialize'
+        Test-HostPrerequisites
         try { Invoke-Container 'doctor' }
         catch { Fail 'CUDA operations are unavailable inside the container. Resolve the host NVIDIA driver/WSL2 GPU passthrough prerequisite before downloading model assets.' }
         Invoke-Container 'smoke'
     }
     'run' {
-        Test-HostPrerequisites
+        Test-DockerPrerequisites
+        Test-HostDiskCapacity
+        Test-PersistentMountPermissions
         Ensure-Image
+        Invoke-Container 'initialize'
+        Test-HostPrerequisites
         Invoke-Container 'run' $Remaining
     }
     'resume' {
-        Test-HostPrerequisites
+        Test-DockerPrerequisites
+        Test-HostDiskCapacity
+        Test-PersistentMountPermissions
         Ensure-Image
+        Invoke-Container 'initialize'
+        Test-HostPrerequisites
         if ($Remaining.Count -gt 1) { Fail 'Usage: .\ablation.ps1 resume [run_directory_name]' }
         if ($Remaining.Count -eq 1) {
             Invoke-Container 'resume' @('--run-id', $Remaining[0])

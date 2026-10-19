@@ -27,6 +27,7 @@ from ablation_cuda.runtime.full_run import (
 from ablation_cuda.runtime.packaging import pack_experiment
 from ablation_cuda.runtime.checkpoints import atomic_write_json
 from ablation_cuda.verify import verify_result_archive
+from ablation_portability.dataset.loader import load_frozen_dataset
 
 
 def _install() -> dict:
@@ -35,6 +36,9 @@ def _install() -> dict:
     progress.update("validating frozen input package", completed_arms=0, tokens=0)
     info = validate_release(RELEASE_ROOT)
     MODEL_ROOT.mkdir(parents=True, exist_ok=True)
+    progress.update("restoring external_db and rebuilding USEARCH from stored vectors",
+                    completed_arms=0, tokens=0)
+    db_path, database_report = _prepare_database(info)
     model_manifest_path = MODEL_ROOT / "installed_models.json"
     progress.update("acquiring pinned model assets", completed_arms=0, tokens=0)
     model_report = acquire_models(
@@ -44,14 +48,12 @@ def _install() -> dict:
     model_manifest_path.write_text(json.dumps(model_report, ensure_ascii=False,
                                               sort_keys=True, indent=2) + "\n",
                                    encoding="utf-8")
-    progress.update("restoring external_db and rebuilding USEARCH from stored vectors",
-                    completed_arms=0, tokens=0)
-    db_path, database_report = _prepare_database(info)
     progress.update("recording locked software and installation state", completed_arms=0, tokens=0)
     versions = _version_manifest()
     install_report = {
         "schema_version": "1.0", "input_package_verified": True,
         "model_assets": model_report, "database": database_report,
+        "disk_preflight": json.loads((DB_ROOT / "restore_manifest.json").read_text(encoding="utf-8"))["disk_preflight"],
         "versions": versions,
         "config_isolation": {"HOME": os.environ.get("HOME"),
                              "external_yaml_mount": False,
@@ -72,6 +74,19 @@ def _doctor() -> dict:
     from ablation_cuda.runtime.smoke import _actual_cuda_probe
     result = _actual_cuda_probe()
     return {"status": "CUDA_VISIBLE_AND_EXECUTED", "cuda_probe": result}
+
+
+def _initialize() -> dict:
+    """Validate release data, restore SQLite/index, and verify the frozen query set."""
+    info = validate_release(RELEASE_ROOT)
+    records = load_frozen_dataset(RELEASE_ROOT / "dataset")
+    db_path, database_report = _prepare_database(info)
+    return {
+        "status": "INITIALIZED", "release_version": info["manifest"].get("release_version"),
+        "dataset_records": len(records),
+        "dataset_sha256": info["manifest"]["dataset"]["questions_sha256"],
+        "database_path": str(db_path), "database": database_report,
+    }
 
 
 def _status() -> dict:
@@ -261,6 +276,7 @@ def _run_full(*, new_run: bool = False, requested_run_id: str | None = None,
               resume_only: bool = False, export_dir: Path = Path("/return")) -> dict:
     # This order makes the real RTX 5090 smoke an unconditional prerequisite
     # for all 5,250 planned query-arm operations.
+    _initialize()
     device_report = _doctor()
     existing_result = _existing_run_action(
         new_run=new_run, requested_run_id=requested_run_id,
@@ -316,7 +332,7 @@ def _run_full(*, new_run: bool = False, requested_run_id: str | None = None,
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog="ablation-cuda-runtime")
-    parser.add_argument("command", choices=("doctor", "install", "smoke", "run", "resume", "status", "pack", "verify"))
+    parser.add_argument("command", choices=("doctor", "initialize", "install", "smoke", "run", "resume", "status", "pack", "verify"))
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--run-id")
     parser.add_argument("--new-run", action="store_true",
@@ -329,9 +345,13 @@ def main() -> None:
     try:
         if args.command == "doctor":
             result = _doctor()
+        elif args.command == "initialize":
+            result = _initialize()
         elif args.command == "install":
             result = _install()
         elif args.command == "smoke":
+            initialization = _initialize()
+            device_report = _doctor()
             install_report = _install()
             try:
                 run_result = run_smoke()
@@ -347,7 +367,8 @@ def main() -> None:
                         questions_path=RELEASE_ROOT / "dataset/questions.jsonl",
                         destination=Path(verify_root) / "verified-smoke",
                     )
-            result = {**run_result, "archive": str(archive),
+            result = {**run_result, "initialization": initialization, "device_preflight": device_report,
+                      "archive": str(archive),
                       "archive_sha256": sha256_file(archive),
                       "archive_verification": ({"status": "PASSED",
                           "verified_arms": [item["arm"] for item in archive_verification.get("arms", [])]}

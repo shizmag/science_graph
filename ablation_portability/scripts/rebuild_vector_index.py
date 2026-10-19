@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -43,12 +44,17 @@ def rebuild_index(database: Path, output: Path | None = None) -> dict:
     index = Index(ndim=dimensions, metric="cos")
     index.add(ids, vectors)
     output.parent.mkdir(parents=True, exist_ok=True)
-    index.save(str(output))
+    temporary = output.with_name(f".{output.name}.{os.getpid()}.tmp")
+    try:
+        index.save(str(temporary))
 
-    check = Index(ndim=dimensions, metric="cos")
-    check.load(str(output))
-    if len(check) != len(rows) or check.ndim != dimensions:
-        raise RuntimeError("Rebuilt USEARCH sidecar failed count or dimension validation")
+        check = Index(ndim=dimensions, metric="cos")
+        check.load(str(temporary))
+        if len(check) != len(rows) or check.ndim != dimensions:
+            raise RuntimeError("Rebuilt USEARCH sidecar failed count or dimension validation")
+        os.replace(temporary, output)
+    finally:
+        temporary.unlink(missing_ok=True)
     result = {
         "database": str(database),
         "index": str(output),
