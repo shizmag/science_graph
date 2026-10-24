@@ -118,3 +118,22 @@ def test_compute_telemetry_for_answer_mocked():
     assert shannon["h_rank_pre_rerank"] == 2.0  # preserved retrieval fields
     assert "first_token_msp" in shannon
     assert engine.score_text_logprobs.call_count == 2
+
+
+def test_compute_telemetry_for_answer_rejects_malformed_token_container() -> None:
+    engine = MagicMock()
+    engine.score_text_logprobs.side_effect = ["not-a-token-list", None]
+
+    tokens_info, shannon = compute_telemetry_for_answer(
+        engine,
+        prompt="RAG PROMPT",
+        answer_text="Answer.",
+        query="Question?",
+        baseline="B1",
+        h_b0=0.0,
+    )
+
+    assert tokens_info == []
+    assert shannon["ll_rag"] == 0.0
+    assert shannon["ll_base"] == 0.0
+    assert shannon["clr"] == 0.0

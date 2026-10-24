@@ -23,7 +23,7 @@ import shutil
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import yaml
 
@@ -149,7 +149,12 @@ def compute_telemetry_for_answer(
             "teacher-force backfill requires MLX (or compatible) scorer."
         )
 
-    tokens_info = score_fn(prompt, answer_text) or []
+    scored_tokens: Any = score_fn(prompt, answer_text)
+    if not isinstance(scored_tokens, list):
+        scored_tokens = []
+    tokens_info: List[Dict[str, Any]] = cast(
+        List[Dict[str, Any]], [token for token in scored_tokens if isinstance(token, dict)]
+    )
     h_gen = float(compute_generation_entropy(tokens_info))
     h_cit, n_cit = compute_citation_entropy(tokens_info, answer_text)
     ll_rag = float(compute_log_likelihood(tokens_info))
@@ -159,7 +164,12 @@ def compute_telemetry_for_answer(
         clr = 0.0
     else:
         b0_prompt = f"Question: {query}\nAnswer based on your general knowledge."
-        base_tokens = score_fn(b0_prompt, answer_text) or []
+        scored_base_tokens: Any = score_fn(b0_prompt, answer_text)
+        if not isinstance(scored_base_tokens, list):
+            scored_base_tokens = []
+        base_tokens: List[Dict[str, Any]] = cast(
+            List[Dict[str, Any]], [token for token in scored_base_tokens if isinstance(token, dict)]
+        )
         ll_base = float(compute_log_likelihood(base_tokens))
         clr = float(compute_clr(ll_rag, ll_base))
 

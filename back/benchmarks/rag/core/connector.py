@@ -292,8 +292,10 @@ def build_statistical_markdown(stats_analysis: dict[str, Any]) -> str:
 def generate_statistical_plots(stats_analysis: dict[str, Any], output_dir: Path) -> list[str]:
     """Optional boxplots, p-value heatmaps, and difference plots."""
     try:
-        import matplotlib.pyplot as plt
-        import numpy as np
+        from importlib import import_module
+
+        plt = import_module("matplotlib.pyplot")
+        np = import_module("numpy")
     except ImportError:
         return []
 
@@ -414,6 +416,9 @@ def run_statistical_pipeline(
 def export_stats_json(stats_analysis: dict[str, Any], path: Path) -> None:
     """Serialize statistical results (excluding raw records) to JSON."""
     exportable = {k: v for k, v in stats_analysis.items() if k != "records"}
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(exportable, f, ensure_ascii=False, indent=2, default=str)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(exportable, f, ensure_ascii=False, indent=2, default=str)
+    except OSError as exc:
+        raise RuntimeError(f"Unable to write statistical JSON to {path}: {exc}") from exc

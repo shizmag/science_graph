@@ -10,6 +10,8 @@ import csv
 import json
 import statistics
 import math
+from typing import Literal
+
 import yaml
 from pathlib import Path
 
@@ -230,8 +232,8 @@ class MetricsParser:
         enable_stats: bool = True,
         n_bootstraps: int = 10000,
         alpha: float = 0.05,
-        ci_method: str = "percentile",
-        correction_method: str = "holm",
+        ci_method: Literal["percentile", "bca"] = "percentile",
+        correction_method: Literal["holm", "bonferroni", "none"] = "holm",
         enable_plots: bool = False,
         random_seed: int = 42,
     ):
@@ -280,11 +282,14 @@ class MetricsParser:
             print(f"Warning: result_metrics.yaml not found at {input_path}")
 
         if self.stats and self.data:
-            generate_markdown_report(self.stats, self.output_md_path)
-            export_wide_csv(self.stats, self.csv_summary_path)
-            export_detailed_csv(self.data, self.stats, self.csv_details_path)
-            with open(self.parsed_dir / "metrics_summary.parsed.json", "w", encoding="utf-8") as f:
-                json.dump(self.stats, f, ensure_ascii=False, indent=2)
+            try:
+                generate_markdown_report(self.stats, self.output_md_path)
+                export_wide_csv(self.stats, self.csv_summary_path)
+                export_detailed_csv(self.data, self.stats, self.csv_details_path)
+                with (self.parsed_dir / "metrics_summary.parsed.json").open("w", encoding="utf-8") as f:
+                    json.dump(self.stats, f, ensure_ascii=False, indent=2)
+            except OSError as exc:
+                raise RuntimeError(f"Unable to write metrics reports under {self.parsed_dir}: {exc}") from exc
 
         graph_rows = None
         eval_rows = None
@@ -424,11 +429,15 @@ class MetricsParser:
     def _write_metrics_details_parsed(self, metrics_rows: list[dict]) -> None:
         if not metrics_rows:
             return
-        with open(self.parsed_dir / "metrics_details.parsed.csv", "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=metrics_rows[0].keys())
-            writer.writeheader()
-            for r in metrics_rows:
-                writer.writerow(r)
+        path = self.parsed_dir / "metrics_details.parsed.csv"
+        try:
+            with path.open("w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=metrics_rows[0].keys())
+                writer.writeheader()
+                for r in metrics_rows:
+                    writer.writerow(r)
+        except OSError as exc:
+            raise RuntimeError(f"Unable to write parsed metrics rows to {path}: {exc}") from exc
 
     def _build_joined_data(self, metrics_rows, graph_rows, eval_rows) -> dict:
         """Build per-query joined data from YAML and trace sources."""
@@ -534,12 +543,16 @@ class MetricsParser:
     def _write_joined_csv(self, joined_data: dict) -> None:
         if not joined_data:
             return
-        with open(self.parsed_dir / "per_query_joined.csv", "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=self.JOINED_HEADERS)
-            writer.writeheader()
-            for key in sorted(joined_data.keys()):
-                row = joined_data[key]
-                writer.writerow({h: row.get(h, "") for h in self.JOINED_HEADERS})
+        path = self.parsed_dir / "per_query_joined.csv"
+        try:
+            with path.open("w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=self.JOINED_HEADERS)
+                writer.writeheader()
+                for key in sorted(joined_data.keys()):
+                    row = joined_data[key]
+                    writer.writerow({h: row.get(h, "") for h in self.JOINED_HEADERS})
+        except OSError as exc:
+            raise RuntimeError(f"Unable to write joined metrics to {path}: {exc}") from exc
 
     def _build_run_summary(self, joined_data: dict) -> dict:
         baselines = sorted({row["baseline"] for row in joined_data.values() if row.get("baseline")})
@@ -675,10 +688,15 @@ class MetricsParser:
         return run_summary
 
     def _write_run_summary(self, run_summary: dict) -> None:
-        with open(self.parsed_dir / "run_summary.json", "w", encoding="utf-8") as f:
-            json.dump(run_summary, f, ensure_ascii=False, indent=2)
-        with open(self.parsed_dir / "run_summary.yaml", "w", encoding="utf-8") as f:
-            yaml.safe_dump(run_summary, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        json_path = self.parsed_dir / "run_summary.json"
+        yaml_path = self.parsed_dir / "run_summary.yaml"
+        try:
+            with json_path.open("w", encoding="utf-8") as f:
+                json.dump(run_summary, f, ensure_ascii=False, indent=2)
+            with yaml_path.open("w", encoding="utf-8") as f:
+                yaml.safe_dump(run_summary, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        except OSError as exc:
+            raise RuntimeError(f"Unable to write run summary under {self.parsed_dir}: {exc}") from exc
 
     def _print_console_report(self, run_summary: dict, joined_data: dict) -> None:
         print(f"\nParsed run: {self.run_dir}")

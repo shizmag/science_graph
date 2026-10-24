@@ -66,7 +66,7 @@
       "temperature": 0
     },
     "max_payload_multiplicity": 9,
-    "note": "Per-case digest excludes system/rubric/model/parameters because these were fixed globally in this single run. No cross-run score cache was used. The archived global system text and model/decoding settings must remain attached when interpreting this validation.",
+    "note": "Exact per-case reuse is validated for question, designated-answerability label, reference, evaluator-visible context, and cleaned answer. System rubric SHA-256 and model/decode settings (codex/gpt-6-luna-low, temperature=0, reasoning_effort=low) were fixed globally; rubric/script hash and manifest settings are preserved separately. No cross-run cache. No per-batch request/response replay was performed.",
     "payload_identity_fields": [
       "question",
       "answerability_label",
@@ -108,6 +108,12 @@
     "B6_minus_static_graph_context": 375
   },
   "raw_response_hash_mismatches": [],
+  "reported_judge_summary_crosscheck": {
+    "arm_summary_deltas_are_reference_only": true,
+    "judge_summary_path": "/Users/vladimirkasterin/python/graph/reports/ablation_luna6_low/run_20261020T065029857103Z/judge_summary.json",
+    "note": "Saved judge_summary uses its own legacy percentile indexing and arm iterates a Python set; primary table is rederived deterministically and does not adopt order-dependent seed assignment.",
+    "primary_recomputed_bootstrap": "query-paired, fixed-seed 10,000 resamples; analysis uses regenerated arms/IDs and recomputed source pair table"
+  },
   "run_manifest_status": "PARTIAL",
   "run_package_expected_files": 14891,
   "runtime_dataset_sha256": "d2820ced7c2994218245887ad753700923262fb91ec983eeacc01b217ec43b6b",

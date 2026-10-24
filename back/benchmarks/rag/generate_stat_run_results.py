@@ -17,13 +17,13 @@ import json
 import math
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from itertools import combinations
 
 import numpy as np
 import pandas as pd
 import yaml
-from scipy import stats
+import scipy.stats as scipy_stats
 
 # Ensure imports work
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -87,18 +87,25 @@ def run_full_statistical_analysis():
     if not csv_path.exists():
         raise FileNotFoundError(f"Missing {csv_path}")
 
-    with open(yaml_path, "r", encoding="utf-8") as f:
-        rm_data = yaml.safe_load(f)
+    try:
+        with yaml_path.open("r", encoding="utf-8") as f:
+            rm_data = yaml.safe_load(f)
+    except OSError as exc:
+        raise RuntimeError(f"Unable to read statistical input {yaml_path}: {exc}") from exc
 
     records, _ = data_prep_agent(rm_data, baselines=BASELINES)
-    df_rec = pd.DataFrame(records)
+    df_rec: pd.DataFrame = pd.DataFrame(records)
 
-    df_csv = pd.read_csv(csv_path)
+    try:
+        df_csv = pd.read_csv(csv_path)
+    except OSError as exc:
+        raise RuntimeError(f"Unable to read statistical input {csv_path}: {exc}") from exc
     df_csv = df_csv[df_csv["baseline"].isin(BASELINES)]
 
     # Merge context_fillness and ar_sa_f1 if missing in records
-    df_merged = df_rec.merge(
-        df_csv[["query_id", "baseline", "context_fillness", "ar_sa_f1"]],
+    merge_features: pd.DataFrame = df_csv.loc[:, ["query_id", "baseline", "context_fillness", "ar_sa_f1"]].copy()
+    df_merged: pd.DataFrame = df_rec.merge(
+        merge_features,
         on=["query_id", "baseline"],
         how="left",
         suffixes=("", "_csv"),
@@ -168,16 +175,19 @@ def run_full_statistical_analysis():
     for m in CONTINUOUS_METRICS:
         piv = df_merged.pivot(index="query_id", columns="baseline", values=m)
         piv = piv.fillna(0.0)
-        arrays = [piv[b].values for b in BASELINES if b in piv.columns]
-        
+        arrays: list[np.ndarray] = [
+            np.asarray(piv[b].to_numpy(dtype=float), dtype=float)
+            for b in BASELINES if b in piv.columns
+        ]
+
         # Check if all values identical across all baselines
-        matrix = np.column_stack(arrays)
+        matrix = np.column_stack(cast(Any, arrays))
         row_ranges = np.nanmax(matrix, axis=1) - np.nanmin(matrix, axis=1)
         if not np.any(row_ranges > 0):
             stat, p_val, kendall_w = 0.0, 1.0, 0.0
         else:
             try:
-                stat, p_val = stats.friedmanchisquare(*arrays)
+                stat, p_val = scipy_stats.friedmanchisquare(*arrays)
                 stat = float(stat)
                 p_val = float(p_val)
                 n_q = len(piv)
@@ -202,8 +212,8 @@ def run_full_statistical_analysis():
         metric_rows = []
         
         for b_a, b_b in combinations(BASELINES, 2):
-            vec_a = piv[b_a].values
-            vec_b = piv[b_b].values
+            vec_a = np.asarray(piv[b_a].to_numpy(dtype=float), dtype=float)
+            vec_b = np.asarray(piv[b_b].to_numpy(dtype=float), dtype=float)
             diffs = vec_a - vec_b
             n_pairs = len(diffs)
             
@@ -246,8 +256,8 @@ def run_full_statistical_analysis():
             r["p_holm"] = p_h
             r["significant"] = sig
             r["alpha_adjusted"] = alpha_adj
-            vec_a = piv[r["baseline_a"]].values
-            vec_b = piv[r["baseline_b"]].values
+            vec_a = np.asarray(piv[r["baseline_a"]].to_numpy(dtype=float), dtype=float)
+            vec_b = np.asarray(piv[r["baseline_b"]].to_numpy(dtype=float), dtype=float)
             delta_ci = bootstrap_paired_difference_ci(vec_a, vec_b, config, alpha_override=alpha_adj)
             r["delta"] = delta_ci["delta"]
             r["ci_lower"] = delta_ci["ci_lower"]
@@ -268,8 +278,8 @@ def run_full_statistical_analysis():
         shared_ids = sorted(set(sub_a.index) & set(sub_b.index))
         n_pairs = len(shared_ids)
         
-        c_a = sub_a.loc[shared_ids].astype(bool).values
-        c_b = sub_b.loc[shared_ids].astype(bool).values
+        c_a = np.asarray(sub_a.loc[shared_ids].astype(bool).to_numpy(), dtype=bool)
+        c_b = np.asarray(sub_b.loc[shared_ids].astype(bool).to_numpy(), dtype=bool)
 
         b_cnt = int(np.sum(c_a & ~c_b))
         c_cnt = int(np.sum(~c_a & c_b))
@@ -279,7 +289,7 @@ def run_full_statistical_analysis():
             p_val = 1.0
         else:
             k = min(b_cnt, c_cnt)
-            p_val = float(min(1.0, 2.0 * stats.binom.cdf(k, n_disc, 0.5)))
+            p_val = float(min(1.0, 2.0 * scipy_stats.binom.cdf(k, n_disc, 0.5)))
 
         odds_ratio = float(b_cnt / c_cnt) if c_cnt > 0 else (float(b_cnt) if b_cnt > 0 else 1.0)
 
@@ -323,8 +333,11 @@ def run_full_statistical_analysis():
     }
 
     output_file = parsed_dir / "stat_run_results.json"
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(output_data, f, ensure_ascii=False, indent=2, default=str)
+    try:
+        with output_file.open("w", encoding="utf-8") as f:
+            json.dump(output_data, f, ensure_ascii=False, indent=2, default=str)
+    except OSError as exc:
+        raise RuntimeError(f"Unable to write statistical results to {output_file}: {exc}") from exc
 
     print(f"Successfully generated statistical results: {output_file}\n")
     print_summary_tables(output_data)

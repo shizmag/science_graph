@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import importlib
 import json
 import math
+import os
 import random
 import re
 import statistics
@@ -54,14 +56,33 @@ def canon(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
+def atomic_text_write(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    try:
+        temporary.write_text(content, encoding="utf-8")
+        temporary.replace(path)
+    except OSError as exc:
+        temporary.unlink(missing_ok=True)
+        raise RuntimeError(f"Unable to write {path}: {exc}") from exc
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]], columns: list[str] | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     columns = columns or list(dict.fromkeys(key for row in rows for key in row))
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=columns, extrasaction="ignore")
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({key: row.get(key) for key in columns})
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    try:
+        with temporary.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=columns, extrasaction="ignore")
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({key: row.get(key) for key in columns})
+            handle.flush()
+            os.fsync(handle.fileno())
+        temporary.replace(path)
+    except OSError as exc:
+        temporary.unlink(missing_ok=True)
+        raise RuntimeError(f"Unable to write table {path}: {exc}") from exc
 
 
 def score_metric(score_row: dict[str, Any] | None, metric: str) -> float | None:
@@ -81,9 +102,7 @@ def paired_bootstrap(deltas: list[float], *, seed: int, iterations: int = 10_000
     rng = random.Random(seed)
     n = len(deltas)
     means = [statistics.fmean(deltas[rng.randrange(n)] for _ in range(n)) for _ in range(iterations)]
-    ordered = sorted(means)
-    return ordered[int(0.025 * iterations)], ordered[int(0.975 * iterations)]
-
+    return percentile(means, 0.025), percentile(means, 0.975)
 
 def sign_test_p(deltas: list[float]) -> float:
     pos = sum(value > 1e-12 for value in deltas)
@@ -102,18 +121,19 @@ def rank_biserial(deltas: list[float]) -> float | None:
         return 0.0
     ordered = sorted(range(len(nonzero)), key=lambda i: nonzero[i][0])
     ranks = [0.0] * len(nonzero)
-    i = 0
-    while i < len(ordered):
-        j = i + 1
-        while j < len(ordered) and abs(nonzero[ordered[j]][0] - nonzero[ordered[i]][0]) <= 1e-12:
-            j += 1
-        avg_rank = (i + 1 + j) / 2
-        for pos in ordered[i:j]:
-            ranks[pos] = avg_rank
-        i = j
-    signed_rank = sum(rank * sign for rank, (_, sign) in zip(ranks, nonzero, strict=True))
-    return signed_rank / sum(ranks)
-
+    index = 0
+    while index < len(ordered):
+        end = index + 1
+        while end < len(ordered) and abs(nonzero[ordered[end]][0] - nonzero[ordered[index]][0]) <= 1e-12:
+            end += 1
+        average_rank = (index + 1 + end) / 2
+        for position in ordered[index:end]:
+            ranks[position] = average_rank
+        index = end
+    positive_rank_sum = sum(rank for rank, (_, sign) in zip(ranks, nonzero, strict=True) if sign > 0)
+    negative_rank_sum = sum(rank for rank, (_, sign) in zip(ranks, nonzero, strict=True) if sign < 0)
+    total = positive_rank_sum + negative_rank_sum
+    return (positive_rank_sum - negative_rank_sum) / total if total else 0.0
 
 def holm_adjust(rows: list[dict[str, Any]], p_key: str, out_key: str, family: str) -> None:
     valid = sorted(((row[p_key], row) for row in rows if row.get(p_key) is not None), key=lambda item: item[0])
@@ -139,6 +159,34 @@ def correlation(xs: list[float], ys: list[float]) -> float | None:
     if sx == 0 or sy == 0:
         return None
     return sum((x - mx) * (y - my) for x, y in zip(xs, ys, strict=True)) / (sx * sy)
+
+
+def load_token_means() -> dict[tuple[str, str], dict[str, float]]:
+    """Read saved token telemetry only; does not import generation/runtime code."""
+    try:
+        pyarrow_modules = {name: importlib.import_module(name) for name in ("pyarrow.compute", "pyarrow.parquet")}
+    except ImportError as exc:
+        raise RuntimeError("Reading saved token_telemetry.parquet requires local pyarrow") from exc
+    pc = pyarrow_modules["pyarrow.compute"]
+    pq = pyarrow_modules["pyarrow.parquet"]
+    columns = ["arm_id", "query_id", "generation_purpose", "token_index",
+               "entropy_k20_bits", "entropy_k50_bits", "entropy_k100_bits",
+               "retained_mass_k20", "retained_mass_k50", "retained_mass_k100"]
+    table = pq.read_table(RUN / "token_telemetry.parquet", columns=columns)
+    table = table.filter(pc.equal(table["generation_purpose"], "final_answer_generation"))
+    measures = ["entropy_k20_bits", "entropy_k50_bits", "entropy_k100_bits",
+                "retained_mass_k20", "retained_mass_k50", "retained_mass_k100"]
+    grouped = table.group_by(["arm_id", "query_id"]).aggregate(
+        [(measure, "mean") for measure in measures] + [("token_index", "count")]
+    )
+    output: dict[tuple[str, str], dict[str, float]] = {}
+    for row in grouped.to_pylist():
+        values = {measure: float(row[f"{measure}_mean"]) for measure in measures}
+        values["telemetry_token_count"] = float(row["token_index_count"])
+        output[(row["arm_id"], row["query_id"])] = values
+    if len(output) != 4265:
+        raise AssertionError(f"Expected telemetry for 4,265 successful operations, found {len(output)}")
+    return output
 
 
 def load_sources() -> tuple[dict[str, Any], dict[tuple[str, str], dict[str, Any]], dict[tuple[str, str], dict[str, Any]], dict[str, Any]]:
@@ -169,9 +217,13 @@ def load_sources() -> tuple[dict[str, Any], dict[tuple[str, str], dict[str, Any]
                     "context_hash_source": "result trace fallback; no separate retrieved_contexts export",
                 }
     mapping_by_operation = {(row["arm_id"], row["query_id"]): row for row in mapping.values()}
+    for blinded_id, input_row in inputs.items():
+        operation = (mapping[blinded_id]["arm_id"], mapping[blinded_id]["query_id"])
+        contexts.setdefault(operation, {})["actual_evaluator_context"] = input_row.get("actual_evaluator_context")
+    token_means = load_token_means()
     return questions, metric_rows, errors, {"mapping": mapping, "mapping_by_operation": mapping_by_operation,
                                              "inputs": inputs, "scores": score_rows, "contexts": contexts,
-                                             "generation_rows": generation_rows}
+                                             "generation_rows": generation_rows, "token_means": token_means}
 
 
 def build_canonical(questions: dict[str, Any], details: dict[tuple[str, str], dict[str, Any]], errors: dict[tuple[str, str], dict[str, Any]], judge: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any], dict[tuple[str, str], dict[str, Any]]]:
@@ -247,6 +299,7 @@ def build_canonical(questions: dict[str, Any], details: dict[tuple[str, str], di
                     audit["failed_scored"] += 1
             if maprow["effective_configuration_hash"] != (result.get("effective_configuration_hash") if result else arm_manifest[arm].get("effective_configuration_hash")):
                 audit["config_hash_mismatch"] += 1
+            token_row = judge["token_means"].get(key, {})
             row = {
                 "query_id": query_id,
                 "arm_id": arm,
@@ -254,23 +307,26 @@ def build_canonical(questions: dict[str, Any], details: dict[tuple[str, str], di
                 "source_pmid": question.get("source_pmid"),
                 "operation_status": status,
                 "failure_reason": error_text or None,
-                "prompt_tokens": final_event.get("prompt_token_count") if final_event else prompt_tokens,
+                "prompt_tokens": prompt_tokens,
                 "context_tokens": final_event.get("prompt_token_count") if final_event else prompt_tokens,
                 "context_chars": (result.get("retrieval_candidates_and_ranking_trace", {}).get("context_capture", {}).get("context_trim", {}).get("input_text_chars") if result else None),
                 "generated_tokens": detail.get("final_generation_tokens") or None,
                 "generation_available": available,
                 "retrieval_recall": float(detail["retrieval_recall"]) if available and detail.get("retrieval_recall") != "" else None,
                 "context_precision": float(detail["context_precision"]) if available and detail.get("context_precision") != "" else None,
+                "context_hash": sha256_bytes(canon(context_record["actual_evaluator_context"]).encode("utf-8")) if context_record and context_record.get("actual_evaluator_context") is not None else context_record.get("context_payload_sha256") if context_record else None,
+                "selected_context_payload_hash": context_record.get("context_payload_sha256") if context_record else None,
+                "evaluator_context_hash": sha256_bytes(canon(inp["actual_evaluator_context"]).encode("utf-8")) if inp and inp.get("scoring_eligible") else None,
                 "latency": detail.get("elapsed_seconds") or None,
-                "h20": float(detail["h20_bits"]) if available and detail.get("h20_bits") != "" else None,
-                "h50": float(detail["h50_bits"]) if available and detail.get("h50_bits") != "" else None,
-                "h100": float(detail["h100_bits"]) if available and detail.get("h100_bits") != "" else None,
-                "retained_mass_k20": float(detail["top_k_retained_mass_k20"]) if available and detail.get("top_k_retained_mass_k20") != "" else None,
-                "retained_mass_k50": float(detail["top_k_retained_mass_k50"]) if available and detail.get("top_k_retained_mass_k50") != "" else None,
-                "retained_mass_k100": float(detail["top_k_retained_mass_k100"]) if available and detail.get("top_k_retained_mass_k100") != "" else None,
+                "h20": token_row.get("entropy_k20_bits"),
+                "h50": token_row.get("entropy_k50_bits"),
+                "h100": token_row.get("entropy_k100_bits"),
+                "retained_mass_k20": token_row.get("retained_mass_k20"),
+                "retained_mass_k50": token_row.get("retained_mass_k50"),
+                "retained_mass_k100": token_row.get("retained_mass_k100"),
+                "entropy_token_count": token_row.get("telemetry_token_count"),
                 "parser_status": detail.get("parser_status") or None,
                 "raw_response_hash": raw_hash,
-                "context_hash": context_record.get("context_payload_sha256") if context_record else None,
                 "effective_config_hash": result.get("effective_configuration_hash") if result else arm_manifest[arm].get("effective_configuration_hash"),
                 "judge_blinded_response_id": maprow["blinded_response_id"],
                 "judge_case_id": score.get("case_id") if score else None,
@@ -347,7 +403,7 @@ def judge_cache_audit(judge: dict[str, Any], canonical_rows: list[dict[str, Any]
             "fixed_global_judge_identity": {"model": "gpt-6-luna-low", "omniroute_model_id": "codex/gpt-6-luna-low", "temperature": 0, "reasoning_effort": "low", "system_rubric_sha256": judge_system_sha256()},
             "bad_case_id_count": len(bad_case_ids), "duplicate_payload_score_conflict_count": len(score_conflicts),
             "exact_payload_key_matches_score_case_id": len(bad_case_ids) == 0,
-            "note": "Per-case digest excludes system/rubric/model/parameters because these were fixed globally in this single run. No cross-run score cache was used. The archived global system text and model/decoding settings must remain attached when interpreting this validation."}
+            "note": "Exact per-case reuse is validated for question, designated-answerability label, reference, evaluator-visible context, and cleaned answer. System rubric SHA-256 and model/decode settings (codex/gpt-6-luna-low, temperature=0, reasoning_effort=low) were fixed globally; rubric/script hash and manifest settings are preserved separately. No cross-run cache. No per-batch request/response replay was performed."}
 
 
 def arm_rows(rows: list[dict[str, Any]]) -> dict[str, dict[str, dict[str, Any]]]:
@@ -426,7 +482,7 @@ def create_subgroups(data: dict[str, dict[str, dict[str, Any]]]) -> list[dict[st
     for arm in ("B6_minus_parent_deduplication", "B6_minus_dynamic_graph_expander"):
         common = [q for q in data["B6_full"] if data["B6_full"][q]["generation_available"] and data[arm][q]["generation_available"]]
         for subgroup in ("answerable", "designated_negative"):
-            qs = [q for q in common if data[arm][q]["answerability_label"] == subgroup]
+            qs = sorted(q for q in common if data[arm][q]["answerability_label"] == subgroup)
             for metric in ("semantic_accuracy", "faithfulness", "citation_fidelity", "answer_relevance"):
                 deltas = [data[arm][q][metric] - data["B6_full"][q][metric] for q in qs]
                 seed = 20261020 + sum(map(ord, arm + subgroup + metric))
@@ -444,15 +500,17 @@ def operational_utility(data: dict[str, dict[str, dict[str, Any]]]) -> list[dict
     out = []
     for arm in ARM_ORDER:
         deltas = []
-        a_values, b_values = [], []
+        a_values = []
+        paired_quality_deltas: list[float] = []
         for q in data["B6_full"]:
             a = data[arm][q]
             b = data["B6_full"][q]
             av = float(a["semantic_accuracy"]) if a["generation_available"] else 0.0
             bv = float(b["semantic_accuracy"]) if b["generation_available"] else 0.0
             a_values.append(av)
-            b_values.append(bv)
             deltas.append(av - bv)
+            if a["generation_available"] and b["generation_available"]:
+                paired_quality_deltas.append(av - bv)
         seed = 20261020 + sum(map(ord, arm + "operational_semantic_utility"))
         lo, hi = paired_bootstrap(deltas, seed=seed)
         out.append({"arm_id": arm, "n_frozen_queries": len(deltas),
@@ -461,6 +519,7 @@ def operational_utility(data: dict[str, dict[str, dict[str, Any]]]) -> list[dict
                     "mean_policy_operational_utility": statistics.fmean(a_values),
                     "mean_policy_operational_utility_delta_vs_B6": statistics.fmean(deltas),
                     "paired_bootstrap_ci95_low": lo, "paired_bootstrap_ci95_high": hi,
+                    "paired_success_quality_delta": statistics.fmean(paired_quality_deltas) if paired_quality_deltas else None,
                     "formula": "U_q = I(generation available) * judge Semantic Accuracy; unavailable=0 by service-utility policy only",
                     "not_a_missing_answer_judge_score": True, "bootstrap_resamples": 10000, "bootstrap_seed": seed})
     return out
@@ -517,130 +576,168 @@ def document_ap(result: dict[str, Any], gold_papers: set[str]) -> float | None:
     return precision_sum / len(gold_papers)
 
 
-def create_context_provenance(data: dict[str, dict[str, dict[str, Any]]], results: dict[tuple[str,str],dict[str,Any]]) -> list[dict[str, Any]]:
-    out = []
+def create_context_provenance(data: dict[str, dict[str, dict[str, Any]]], results: dict[tuple[str, str], dict[str, Any]]) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
     for arm in ARM_ORDER:
-        queries = [q for q in data[arm] if data[arm][q]["generation_available"]]
-        uniq_docs, gold_chunks, gold_doc_hits, input_chars, dynamic_chars = [], [], [], [], []
-        prompt_hashes = Counter()
-        gen_hashes = Counter()
-        token_counts = []
-        cp = []
-        doc_ap_vals = []
-        evidence_counts = []
-        inserted_count = executed_count = 0
-        for q in queries:
-            result=results[(arm,q)]
-            evidence=result.get("selected_evidence") or []
-            gold=set(result.get("gold_paper_ids") or [])
-            papers=[e.get("paper_id") for e in evidence if e.get("paper_id")]
-            uniq_docs.append(len(set(papers)))
-            gold_chunks.append(sum(p in gold for p in papers))
-            gold_doc_hits.append(len(set(papers) & gold))
-            evidence_counts.append(len(evidence))
-            cp.append(float(data[arm][q]["context_precision"]) if data[arm][q]["context_precision"] is not None else 0.0)
-            ap=document_ap(result,gold)
+        query_ids = [query_id for query_id in data[arm] if data[arm][query_id]["generation_available"]]
+        unique_pmids: list[float] = []
+        gold_chunk_counts: list[float] = []
+        gold_doc_hits: list[float] = []
+        text_chars: list[float] = []
+        dynamic_chars: list[float] = []
+        chunk_precision: list[float] = []
+        document_ap_values: list[float] = []
+        selected_chunk_counts: list[float] = []
+        prompt_tokens: list[float] = []
+        prompt_hashes: set[str] = set()
+        response_hashes: set[str] = set()
+        expansion_executed = 0
+        expansion_inserted = 0
+        for query_id in query_ids:
+            result = results[(arm, query_id)]
+            evidence = result.get("selected_evidence") or []
+            gold = set(result.get("gold_paper_ids") or [])
+            paper_ids = [item.get("paper_id") for item in evidence if item.get("paper_id")]
+            unique_pmids.append(float(len(set(paper_ids))))
+            gold_chunk_counts.append(float(sum(paper_id in gold for paper_id in paper_ids)))
+            gold_doc_hits.append(float(len(set(paper_ids) & gold)))
+            selected_chunk_counts.append(float(len(evidence)))
+            metric = data[arm][query_id]["context_precision"]
+            if metric is not None:
+                chunk_precision.append(float(metric))
+            ap = document_ap(result, gold)
             if ap is not None:
-                doc_ap_vals.append(ap)
-            trace=result.get("retrieval_candidates_and_ranking_trace",{})
-            trim=trace.get("context_capture",{}).get("context_trim",{})
-            input_chars.append(trim.get("input_text_chars"))
-            ass=trace.get("context_and_prompt_assembly",{})
-            dynamic=trace.get("dynamic_graph_output") or ""
-            dynamic_chars.append(len(dynamic))
-            inserted_count += int(bool(ass.get("dynamic_graph_output_inserted")))
-            executed_count += int(bool(ass.get("dynamic_graph_expansion_executed")))
-            prompt_hashes[ass.get("serialized_prompt_sha256")] += 1
-            gen_hash=sha256_bytes(result["raw_generated_response"].encode()) if result.get("raw_generated_response") else None
-            gen_hashes[gen_hash]+=1
-            evs=[x.get("event",{}) for x in result.get("generation_events",[]) if x.get("purpose")=="final_answer_generation"]
-            if evs:
-                token_counts.append(evs[0].get("prompt_token_count"))
-        out.append({"arm_id":arm,"n_success":len(queries),"mean_selected_chunks":mean_or_none([float(x) for x in evidence_counts]),
-                    "mean_unique_selected_pmids":mean_or_none([float(x) for x in uniq_docs]),
-                    "mean_gold_paper_chunks":mean_or_none([float(x) for x in gold_chunks]),
-                    "mean_unique_gold_pmids_selected":mean_or_none([float(x) for x in gold_doc_hits]),
-                    "mean_chunk_context_precision":mean_or_none(cp),"mean_document_level_AP":mean_or_none(doc_ap_vals),
-                    "mean_context_text_chars":mean_or_none([float(x) for x in input_chars if x is not None]),
-                    "mean_serialized_prompt_tokens":mean_or_none([float(x) for x in token_counts if x is not None]),
-                    "mean_dynamic_graph_output_chars":mean_or_none([float(x) for x in dynamic_chars]),
-                    "dynamic_expansion_executed_n":executed_count,"dynamic_output_inserted_n":inserted_count,
-                    "unique_serialized_prompt_hashes":len([k for k in prompt_hashes if k]),
-                    "unique_generation_response_hashes":len([k for k in gen_hashes if k]),
-                    "context_precision_note":"chunk-level MAP can count repeated same-PMID chunks; document-level AP deduplicates selected evidence by paper_id, preserving first rank"})
-    base_hashes={q:results[("B6_full",q)].get("retrieval_candidates_and_ranking_trace",{}).get("context_and_prompt_assembly",{}).get("serialized_prompt_sha256") for q in data["B6_full"] if data["B6_full"][q]["generation_available"]}
-    base_resp={q:sha256_bytes(results[("B6_full",q)]["raw_generated_response"].encode()) for q in base_hashes if results[("B6_full",q)].get("raw_generated_response")}
-    for row in out:
-        arm=row["arm_id"]
-        common=[q for q in base_hashes if data[arm][q]["generation_available"]]
+                document_ap_values.append(ap)
+            trace = result.get("retrieval_candidates_and_ranking_trace", {})
+            trim = trace.get("context_capture", {}).get("context_trim", {})
+            if trim.get("input_text_chars") is not None:
+                text_chars.append(float(trim["input_text_chars"]))
+            assembly = trace.get("context_and_prompt_assembly", {})
+            dynamic = trace.get("dynamic_graph_output") or ""
+            dynamic_chars.append(float(len(dynamic)))
+            expansion_executed += int(bool(assembly.get("dynamic_graph_expansion_executed")))
+            expansion_inserted += int(bool(assembly.get("dynamic_graph_output_inserted")))
+            prompt_hash = assembly.get("serialized_prompt_sha256")
+            if prompt_hash:
+                prompt_hashes.add(prompt_hash)
+            raw_response = result.get("raw_generated_response")
+            if raw_response:
+                response_hashes.add(sha256_bytes(raw_response.encode()))
+            event = next((entry.get("event", {}) for entry in result.get("generation_events", [])
+                          if entry.get("purpose") == "final_answer_generation"), None)
+            if event and event.get("prompt_token_count") is not None:
+                prompt_tokens.append(float(event["prompt_token_count"]))
+        output.append({
+            "arm_id": arm,
+            "n_success": len(query_ids),
+            "mean_selected_chunks": mean_or_none(selected_chunk_counts),
+            "mean_unique_selected_pmids": mean_or_none(unique_pmids),
+            "mean_gold_paper_chunks": mean_or_none(gold_chunk_counts),
+            "mean_unique_gold_pmids_selected": mean_or_none(gold_doc_hits),
+            "mean_chunk_context_precision": mean_or_none(chunk_precision),
+            "mean_document_level_AP": mean_or_none(document_ap_values),
+            "mean_context_text_chars": mean_or_none(text_chars),
+            "mean_serialized_prompt_tokens": mean_or_none(prompt_tokens),
+            "mean_dynamic_graph_output_chars": mean_or_none(dynamic_chars),
+            "dynamic_expansion_executed_n": expansion_executed,
+            "dynamic_output_inserted_n": expansion_inserted,
+            "unique_serialized_prompt_hashes": len(prompt_hashes),
+            "unique_generation_response_hashes": len(response_hashes),
+            "context_precision_note": "Chunk-level MAP may count repeated same-PMID chunks; document-level AP deduplicates selected evidence by paper_id, preserving first rank.",
+        })
+    base_success = {query_id for query_id, row in data["B6_full"].items() if row["generation_available"]}
+    base_prompt = {
+        query_id: results[("B6_full", query_id)].get("retrieval_candidates_and_ranking_trace", {}).get("context_and_prompt_assembly", {}).get("serialized_prompt_sha256")
+        for query_id in base_success
+    }
+    base_response = {
+        query_id: sha256_bytes(results[("B6_full", query_id)]["raw_generated_response"].encode())
+        for query_id in base_success if results[("B6_full", query_id)].get("raw_generated_response")
+    }
+    for row in output:
+        arm = row["arm_id"]
+        common = sorted(query_id for query_id in base_success if data[arm][query_id]["generation_available"])
         row["shared_success_n"] = len(common)
         row["paired_prompt_hash_identical_to_B6_n"] = sum(
-            results[(arm, q)].get("retrieval_candidates_and_ranking_trace", {}).get("context_and_prompt_assembly", {}).get("serialized_prompt_sha256") == base_hashes[q]
-            for q in common
+            results[(arm, query_id)].get("retrieval_candidates_and_ranking_trace", {}).get("context_and_prompt_assembly", {}).get("serialized_prompt_sha256") == base_prompt[query_id]
+            for query_id in common
         )
         row["paired_generation_hash_identical_to_B6_n"] = sum(
-            sha256_bytes(results[(arm, q)]["raw_generated_response"].encode()) == base_resp.get(q)
-            for q in common if results[(arm, q)].get("raw_generated_response")
+            sha256_bytes(results[(arm, query_id)]["raw_generated_response"].encode()) == base_response.get(query_id)
+            for query_id in common if results[(arm, query_id)].get("raw_generated_response")
         )
-        if arm != "B6_full":
-            before = [float(data[arm][q]["context_precision"]) - float(data["B6_full"][q]["context_precision"])
-                      for q in common if data[arm][q]["context_precision"] is not None
-                      and data["B6_full"][q]["context_precision"] is not None]
-            docdiff = []
-            qualitydiff = []
-            goldchunkdiff = []
-            for q in common:
-                a = results[(arm, q)]
-                b = results[("B6_full", q)]
-                ap_a = document_ap(a, set(a.get("gold_paper_ids") or []))
-                ap_b = document_ap(b, set(b.get("gold_paper_ids") or []))
-                if ap_a is not None and ap_b is not None:
-                    docdiff.append(ap_a - ap_b)
-                qualitydiff.append(float(data[arm][q]["semantic_accuracy"]) - float(data["B6_full"][q]["semantic_accuracy"]))
-                goldchunkdiff.append(
-                    sum(e.get("paper_id") in set(a.get("gold_paper_ids") or []) for e in a.get("selected_evidence", []))
-                    - sum(e.get("paper_id") in set(b.get("gold_paper_ids") or []) for e in b.get("selected_evidence", []))
-                )
-            row["paired_chunk_precision_delta_vs_B6"] = mean_or_none(before)
-            row["paired_document_AP_delta_vs_B6"] = mean_or_none(docdiff)
-            row["paired_semantic_accuracy_delta_vs_B6"] = mean_or_none(qualitydiff)
-            row["corr_semantic_delta_gold_chunk_count_delta"] = correlation(qualitydiff, goldchunkdiff)
-            row["paired_mean_gold_chunk_count_delta"] = mean_or_none([float(x) for x in goldchunkdiff])
-    return out
-
+        if arm == "B6_full":
+            continue
+        precision_delta: list[float] = []
+        document_ap_delta: list[float] = []
+        semantic_delta: list[float] = []
+        gold_chunk_delta: list[float] = []
+        for query_id in common:
+            arm_row = data[arm][query_id]
+            base_row = data["B6_full"][query_id]
+            if arm_row["context_precision"] is not None and base_row["context_precision"] is not None:
+                precision_delta.append(float(arm_row["context_precision"]) - float(base_row["context_precision"]))
+            if arm_row["semantic_accuracy"] is not None and base_row["semantic_accuracy"] is not None:
+                semantic_delta.append(float(arm_row["semantic_accuracy"]) - float(base_row["semantic_accuracy"]))
+            arm_result = results[(arm, query_id)]
+            base_result = results[("B6_full", query_id)]
+            arm_ap = document_ap(arm_result, set(arm_result.get("gold_paper_ids") or []))
+            base_ap = document_ap(base_result, set(base_result.get("gold_paper_ids") or []))
+            if arm_ap is not None and base_ap is not None:
+                document_ap_delta.append(arm_ap - base_ap)
+            arm_gold = set(arm_result.get("gold_paper_ids") or [])
+            base_gold = set(base_result.get("gold_paper_ids") or [])
+            gold_chunk_delta.append(
+                sum(item.get("paper_id") in arm_gold for item in arm_result.get("selected_evidence", []))
+                - sum(item.get("paper_id") in base_gold for item in base_result.get("selected_evidence", []))
+            )
+        row["paired_chunk_precision_delta_vs_B6"] = mean_or_none(precision_delta)
+        row["paired_document_AP_delta_vs_B6"] = mean_or_none(document_ap_delta)
+        row["paired_document_AP_delta_note"] = "Document AP deduplicates PMID; repeated chunks cannot add unique source coverage. When only one known gold PMID exists and is retrieved, AP may tie at 1.0 despite different repeated-chunk counts."
+        row["paired_document_precision_delta_vs_B6"] = mean_or_none(document_ap_delta)
+        row["paired_semantic_accuracy_delta_vs_B6"] = mean_or_none(semantic_delta)
+        row["corr_semantic_delta_gold_chunk_count_delta"] = correlation(semantic_delta, gold_chunk_delta)
+        row["paired_mean_gold_chunk_count_delta"] = mean_or_none([float(value) for value in gold_chunk_delta])
+    return output
 
 def create_entropy(data: dict[str, dict[str, dict[str, Any]]]) -> list[dict[str, Any]]:
-    output=[]
+    output: list[dict[str, Any]] = []
     for arm in ARM_ORDER:
         if arm == "B6_full":
             continue
-        common=[q for q in data["B6_full"] if data["B6_full"][q]["generation_available"] and data[arm][q]["generation_available"]]
-        for measure in ("h20","h50","h100","generated_tokens"):
-            vals=[]
-            for q in common:
-                av = data[arm][q][measure]
-                bv = data["B6_full"][q][measure]
-                if av is not None and bv is not None:
-                    vals.append(float(av) - float(bv))
-            seed=20261020+sum(map(ord,arm+measure+"entropy"))
-            lo,hi=paired_bootstrap(vals,seed=seed) if vals else (None,None)
-            output.append({"arm_id":arm,"measure":measure,"n_paired":len(vals),"mean_delta_vs_B6":mean_or_none(vals),
-                           "ci95_low":lo,"ci95_high":hi,"bootstrap_resamples":10000,"bootstrap_seed":seed,
-                           "metric_definition":"mean per-generated-token top-K entropy (bits), locally renormalized among top K logits; not full-vocabulary Shannon entropy" if measure.startswith("h") else "final generation token count",
-                           "paired_query_ids_only":True})
-        for measure in ("retained_mass_k20","retained_mass_k50","retained_mass_k100"):
-            vals=[float(data[arm][q][measure])-float(data["B6_full"][q][measure]) for q in common if data[arm][q][measure] is not None and data["B6_full"][q][measure] is not None]
+        common = sorted(q for q in data["B6_full"]
+                        if data["B6_full"][q]["generation_available"] and data[arm][q]["generation_available"])
+        for measure in ("h20", "h50", "h100", "generated_tokens"):
+            values = [float(data[arm][q][measure]) - float(data["B6_full"][q][measure])
+                      for q in common if data[arm][q][measure] is not None and data["B6_full"][q][measure] is not None]
             seed = 20261020 + sum(map(ord, arm + measure + "entropy"))
-            lo, hi = paired_bootstrap(vals, seed=seed) if vals else (None, None)
-            output.append({"arm_id":arm,"measure":measure,"n_paired":len(vals),"mean_delta_vs_B6":mean_or_none(vals),"ci95_low":lo,"ci95_high":hi,"bootstrap_resamples":10000,"bootstrap_seed":seed,"metric_definition":"full-softmax probability mass contained in top K logits; fraction, not entropy","paired_query_ids_only":True})
-        # paired entropy/quality relationship using one observation per query
-        for k in ("h20","h50","h100"):
-            pairs = [(float(data[arm][q][k]) - float(data["B6_full"][q][k]),
+            low, high = paired_bootstrap(values, seed=seed) if values else (None, None)
+            output.append({"arm_id": arm, "measure": measure, "n_paired": len(values),
+                           "mean_delta_vs_B6": mean_or_none(values), "ci95_low": low, "ci95_high": high,
+                           "bootstrap_resamples": 10000, "bootstrap_seed": seed,
+                           "metric_definition": "mean per-generated-token top-K entropy (bits), locally renormalized over top K logits; not full-vocabulary Shannon entropy" if measure.startswith("h") else "final generation token count",
+                           "paired_query_ids_only": True})
+        for measure in ("retained_mass_k20", "retained_mass_k50", "retained_mass_k100"):
+            values = [float(data[arm][q][measure]) - float(data["B6_full"][q][measure])
+                      for q in common if data[arm][q][measure] is not None and data["B6_full"][q][measure] is not None]
+            seed = 20261020 + sum(map(ord, arm + measure + "entropy"))
+            low, high = paired_bootstrap(values, seed=seed) if values else (None, None)
+            output.append({"arm_id": arm, "measure": measure, "n_paired": len(values),
+                           "mean_delta_vs_B6": mean_or_none(values), "ci95_low": low, "ci95_high": high,
+                           "bootstrap_resamples": 10000, "bootstrap_seed": seed,
+                           "metric_definition": "full-softmax probability mass within top K logits; fraction, not entropy",
+                           "paired_query_ids_only": True})
+        for measure in ("h20", "h50", "h100"):
+            pairs = [(float(data[arm][q][measure]) - float(data["B6_full"][q][measure]),
                       float(data[arm][q]["semantic_accuracy"]) - float(data["B6_full"][q]["semantic_accuracy"]))
-                     for q in common if data[arm][q][k] is not None and data["B6_full"][q][k] is not None]
-            output.append({"arm_id":arm,"measure":f"corr_{k}_delta_semantic_accuracy_delta","n_paired":len(pairs),"mean_delta_vs_B6":correlation([p[0] for p in pairs],[p[1] for p in pairs]),"ci95_low":None,"ci95_high":None,"bootstrap_resamples":0,"bootstrap_seed":None,"metric_definition":"descriptive Pearson correlation between within-query entropy change and Semantic Accuracy change; no causal interpretation","paired_query_ids_only":True})
+                     for q in common if data[arm][q][measure] is not None and data["B6_full"][q][measure] is not None]
+            output.append({"arm_id": arm, "measure": f"corr_{measure}_delta_semantic_accuracy_delta",
+                           "n_paired": len(pairs),
+                           "mean_delta_vs_B6": correlation([pair[0] for pair in pairs], [pair[1] for pair in pairs]),
+                           "ci95_low": None, "ci95_high": None, "bootstrap_resamples": 0, "bootstrap_seed": None,
+                           "metric_definition": "descriptive Pearson correlation of within-query entropy change and Semantic Accuracy change; no causal interpretation",
+                           "paired_query_ids_only": True})
     return output
-
 
 def create_overflow_analysis(data: dict[str, dict[str, dict[str, Any]]], questions: dict[str,Any]) -> list[dict[str,Any]]:
     output=[]
@@ -706,6 +803,12 @@ def main() -> None:
     rows,audit,results=build_canonical(questions,details,errors,judge)
     cache_audit=judge_cache_audit(judge,rows)
     checks=integrity_outputs(rows,audit,cache_audit)
+    checks["reported_judge_summary_crosscheck"] = {
+        "judge_summary_path": str(JUDGE / "judge_summary.json"),
+        "arm_summary_deltas_are_reference_only": True,
+        "primary_recomputed_bootstrap": "query-paired, fixed-seed 10,000 resamples; analysis uses regenerated arms/IDs and recomputed source pair table",
+        "note": "Saved judge_summary uses its own legacy percentile indexing and arm iterates a Python set; primary table is rederived deterministically and does not adopt order-dependent seed assignment."
+    }
     data=arm_rows(rows)
     columns=list(rows[0])
     write_csv(TABLES/"canonical_5250.csv",rows,columns)
@@ -721,7 +824,7 @@ def main() -> None:
     contexts=create_context_provenance(data,results)
     write_csv(TABLES/"context_provenance.csv",contexts)
     write_csv(TABLES/"entropy_paired.csv",create_entropy(data))
-    (OUT/"integrity_audit.json").write_text(json.dumps(checks,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    atomic_text_write(OUT/"integrity_audit.json", json.dumps(checks, indent=2, sort_keys=True) + "\n")
     if not all(checks['assertions'].values()):
         raise SystemExit("Integrity assertions failed; inspect integrity_audit.json")
     print(json.dumps({"rows":len(rows),"integrity_assertions":checks['assertions'],"outputs":sorted(p.name for p in TABLES.glob('*.csv'))},indent=2))

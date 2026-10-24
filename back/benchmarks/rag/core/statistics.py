@@ -20,20 +20,16 @@ from __future__ import annotations
 
 import math
 import warnings
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from itertools import combinations
 from typing import Any, Literal
 
 import numpy as np
 from scipy import stats as scipy_stats
 
-from core.analytics import QUALITY_METRICS, TELEMETRY_METRICS, METRIC_LABELS
+from core.analytics import QUALITY_METRICS, TELEMETRY_METRICS
 from core.metrics import classify_answerability, detect_abstention, get_is_answerable
 
-try:
-    from statsmodels.stats.contingency_tables import mcnemar as sm_mcnemar
-except ImportError:  # pragma: no cover
-    sm_mcnemar = None
 
 ANSWERED_OUTCOMES = frozenset({"TP", "FP"})
 QUALITY_METRIC_SET = frozenset(QUALITY_METRICS)
@@ -252,7 +248,7 @@ def prepare_per_query_records(
             {
                 b
                 for r in results
-                for b in r.get("baselines", {}).keys()
+                for b in r.get("baselines", {})
                 if r.get("baselines", {}).get(b, {}).get("status") == "success"
             }
         )
@@ -423,7 +419,7 @@ def _bca_interval(
     """Bias-corrected and accelerated (BCa) bootstrap interval."""
     n = len(values)
     prop_less = float(np.mean(boot_stats < observed))
-    z0 = scipy_stats.norm.ppf(max(min(prop_less, 1 - 1e-12), 1e-12))
+    z0 = float(scipy_stats.norm.ppf(max(min(prop_less, 1 - 1e-12), 1e-12)))
 
     jack_vals = np.empty(n, dtype=float)
     for i in range(n):
@@ -432,18 +428,18 @@ def _bca_interval(
     jack_mean = np.mean(jack_vals)
     num = np.sum((jack_mean - jack_vals) ** 3)
     den = 6.0 * (np.sum((jack_mean - jack_vals) ** 2) ** 1.5)
-    accel = num / den if den != 0 else 0.0
+    accel = float(num / den) if den != 0 else 0.0
 
     def _adjusted_quantile(prob: float) -> float:
-        z = scipy_stats.norm.ppf(prob)
+        z = float(scipy_stats.norm.ppf(prob))
         adj = z0 + z
         denom = 1 - accel * adj
         if abs(denom) < 1e-12:
             return z
-        return z0 + (z0 + z) / denom
+        return float(z0 + (z0 + z) / denom)
 
-    lo_prob = scipy_stats.norm.cdf(_adjusted_quantile(alpha / 2))
-    hi_prob = scipy_stats.norm.cdf(_adjusted_quantile(1 - alpha / 2))
+    lo_prob = float(scipy_stats.norm.cdf(_adjusted_quantile(alpha / 2)))
+    hi_prob = float(scipy_stats.norm.cdf(_adjusted_quantile(1 - alpha / 2)))
     lo_prob = max(min(lo_prob, 1.0), 0.0)
     hi_prob = max(min(hi_prob, 1.0), 0.0)
     return float(np.percentile(boot_stats, 100 * lo_prob)), float(np.percentile(boot_stats, 100 * hi_prob))
@@ -536,9 +532,9 @@ def rank_biserial_effect_size(differences: np.ndarray) -> float | None:
     return float((w_plus - w_minus) / denom)
 
 
-def _as_float64_array(values: np.ndarray) -> np.ndarray:
-    """Coerce inputs to contiguous float64 arrays for scipy compatibility."""
-    clean = [float(v) for v in np.asarray(values).ravel().tolist()]
+def _as_float64_array(values: Any) -> np.ndarray:
+    """Coerce a sequence of values to contiguous float64 for scipy."""
+    clean = [float(value) for value in values]
     return np.ascontiguousarray(np.array(clean, dtype=np.float64))
 
 
@@ -577,14 +573,11 @@ def wilcoxon_signed_rank_test(vec_a: np.ndarray, vec_b: np.ndarray) -> dict[str,
 
     statistic: float | None = None
     p_value: float | None = None
-    for kwargs in (
-        {"alternative": "two-sided", "method": "approx"},
-        {"alternative": "two-sided"},
-    ):
+    for method in ("approx", "auto"):
         try:
-            res = scipy_stats.wilcoxon(vec_a, vec_b, **kwargs)
-            p_value = float(res.pvalue)
-            statistic = float(res.statistic)
+            result: Any = scipy_stats.wilcoxon(vec_a, vec_b, alternative="two-sided", method=method)
+            p_value = float(result.pvalue)
+            statistic = float(result.statistic)
             break
         except (ValueError, TypeError, AttributeError):
             continue
@@ -631,13 +624,6 @@ def mcnemar_answerability_test(records: list[dict[str, Any]], baseline_a: str, b
     p_value = float(2 * scipy_stats.binom.cdf(k, n_discordant, 0.5))
     p_value = min(p_value, 1.0)
 
-    if sm_mcnemar is not None:
-        try:
-            result = sm_mcnemar([[0, b_count], [c_count, 0]], exact=True)
-            p_value = float(result.pvalue)
-        except (ValueError, TypeError):
-            pass
-
     return {"p_value": p_value, "b": b_count, "c": c_count, "n": len(shared)}
 
 
@@ -656,7 +642,7 @@ def friedman_omnibus_test(
     else:
         target_records = records
 
-    target_query_ids = sorted(list({str(r["query_id"]) for r in target_records if "query_id" in r}))
+    target_query_ids = sorted({str(r["query_id"]) for r in target_records if "query_id" in r})
     if len(target_query_ids) < 2:
         return {"statistic": None, "p_value": None, "n": len(target_query_ids)}
 
@@ -675,8 +661,8 @@ def friedman_omnibus_test(
                 by_baseline[b][qid] = 0.0
 
     arrays = [
-        _as_float64_array([by_baseline[b][q] for q in target_query_ids])
-        for b in baselines
+        _as_float64_array([by_baseline[baseline][query_id] for query_id in target_query_ids])
+        for baseline in baselines
     ]
     # Stack as (n_queries, n_baselines). When every query has identical scores
     # across baselines, all ranks are fully tied and scipy's tie correction
@@ -830,7 +816,7 @@ def _pairwise_wilcoxon_family(
         sig_flags, adj_p_vals, adj_alphas = compute_multiple_comparison_correction(p_vals, config)
 
         for (b_a, b_b, vec_a, vec_b, wilcox), sig, p_adj, alpha_adj in zip(
-            metric_pairs, sig_flags, adj_p_vals, adj_alphas
+            metric_pairs, sig_flags, adj_p_vals, adj_alphas, strict=True
         ):
             diff_ci = bootstrap_paired_difference_ci(
                 vec_a, vec_b, config, alpha_override=alpha_adj

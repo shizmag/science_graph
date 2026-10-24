@@ -1,0 +1,8 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic",
+  "include": ["back/benchmarks/rag", "revision_ablation_defense/analyze_existing.py"],
+  "exclude": ["back/benchmarks/rag/sciq_dataset.yaml"]
+}
