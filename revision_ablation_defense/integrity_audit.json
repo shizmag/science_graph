@@ -1,0 +1,115 @@
+{
+  "answerability_population": {
+    "answerable": 300,
+    "designated_negative": 75
+  },
+  "arms_manifest_dataset_sha256": "d2820ced7c2994218245887ad753700923262fb91ec983eeacc01b217ec43b6b",
+  "assertions": {
+    "300_answerable_75_negative": true,
+    "375_ids_each_arm": true,
+    "4,265_success_985_failed": true,
+    "5,250_planned_unique": true,
+    "all_eligible_scored": true,
+    "all_failures_overflow": true,
+    "judge_reuse_payload_complete": true,
+    "model_index_dataset_consistent_within_arm_matrix": true,
+    "no_failed_scores": true,
+    "response_hashes_match": true
+  },
+  "canonical_audit_counts": {
+    "eligible_rows": 4265,
+    "failed_rows": 985,
+    "ineligible_rows": 985,
+    "success_rows": 4265
+  },
+  "canonical_rows": 5250,
+  "dataset_sha256": "d2820ced7c2994218245887ad753700923262fb91ec983eeacc01b217ec43b6b",
+  "external_db_snapshot_sha256": "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0",
+  "identity_values": {
+    "dataset": [
+      "d2820ced7c2994218245887ad753700923262fb91ec983eeacc01b217ec43b6b"
+    ],
+    "effective_config": [
+      "070926292b75494889185290b0df33a5a517d8370855d5aaa8b26c7694fe601f",
+      "2b2f8cd46225dd630a9d52dcc05e9683f9ef5aecb1cf374e65bf035e071d1125",
+      "3ddebedbdc31f0bc7048d493498a1d96b54a71d65dae44456f3f75bc3f5b8308",
+      "44f9fb48be77b456cec08739bd47dd18f048d7a5a8b2f1ef3d6f180349d099e9",
+      "45cb770666c5f07427e84b76d5e51c499b96920497db4739792884591c88464f",
+      "4e01a284a3dfb83d8defdedf179fbf9ada3224d77447e7e666cc104f52081957",
+      "6857655408a2b3e5897bae5defc2a2121437d82c8c2f7025cf036eca4ca22f4c",
+      "6be1a4892831a218761e8244a4bb4b93961dcc0c3119d551c58dda10cab8f1ad",
+      "c8a1162acc3810eba177d88e4a87ca4378614815a587ff7c66d3b328ac42918f",
+      "cb705bc6605ccea9cccf182e94690e2fdb30cfc518658e06ea9498dfcd792169",
+      "ccc834bb398e55d5570c88e44e7e8e43aa5c234126a01d39cdbd939fc685bd62",
+      "d37c1e81af7b43b949431d1469cf4f30ab2177bf72b3c195e5db622cfb4ead50",
+      "e2c2482beb79252f340f3ccf73134b431baf8cbbd0adfa1286a28986647ffcf2",
+      "e5590be5cbeaeb24928821bd7574e16235a56fc6fd0781a9829ff0d645849bc4"
+    ],
+    "model_manifest": [
+      "d966240c28b0b4da2ed2a7b34ffb3a2b10cf2cfc6f88589ab599a0862f17508b"
+    ],
+    "snapshot": [
+      "c7fdd7c6fed69b788563896efaa8cbfe204216d6ff82043ff3a7414267aba8f0"
+    ]
+  },
+  "judge_cache_audit": {
+    "bad_case_id_count": 0,
+    "duplicate_payload_score_conflict_count": 0,
+    "duplicate_slots_reused": 1968,
+    "eligible_slots": 4265,
+    "exact_payload_key_matches_score_case_id": true,
+    "fixed_global_judge_identity": {
+      "model": "gpt-6-luna-low",
+      "omniroute_model_id": "codex/gpt-6-luna-low",
+      "reasoning_effort": "low",
+      "system_rubric_sha256": "920702b80a4bbfa2680e97b277ee279b81a2ac528a3b73cbda0de192b9f8641a",
+      "temperature": 0
+    },
+    "max_payload_multiplicity": 9,
+    "note": "Per-case digest excludes system/rubric/model/parameters because these were fixed globally in this single run. No cross-run score cache was used. The archived global system text and model/decoding settings must remain attached when interpreting this validation.",
+    "payload_identity_fields": [
+      "question",
+      "answerability_label",
+      "reference_answer",
+      "evaluator-visible context",
+      "cleaned answer"
+    ],
+    "unique_exact_payloads": 2297
+  },
+  "judge_status_counts": {
+    "operation_ineligible": 985,
+    "scored": 4265
+  },
+  "july_database_identity_proven": false,
+  "missing_result_records": [],
+  "model_revisions": {
+    "cross_encoder": "1427fd652930e4ba29e8149678df786c240d8825",
+    "embedder": "d128750597153bb5987e10b1c3493a34e5a4502a",
+    "generator": "e7d9f8b912dc1ac9a66ab42f0d07a7663d6ed58c"
+  },
+  "operation_status_counts": {
+    "PARTIAL": 985,
+    "SUCCESS": 4265
+  },
+  "planned_queries_per_arm": {
+    "B6_fixed_budget_context": 375,
+    "B6_full": 375,
+    "B6_interaction_graph_candidate_x_dynamic_expander": 375,
+    "B6_interaction_reranker_x_blending": 375,
+    "B6_minus_bridge_retrieval": 375,
+    "B6_minus_concept_retrieval": 375,
+    "B6_minus_dense_retrieval": 375,
+    "B6_minus_dynamic_graph_expander": 375,
+    "B6_minus_final_reranking": 375,
+    "B6_minus_intrapaper_graph_candidates": 375,
+    "B6_minus_lexical_retrieval": 375,
+    "B6_minus_parent_deduplication": 375,
+    "B6_minus_score_blending": 375,
+    "B6_minus_static_graph_context": 375
+  },
+  "raw_response_hash_mismatches": [],
+  "run_manifest_status": "PARTIAL",
+  "run_package_expected_files": 14891,
+  "runtime_dataset_sha256": "d2820ced7c2994218245887ad753700923262fb91ec983eeacc01b217ec43b6b",
+  "unique_arm_query_pairs": 5250
+}

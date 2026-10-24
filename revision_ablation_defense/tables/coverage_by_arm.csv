@@ -1,0 +1,15 @@
+arm_id,planned,successful,failed,coverage_pct,answerable_planned,answerable_success,answerable_coverage_pct,negative_planned,negative_success,negative_coverage_pct,shared_success_with_B6,success_only_arm,success_only_B6,failed_both,failure_reason_counts
+B6_full,375,296,79,78.93333333333334,300,248,82.66666666666667,75,48,64.0,296,0,0,79,"{""RuntimeError"": 79}"
+B6_minus_score_blending,375,264,111,70.4,300,213,71.0,75,51,68.0,249,15,47,64,"{""RuntimeError"": 111}"
+B6_minus_final_reranking,375,265,110,70.66666666666667,300,218,72.66666666666667,75,47,62.666666666666664,247,18,49,61,"{""RuntimeError"": 110}"
+B6_minus_dynamic_graph_expander,375,375,0,100.0,300,300,100.0,75,75,100.0,296,79,0,0,{}
+B6_minus_static_graph_context,375,296,79,78.93333333333334,300,248,82.66666666666667,75,48,64.0,296,0,0,79,"{""RuntimeError"": 79}"
+B6_minus_intrapaper_graph_candidates,375,294,81,78.4,300,246,82.0,75,48,64.0,294,0,2,79,"{""RuntimeError"": 81}"
+B6_minus_concept_retrieval,375,296,79,78.93333333333334,300,248,82.66666666666667,75,48,64.0,296,0,0,79,"{""RuntimeError"": 79}"
+B6_minus_bridge_retrieval,375,309,66,82.4,300,260,86.66666666666667,75,49,65.33333333333333,277,32,19,47,"{""RuntimeError"": 66}"
+B6_minus_parent_deduplication,375,347,28,92.53333333333333,300,293,97.66666666666667,75,54,72.0,296,51,0,28,"{""RuntimeError"": 28}"
+B6_minus_lexical_retrieval,375,307,68,81.86666666666666,300,255,85.0,75,52,69.33333333333333,266,41,30,38,"{""RuntimeError"": 68}"
+B6_minus_dense_retrieval,375,280,95,74.66666666666667,300,232,77.33333333333333,75,48,64.0,247,33,49,46,"{""RuntimeError"": 95}"
+B6_fixed_budget_context,375,296,79,78.93333333333334,300,248,82.66666666666667,75,48,64.0,296,0,0,79,"{""RuntimeError"": 79}"
+B6_interaction_graph_candidate_x_dynamic_expander,375,375,0,100.0,300,300,100.0,75,75,100.0,296,79,0,0,{}
+B6_interaction_reranker_x_blending,375,265,110,70.66666666666667,300,218,72.66666666666667,75,47,62.666666666666664,247,18,49,61,"{""RuntimeError"": 110}"
