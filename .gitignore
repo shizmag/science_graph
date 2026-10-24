@@ -221,3 +221,4 @@ ablation_cuda/return/
 # Exploded releases are reproducible from the tracked source and stay local;
 # small checksum sidecars remain eligible for Git as the release index.
 ablation_cuda/releases/ablation_cuda_input_v*/
+revision_ablation_defense/
