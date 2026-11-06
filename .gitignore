@@ -222,3 +222,13 @@ ablation_cuda/return/
 # small checksum sidecars remain eligible for Git as the release index.
 ablation_cuda/releases/ablation_cuda_input_v*/
 revision_ablation_defense/
+
+# Expose only the Judge B bridge to workspace-aware tools; keep the rest of
+# revision_round1 under its existing ignore policy and the private map hidden.
+!revision_round1/
+revision_round1/*
+!revision_round1/judge/
+revision_round1/judge/*
+!revision_round1/judge/antigravity_bridge/
+revision_round1/judge/antigravity_bridge/private/
+revision_round1/judge/antigravity_bridge/**/__pycache__/

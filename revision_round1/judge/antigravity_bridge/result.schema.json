@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Blinded R2 Judge B result v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["evaluation_id", "input_sha256", "rubric_version", "judge_session_id", "status", "semantic_accuracy", "faithfulness", "semantic_accuracy_rationale", "faithfulness_rationale", "evidence_identifiers", "unsupported_claims", "unresolved_citation_mapping", "error_reason"],
+  "properties": {
+    "evaluation_id": {"type": "string", "pattern": "^E[0-9a-f]{24}$"},
+    "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "rubric_version": {"const": "v2"},
+    "judge_session_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$"},
+    "status": {"enum": ["scored", "partial", "unevaluable"]},
+    "semantic_accuracy": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "faithfulness": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "semantic_accuracy_rationale": {"type": "string", "minLength": 1},
+    "faithfulness_rationale": {"type": "string", "minLength": 1},
+    "evidence_identifiers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "unsupported_claims": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "unresolved_citation_mapping": {"type": "boolean"},
+    "error_reason": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["code", "detail"], "properties": {"code": {"type": "string", "minLength": 1}, "detail": {"type": "string", "minLength": 1}}}]}
+  },
+  "$comment": "The deterministic bridge adds cross-field rules for eligibility, statuses, session records, hashes, and evidence identifiers."
+}
