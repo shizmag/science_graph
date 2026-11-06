@@ -165,8 +165,17 @@ def main():
     for index, eid in enumerate(pending, 1):
         task = tasks[eid]
         uncertain = WORKSPACE / "uncertain_openrouter" / f"{eid}.json"
-        if uncertain.exists() or list((WORKSPACE / "raw_openrouter").glob(f"{eid}.attempt*.json")):
-            raise RuntimeError(f"{eid}: prior request requires manual reconciliation; refusing to resend")
+        if uncertain.exists():
+            prior = json.loads(uncertain.read_text())
+            # OpenRouter 429 means the upstream provider rejected the request
+            # before generation; it is safe to retry. Timeouts/other errors are
+            # deliberately fail-closed because they may have been processed.
+            if prior.get("state") == "http_error" and prior.get("status") == 429:
+                uncertain.unlink()
+            else:
+                raise RuntimeError(f"{eid}: prior request requires manual reconciliation; refusing to resend")
+        if list((WORKSPACE / "raw_openrouter").glob(f"{eid}.attempt*.json")):
+            raise RuntimeError(f"{eid}: raw response exists without a result; manual reconciliation required")
         for attempt in range(MAX_RETRIES + 1):
             wait = delay - (time.time() - last)
             if wait > 0: time.sleep(wait)
@@ -194,7 +203,18 @@ def main():
                 if e.code == 429 and attempt < MAX_RETRIES:
                     uncertain.unlink(missing_ok=True)
                     time.sleep(min(60, 2 ** attempt)); continue
-                atomic(uncertain, {"task": eid, "state": "http_error", "status": e.code, "detail": body[:500].replace(api_key, "[REDACTED]")})
+                detail = body[:2000].replace(api_key, "[REDACTED]")
+                if e.code == 429 and attempt < MAX_RETRIES:
+                    # Preserve the provider diagnostic, then retry with a
+                    # bounded delay. This is not counted as a scored request.
+                    atomic(uncertain, {"task": eid, "state": "http_error", "status": 429, "detail": detail})
+                    retry_after = 0
+                    try: retry_after = int(e.headers.get("Retry-After", "0"))
+                    except (TypeError, ValueError): pass
+                    time.sleep(max(retry_after, min(120, 30 * (attempt + 1))))
+                    uncertain.unlink(missing_ok=True)
+                    continue
+                atomic(uncertain, {"task": eid, "state": "http_error", "status": e.code, "detail": detail})
                 raise RuntimeError(f"{eid}: HTTP {e.code}; error saved") from e
             except (TimeoutError, urllib.error.URLError) as e:
                 atomic(WORKSPACE / "uncertain_openrouter" / f"{eid}.json", {"error": str(e), "task": eid})
