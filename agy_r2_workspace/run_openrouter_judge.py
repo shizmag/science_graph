@@ -5,21 +5,24 @@ This is an API execution script, not a scoring heuristic. Scores come only from
 OpenRouter's returned LLM JSON. It resumes from validated result files and never
 overwrites a completed result.
 """
+
 from __future__ import annotations
-import argparse, json, os, re, subprocess, sys, time, urllib.error, urllib.request
+import argparse, hashlib, json, math, os, re, subprocess, sys, time, urllib.error, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT / "agy_r2_workspace"
 BRIDGE = ROOT / "revision_round1/judge/antigravity_bridge/bridge.py"
-MODEL = "google/gemma-4-31b-it:free"
+MODEL = "deepseek/deepseek-v4.1-flash-1017"
 ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 RPM = 15
 MAX_RETRIES = 3
 
 
 def compact(obj):
-    return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    return json.dumps(
+        obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode()
 
 
 def atomic(path: Path, value):
@@ -30,8 +33,9 @@ def atomic(path: Path, value):
 
 
 def bridge(*args):
-    p = subprocess.run([sys.executable, str(BRIDGE), *args], cwd=ROOT,
-                       text=True, capture_output=True)
+    p = subprocess.run(
+        [sys.executable, str(BRIDGE), *args], cwd=ROOT, text=True, capture_output=True
+    )
     if p.returncode:
         raise RuntimeError(p.stderr or p.stdout)
     return json.loads(p.stdout)
@@ -65,7 +69,9 @@ def ensure_session(session):
     if path.exists():
         saved = json.loads(path.read_text())
         if saved.get("session_id") != session or saved.get("model") != MODEL:
-            raise ValueError("existing session has a different ID or model; choose a new session")
+            raise ValueError(
+                "existing session has a different ID or model; choose a new session"
+            )
         return
     bridge("session", "--id", session, "--model", MODEL)
 
@@ -83,7 +89,8 @@ def parse_json(text: str):
 def normalize(task, session, output):
     # Accept only score fields produced by the model; this does not calculate scores.
     status = output["status"]
-    if status == "valid": status = "scored"
+    if status == "valid":
+        status = "scored"
     if status not in {"scored", "partial", "unevaluable"}:
         raise ValueError("invalid judge status")
     semantic_rationale = output["semantic_accuracy_rationale"]
@@ -106,7 +113,28 @@ def normalize(task, session, output):
     return result
 
 
-def request(api_key, task):
+def historical_messages(task):
+    prompt = json.loads((WORKSPACE / "historical_judge_prompt.json").read_text())
+    if not task["answerable"] or not task["reference_answer"]:
+        raise ValueError("historical prompt requires a reference; synthetic negatives are excluded")
+    user = prompt["user_prompt_template"].format(
+        query=task["question"], context=task["generator_visible_evidence"],
+        golden_answer=task["reference_answer"], answer=task["generated_answer"])
+    return [{"role":"system", "content":prompt["system_prompt"]}, {"role":"user", "content":user}]
+
+
+def validate_historical_output(output):
+    for name in ("answer_relevance", "semantic_accuracy", "faithfulness", "citation_fidelity"):
+        metric=output.get(name)
+        if not isinstance(metric, dict): raise ValueError(f"missing historical metric: {name}")
+        value=metric.get("score")
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 1:
+            raise ValueError(f"invalid historical score: {name}")
+    return output
+
+
+def request(api_key, task, protocol="historical"):
+
     instruction = (
         "Return ONLY one JSON object. You are an independent biomedical RAG judge. "
         "Follow the embedded v2 rubric exactly. Scores must be numbers in [0,1], "
@@ -120,51 +148,106 @@ def request(api_key, task):
         "code and detail). Use status scored, partial, or unevaluable. For designated negatives "
         "semantic_accuracy must be null. If input is invalid use unevaluable and null scores."
     )
-    body = {"model": MODEL, "provider": {"allow_fallbacks": False}, "temperature": 0, "max_tokens": 1200,
-            "response_format": {"type": "json_object"},
-            "messages": [{"role": "system", "content": instruction},
-                         {"role": "user", "content": json.dumps(task, ensure_ascii=False)}]}
-    req = urllib.request.Request(ENDPOINT, data=compact(body), method="POST",
-        headers={"Authorization": "Bearer " + api_key, "Content-Type": "application/json",
-                 "HTTP-Referer": "https://openrouter.ai", "X-Title": "KNOSYS R2 Judge B"})
+    body = {
+        "model": MODEL,
+        "provider": {"allow_fallbacks": False},
+        "temperature": 0,
+        "max_tokens": 1200,
+        "response_format": {"type": "json_object"},
+        "messages": historical_messages(task) if protocol == "historical" else [
+            {"role": "system", "content": instruction},
+            {"role": "user", "content": json.dumps(task, ensure_ascii=False)},
+        ],
+    }
+    req = urllib.request.Request(
+        ENDPOINT,
+        data=compact(body),
+        method="POST",
+        headers={
+            "Authorization": "Bearer " + api_key,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://openrouter.ai",
+            "X-Title": "KNOSYS R2 Judge B",
+        },
+    )
     started = time.time()
     with urllib.request.urlopen(req, timeout=180) as response:
         raw = response.read()
         payload = json.loads(raw)
-        headers = {k: v for k, v in response.headers.items() if k.lower() in {
-            "x-request-id", "x-ratelimit-limit", "x-ratelimit-remaining", "x-ratelimit-reset"}}
-    payload["_metadata"] = {"latency_seconds": time.time() - started, "headers": headers,
-                             "requested_model": MODEL, "endpoint": ENDPOINT}
+        headers = {
+            k: v
+            for k, v in response.headers.items()
+            if k.lower()
+            in {
+                "x-request-id",
+                "x-ratelimit-limit",
+                "x-ratelimit-remaining",
+                "x-ratelimit-reset",
+            }
+        }
+    payload["_metadata"] = {
+        "latency_seconds": time.time() - started,
+        "headers": headers,
+        "requested_model": MODEL,
+        "endpoint": ENDPOINT,
+    }
     return payload
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--session", default="openrouter_gemma4_20261106_01")
+    ap.add_argument("--session", default="openrouter_deepseek_historical_v1")
+    ap.add_argument("--protocol", choices=("historical", "v2"), default="historical")
     ap.add_argument("--rpm", type=int, default=RPM)
     ap.add_argument("--max-tasks", type=int, default=200)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
-    if args.rpm < 1 or args.rpm > 15: raise SystemExit("rpm must be between 1 and 15")
-    if args.max_tasks < 1: raise SystemExit("max-tasks must be positive")
+    if args.rpm < 1 or args.rpm >= 150:
+        raise SystemExit("rpm must be between 1 and 15")
+    if args.max_tasks < 1:
+        raise SystemExit("max-tasks must be positive")
     api_key = load_api_key()
-    if not args.dry_run and not api_key: raise SystemExit("OPENROUTER_API_KEY is not set")
+    if not args.dry_run and not api_key:
+        raise SystemExit("OPENROUTER_API_KEY is not set")
     status = bridge("status")
-    if status["invalid"]: raise SystemExit("invalid existing bridge state; repair it first")
+    if status["invalid"]:
+        raise SystemExit("invalid existing bridge state; repair it first")
     manifest = json.loads((WORKSPACE / "manifest.json").read_text())
-    tasks = {p.stem: json.loads(p.read_text()) for p in (WORKSPACE / "tasks").glob("*.json")}
-    pending = [eid for batch in manifest["batches"] for eid in batch["tasks"]
-               if not (WORKSPACE / "results" / f"{eid}.json").exists()]
-    pending = pending[:args.max_tasks]
-    print(json.dumps({"model": MODEL, "pending": len(pending), "rpm": args.rpm, "dry_run": args.dry_run}))
-    if args.dry_run: return
+    tasks = {
+        p.stem: json.loads(p.read_text()) for p in (WORKSPACE / "tasks").glob("*.json")
+    }
+    output_root = WORKSPACE / ("historical_prompt_results" if args.protocol == "historical" else "results")
+    pending = [
+        eid
+        for batch in manifest["batches"]
+        for eid in batch["tasks"]
+        if (args.protocol != "historical" or tasks[eid]["answerable"])
+        and not (output_root / f"{eid}.json").exists()
+    ]
+    pending = pending[: args.max_tasks]
+    print(
+        json.dumps(
+            {
+                "model": MODEL,
+                "pending": len(pending),
+                "rpm": args.rpm,
+                "dry_run": args.dry_run,
+                "protocol": args.protocol,
+                "note": "historical prompt differs from v2; negatives excluded" if args.protocol == "historical" else "frozen v2 rubric",
+            }
+        )
+    )
+    if args.dry_run:
+        return
     ensure_session(args.session)
     delay = 60.0 / args.rpm
-    ledger = WORKSPACE / "uncertain_openrouter" / "last_request.json"
+    run_dir = WORKSPACE / ("historical_prompt_run" if args.protocol == "historical" else "uncertain_openrouter")
+    raw_dir = run_dir / "raw" if args.protocol == "historical" else WORKSPACE / "raw_openrouter"
+    ledger = run_dir / "last_request.json"
     last = json.loads(ledger.read_text()).get("timestamp", 0) if ledger.exists() else 0
     for index, eid in enumerate(pending, 1):
         task = tasks[eid]
-        uncertain = WORKSPACE / "uncertain_openrouter" / f"{eid}.json"
+        uncertain = run_dir / f"{eid}.json"
         if uncertain.exists():
             prior = json.loads(uncertain.read_text())
             # OpenRouter 429 means the upstream provider rejected the request
@@ -173,28 +256,53 @@ def main():
             if prior.get("state") == "http_error" and prior.get("status") == 429:
                 uncertain.unlink()
             else:
-                raise RuntimeError(f"{eid}: prior request requires manual reconciliation; refusing to resend")
-        if list((WORKSPACE / "raw_openrouter").glob(f"{eid}.attempt*.json")):
-            raise RuntimeError(f"{eid}: raw response exists without a result; manual reconciliation required")
+                raise RuntimeError(
+                    f"{eid}: prior request requires manual reconciliation; refusing to resend"
+                )
+        if list(raw_dir.glob(f"{eid}.attempt*.json")):
+            raise RuntimeError(
+                f"{eid}: raw response exists without a result; manual reconciliation required"
+            )
         for attempt in range(MAX_RETRIES + 1):
             wait = delay - (time.time() - last)
-            if wait > 0: time.sleep(wait)
+            if wait > 0:
+                time.sleep(wait)
             try:
                 last = time.time()
                 atomic(ledger, {"timestamp": last})
-                atomic(uncertain, {"task": eid, "state": "started", "attempt": attempt + 1, "timestamp": last})
-                payload = request(api_key, task)
-                raw_dir = WORKSPACE / "raw_openrouter"
-                atomic(raw_dir / f"{eid}.attempt{attempt+1}.json", payload)
+                atomic(
+                    uncertain,
+                    {
+                        "task": eid,
+                        "state": "started",
+                        "attempt": attempt + 1,
+                        "timestamp": last,
+                    },
+                )
+                payload = request(api_key, task, args.protocol)
+                atomic(raw_dir / f"{eid}.attempt{attempt + 1}.json", payload)
                 returned_model = payload.get("model")
-                if returned_model not in (MODEL, "google/gemma-4-31b-it", "google/gemma-4-31b-it-20260402"):
-                    raise RuntimeError(f"unexpected returned model {returned_model!r}; raw response saved")
+                if returned_model != MODEL:
+                    raise RuntimeError(
+                        f"unexpected returned model {returned_model!r}; raw response saved"
+                    )
                 choice = payload["choices"][0]["message"]["content"]
-                result = normalize(task, args.session, parse_json(choice))
-                draft = WORKSPACE / f".openrouter_{eid}.draft.json"
-                atomic(draft, result)
-                bridge("submit", str(draft))
-                draft.unlink(missing_ok=True)
+                output = parse_json(choice)
+                if args.protocol == "historical":
+                    validate_historical_output(output)
+                    prompt_bytes = (WORKSPACE / "historical_judge_prompt.json").read_bytes()
+                    result = {"evaluation_id":eid, "input_sha256":task["input_sha256"],
+                              "model_requested":MODEL, "model_returned":returned_model,
+                              "protocol":"historical-unified-with-context-v1",
+                              "historical_prompt_sha256":hashlib.sha256(prompt_bytes).hexdigest(),
+                              "semantic_accuracy_eligible":True, "scores":output}
+                    atomic(output_root / f"{eid}.json", result)
+                else:
+                    result = normalize(task, args.session, output)
+                    draft = WORKSPACE / f".openrouter_{eid}.draft.json"
+                    atomic(draft, result)
+                    bridge("submit", str(draft))
+                    draft.unlink(missing_ok=True)
                 uncertain.unlink(missing_ok=True)
                 print(f"[{index}/{len(pending)}] {eid} complete")
                 break
@@ -204,19 +312,44 @@ def main():
                 if e.code == 429 and attempt < MAX_RETRIES:
                     # Preserve the provider diagnostic, then retry with a
                     # bounded delay. This is not counted as a scored request.
-                    atomic(uncertain, {"task": eid, "state": "http_error", "status": 429, "detail": detail})
+                    atomic(
+                        uncertain,
+                        {
+                            "task": eid,
+                            "state": "http_error",
+                            "status": 429,
+                            "detail": detail,
+                        },
+                    )
                     retry_after = 0
-                    try: retry_after = int(e.headers.get("Retry-After", "0"))
-                    except (TypeError, ValueError): pass
+                    try:
+                        retry_after = int(e.headers.get("Retry-After", "0"))
+                    except (TypeError, ValueError):
+                        pass
                     time.sleep(max(retry_after, min(120, 30 * (attempt + 1))))
                     uncertain.unlink(missing_ok=True)
                     continue
-                atomic(uncertain, {"task": eid, "state": "http_error", "status": e.code, "detail": detail})
+                atomic(
+                    uncertain,
+                    {
+                        "task": eid,
+                        "state": "http_error",
+                        "status": e.code,
+                        "detail": detail,
+                    },
+                )
                 raise RuntimeError(f"{eid}: HTTP {e.code}; error saved") from e
             except (TimeoutError, urllib.error.URLError) as e:
-                atomic(WORKSPACE / "uncertain_openrouter" / f"{eid}.json", {"error": str(e), "task": eid})
-                raise RuntimeError(f"{eid}: uncertain request; stopped without retrying") from e
+                atomic(
+                    uncertain,
+                    {"error": str(e), "task": eid},
+                )
+                raise RuntimeError(
+                    f"{eid}: uncertain request; stopped without retrying"
+                ) from e
             except Exception as e:
                 raise
 
-if __name__ == "__main__": main()
+
+if __name__ == "__main__":
+    main()

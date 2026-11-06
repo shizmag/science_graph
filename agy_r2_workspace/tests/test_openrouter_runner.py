@@ -34,3 +34,23 @@ def test_key_environment_precedes_dotenv(tmp_path,monkeypatch):
     assert r.load_api_key()=='env-key'
     monkeypatch.delenv('OPENROUTER_API_KEY')
     assert r.load_api_key()=='local-key'
+
+def test_historical_prompt_matches_archived_source():
+    import subprocess, yaml
+    archived=subprocess.check_output(['git','show','b4f3322d8cae3395bcbf0b5a1f2e47a904d1591a:back/benchmarks/rag/prompts/judge_prompts.yaml'],cwd=r.ROOT)
+    orig=yaml.safe_load(archived)['unified_with_context_evaluator']
+    task={'answerable':True,'question':'question','reference_answer':'reference','generator_visible_evidence':'evidence','generated_answer':'answer'}
+    msgs=r.historical_messages(task)
+    assert msgs[0]['content']==orig['system_prompt']
+    assert msgs[1]['content']==orig['user_prompt_template'].format(query='question',context='evidence',golden_answer='reference',answer='answer')
+    assert 'Citation Fidelity' in msgs[1]['content']
+
+def test_historical_negatives_rejected():
+    with pytest.raises(ValueError,match='reference'):
+        r.historical_messages({'answerable':False,'reference_answer':None})
+
+def test_historical_scores_validated():
+    x={k:{'score':0.5} for k in ('answer_relevance','semantic_accuracy','faithfulness','citation_fidelity')}
+    assert r.validate_historical_output(x)==x
+    x['faithfulness']['score']=2
+    with pytest.raises(ValueError):r.validate_historical_output(x)

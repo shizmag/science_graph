@@ -6,3 +6,5 @@
 /raw_openrouter/
 /uncertain_openrouter/
 .openrouter_*.draft.json
+/historical_prompt_results/
+/historical_prompt_run/
