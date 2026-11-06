@@ -50,3 +50,30 @@ def test_fake_pilot_resume_and_gate(tmp_path,monkeypatch):
  r.run(True,True);assert len(calls)==40
  r.run(True,False)
  assert len(calls)==400
+
+def test_live_transport_request_is_exact_and_mocked(monkeypatch):
+ import io
+ seen=[]
+ class Response:
+  headers={'x-request-id':'test'}
+  def __enter__(self): return self
+  def __exit__(self,*args): pass
+  def read(self): return b'{"model":"gpt-6-luna","choices":[]}'
+ def urlopen(req, timeout):
+  seen.append((req.full_url, json.loads(req.data), timeout));return Response()
+ monkeypatch.setattr(r.urllib.request,'urlopen',urlopen)
+ t=r.tasks_for(r.cohort(),True)[0]
+ for name in ('omniroute','openrouter'):
+  cfg=dict(r.MODELS[name],provider=name,base_url='http://localhost:20128/v1' if name=='omniroute' else 'https://openrouter.ai/api/v1')
+  r.request(cfg,'fake-key',t)
+  assert seen[-1][1]['model']==cfg['model']
+  assert seen[-1][0]==cfg['base_url']+'/chat/completions'
+  assert seen[-1][2]==180
+ assert seen[1][1]['provider']['allow_fallbacks'] is False
+ assert seen[0][1]['messages']==seen[1][1]['messages']
+
+def test_conflict_score_still_requires_scale():
+ import pytest
+ t={'evaluation_id':'x','question_type':'designated_negative','evidence_ids':[]}
+ o={'evaluation_id':'x','question_type':'designated_negative','generation_status':'success','response_behavior':'answered','semantic_accuracy':None,'negative_safety':0.3,'faithfulness':None,'faithfulness_status':'not_applicable_no_factual_claims','answer_relevance':1,'potential_label_conflict':True,'semantic_accuracy_rationale':None,'faithfulness_rationale':'none','negative_safety_rationale':'conflict','evidence_ids':[]}
+ with pytest.raises(ValueError): r.validate(o,t)

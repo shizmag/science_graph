@@ -49,7 +49,7 @@ def validate(o,t):
  if o['potential_label_conflict'] and t['question_type']!='designated_negative':raise ValueError('label conflict on answerable')
  if o['response_behavior'] not in ('answered','abstained','mixed'):raise ValueError('invalid response behavior')
  if t['question_type']=='answerable' and o['semantic_accuracy'] is None:raise ValueError('missing semantic score')
- if t['question_type']=='designated_negative' and not o['potential_label_conflict'] and o['negative_safety'] not in (0,0.5,1):raise ValueError('invalid negative safety score')
+ if t['question_type']=='designated_negative' and o['negative_safety'] not in ((None,0,0.5,1) if o['potential_label_conflict'] else (0,0.5,1)):raise ValueError('invalid negative safety score')
  if o['faithfulness_status']=='scored' and o['faithfulness'] is None:raise ValueError('missing faithfulness score')
  if o['faithfulness_status']=='not_applicable_no_factual_claims' and o['faithfulness'] is not None:raise ValueError('claimless score must be null')
  if o['faithfulness_status'] not in ('scored','not_applicable_no_factual_claims'):raise ValueError('invalid faithfulness status')
@@ -63,7 +63,7 @@ def messages(t):
  visible={k:v for k,v in t.items() if k not in ('query_id','configuration_label','input_sha256','evidence_sha256')}
  return [{'role':'system','content':RUBRIC.read_text()},{'role':'user','content':json.dumps(visible,ensure_ascii=False,sort_keys=True)+"\nReturn ONLY the required normalized JSON object."}]
 def body_for(cfg,t):
- body={'model':cfg['model'],'temperature':0,'max_tokens':1400,'response_format':{'type':'json_object'},'messages':messages(t)}
+ body={'model':cfg['model'],'temperature':0,'max_tokens':3000,'response_format':{'type':'json_object'},'messages':messages(t)}
  if cfg['provider']=='openrouter':body['provider']={'allow_fallbacks':False}
  return body
 
@@ -87,7 +87,10 @@ def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=50000000,r
  packet=(HERE/'paired_judge_inputs.jsonl').read_text()
  if any(len(k)>=8 and k in packet for k in keys.values()):raise RuntimeError('credential found in packet')
  out=OUT;out.mkdir(parents=True,exist_ok=True);mp=out/'manifest.json'
- if mp.exists() and json.loads(mp.read_text())!=manifest:raise RuntimeError('existing manifest mismatch; refusing to mix')
+ if mp.exists():
+  prior=json.loads(mp.read_text()); prior_code=prior.pop('code_commit',None); current=dict(manifest); current.pop('code_commit',None)
+  if prior!=current:raise RuntimeError('existing manifest mismatch; refusing to mix')
+  manifest['code_commit']=prior_code
  if not mp.exists():atomic(mp,manifest)
  attempts_dir=out/'attempts';attempts_dir.mkdir(exist_ok=True)
  def attempts():return [json.loads(p.read_text()) for p in attempts_dir.glob('*.json')]
@@ -105,13 +108,18 @@ def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=50000000,r
     p=out/'results'/provider/(t['evaluation_id']+'.json');body=body_for(cfg,t);reqhash=sha(canon(body))
     if p.exists():
      saved=json.loads(p.read_text())
-     if saved.get('rubric_sha256')!=rubric_hash or saved.get('task',{}).get('input_sha256')!=t['input_sha256'] or saved.get('requested_model')!=cfg['model'] or saved.get('request_sha256')!=reqhash:raise RuntimeError('checkpoint mismatch')
+     legacy_body=dict(body,max_tokens=1400)
+     valid_hashes={reqhash,sha(canon(legacy_body))}
+     if saved.get('rubric_sha256')!=rubric_hash or saved.get('task')!=t or saved.get('requested_model')!=cfg['model'] or saved.get('returned_model') not in cfg['aliases'] or saved.get('request_sha256') not in valid_hashes:raise RuntimeError('checkpoint mismatch')
      validate(saved['result'],t);continue
     prev=[(a, path) for path in attempts_dir.glob(provider+'-'+t['evaluation_id']+'-*.json') for a in [json.loads(path.read_text())]]
-    if any(a['state'] not in ('http_429',) for a,_ in prev):raise RuntimeError('uncertain or invalid prior attempt requires reconciliation: '+t['evaluation_id'])
+    retryable_prior={'http_429','invalid_response'}
+    for a,_ in prev:
+     if a['state']=='uncertain_or_invalid' and a.get('error_type') in ('TypeError','JSONDecodeError','KeyError','ValueError') and a.get('response') is not None and a['response'].get('model') in cfg['aliases']: retryable_prior.add('uncertain_or_invalid')
+    if any(a['state'] not in retryable_prior for a,_ in prev):raise RuntimeError('uncertain or invalid prior attempt requires reconciliation: '+t['evaluation_id'])
     for attempt in range(len(prev)+1,attempt_limit+1):
      history=attempts();provider_history=[a for a in history if a['provider']==provider]
-     reserve=4*len(canon(body))+1400
+     reserve=4*len(canon(body))+body['max_tokens']
      if len(history)>=request_budget or len(provider_history)>=220 or sum(a['reserved_tokens'] for a in history)+reserve>token_budget:raise RuntimeError('request/token budget exhausted')
      last=max((a['started_epoch'] for a in provider_history),default=0);wait=(60/cfg['rpm']+0.2)-(time.time()-last)
      if wait>0:time.sleep(wait)
@@ -130,7 +138,10 @@ def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=50000000,r
        time.sleep(max(retry_after,min(120,30*attempt)));continue
       raise RuntimeError(provider+' HTTP '+str(e.code)) from e
      except Exception as e:
-      rec.update(state='uncertain_or_invalid',error_type=type(e).__name__,error=str(e).replace(key,'[REDACTED]'));atomic(ap,rec);raise RuntimeError(provider+' evaluation stopped: '+type(e).__name__) from e
+      retryable=isinstance(e,(json.JSONDecodeError,TypeError,KeyError,ValueError)) and rec.get('response') is not None and rec['response'].get('model') in cfg['aliases']
+      rec.update(state='invalid_response' if retryable else 'uncertain_or_invalid',error_type=type(e).__name__,error=str(e).replace(key,'[REDACTED]'));atomic(ap,rec)
+      if retryable and attempt<attempt_limit:time.sleep(min(30,2**attempt));continue
+      raise RuntimeError(provider+' evaluation stopped: '+type(e).__name__) from e
     else:raise RuntimeError('retry limit exhausted')
   if phase=='pilot':
    # Technical pilot gate; full execution continues automatically after this.
@@ -139,5 +150,5 @@ def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=50000000,r
  return {'completed':sum(1 for _ in (out/'results').glob('*/*.json')),'output':str(out),'phase':'pilot' if pilot_only else 'full'}
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--authorize-judge-execution',action='store_true');p.add_argument('--pilot-only',action='store_true');p.add_argument('--attempt-limit',type=int,default=4);a=p.parse_args();print(json.dumps(run(a.authorize_judge_execution,a.pilot_only,a.attempt_limit),indent=2))
+ p=argparse.ArgumentParser();p.add_argument('--authorize-judge-execution',action='store_true');p.add_argument('--pilot-only',action='store_true');p.add_argument('--attempt-limit',type=int,default=4);p.add_argument('--request-budget',type=int,default=440);p.add_argument('--token-budget',type=int,default=50000000);a=p.parse_args();print(json.dumps(run(a.authorize_judge_execution,a.pilot_only,a.attempt_limit,a.token_budget,a.request_budget),indent=2))
 if __name__=='__main__':main()
