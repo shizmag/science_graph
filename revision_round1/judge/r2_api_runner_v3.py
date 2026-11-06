@@ -63,7 +63,7 @@ def messages(t):
  visible={k:v for k,v in t.items() if k not in ('query_id','configuration_label','input_sha256','evidence_sha256')}
  return [{'role':'system','content':RUBRIC.read_text()},{'role':'user','content':json.dumps(visible,ensure_ascii=False,sort_keys=True)+"\nReturn ONLY the required normalized JSON object."}]
 def body_for(cfg,t):
- body={'model':cfg['model'],'temperature':0,'max_tokens':3000,'response_format':{'type':'json_object'},'messages':messages(t)}
+ body={'model':cfg['model'],'temperature':0,'max_tokens':6000,'response_format':{'type':'json_object'},'messages':messages(t)}
  if cfg['provider']=='openrouter':body['provider']={'allow_fallbacks':False}
  return body
 
@@ -108,22 +108,25 @@ def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=50000000,r
     p=out/'results'/provider/(t['evaluation_id']+'.json');body=body_for(cfg,t);reqhash=sha(canon(body))
     if p.exists():
      saved=json.loads(p.read_text())
-     legacy_body=dict(body,max_tokens=1400)
-     valid_hashes={reqhash,sha(canon(legacy_body))}
+     valid_hashes={reqhash}
+     for prior_limit in (1400,3000):
+      valid_hashes.add(sha(canon(dict(body,max_tokens=prior_limit))))
      if saved.get('rubric_sha256')!=rubric_hash or saved.get('task')!=t or saved.get('requested_model')!=cfg['model'] or saved.get('returned_model') not in cfg['aliases'] or saved.get('request_sha256') not in valid_hashes:raise RuntimeError('checkpoint mismatch')
      validate(saved['result'],t);continue
-    prev=[(a, path) for path in attempts_dir.glob(provider+'-'+t['evaluation_id']+'-*.json') for a in [json.loads(path.read_text())]]
+    all_prev=[(a, path) for path in attempts_dir.glob(provider+'-'+t['evaluation_id']+'-*.json') for a in [json.loads(path.read_text())]]
+    prev=[(a,path) for a,path in all_prev if a.get('request_sha256')==reqhash]
     retryable_prior={'http_429','invalid_response'}
-    for a,_ in prev:
+    for a,_ in all_prev:
      if a['state']=='uncertain_or_invalid' and a.get('error_type') in ('TypeError','JSONDecodeError','KeyError','ValueError') and a.get('response') is not None and a['response'].get('model') in cfg['aliases']: retryable_prior.add('uncertain_or_invalid')
-    if any(a['state'] not in retryable_prior for a,_ in prev):raise RuntimeError('uncertain or invalid prior attempt requires reconciliation: '+t['evaluation_id'])
+    if any(a['state'] not in retryable_prior for a,_ in all_prev):raise RuntimeError('uncertain or invalid prior attempt requires reconciliation: '+t['evaluation_id'])
     for attempt in range(len(prev)+1,attempt_limit+1):
      history=attempts();provider_history=[a for a in history if a['provider']==provider]
      reserve=4*len(canon(body))+body['max_tokens']
      if len(history)>=request_budget or len(provider_history)>=220 or sum(a['reserved_tokens'] for a in history)+reserve>token_budget:raise RuntimeError('request/token budget exhausted')
      last=max((a['started_epoch'] for a in provider_history),default=0);wait=(60/cfg['rpm']+0.2)-(time.time()-last)
      if wait>0:time.sleep(wait)
-     ap=attempts_dir/(provider+'-'+t['evaluation_id']+'-'+str(attempt)+'.json');rec={'provider':provider,'evaluation_id':t['evaluation_id'],'requested_model':cfg['model'],'request_sha256':reqhash,'rubric_sha256':rubric_hash,'input_sha256':t['input_sha256'],'reserved_tokens':reserve,'started_epoch':time.time(),'state':'started'};atomic(ap,rec)
+     next_no=max([int(path.stem.rsplit('-',1)[-1]) for _,path in all_prev if path.stem.rsplit('-',1)[-1].isdigit()] or [0])+(attempt-len(prev))
+     ap=attempts_dir/(provider+'-'+t['evaluation_id']+'-'+str(next_no)+'.json');rec={'provider':provider,'evaluation_id':t['evaluation_id'],'requested_model':cfg['model'],'request_sha256':reqhash,'rubric_sha256':rubric_hash,'input_sha256':t['input_sha256'],'reserved_tokens':reserve,'started_epoch':time.time(),'state':'started'};atomic(ap,rec)
      try:
       payload=request(cfg,key,t);rec['response']=payload;rec['state']='received';atomic(ap,rec)
       ret=payload.get('model')

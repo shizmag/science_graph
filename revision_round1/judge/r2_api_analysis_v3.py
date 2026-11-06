@@ -23,6 +23,9 @@ def analyze(out=run.OUT):
   for f in (out/'results'/provider).glob('*.json'):
    rec=json.loads(f.read_text());t=expected.get(f.stem)
    if not t or rec['task']['input_sha256']!=t['input_sha256'] or rec['rubric_sha256']!=rh or rec['requested_model']!=cfg['model'] or rec['returned_model'] not in cfg['aliases']:raise ValueError('mismatched checkpoint')
+   cfg=dict(cfg,provider=provider); body=run.body_for(cfg,t)
+   allowed={run.sha(run.canon(dict(body,max_tokens=n))) for n in (1400,3000,6000)}
+   if rec['task']!=t or rec.get('request_sha256') not in allowed:raise ValueError('checkpoint input or request mismatch')
    run.validate(rec['result'],t);results[(provider,f.stem)]=rec['result']
    baseline=next(b for b in ('B3','B5') if run.sha(run.canon([t['query_id'],b]))[:24]==f.stem)
    rows.append({'provider':provider,'query_id':t['query_id'],'baseline':baseline,'evaluation_id':f.stem,'input_sha256':t['input_sha256'],**rec['result']})
