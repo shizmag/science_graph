@@ -1,10 +1,10 @@
 """Narrow, fail-closed runner for the recovered R2 v2 packet (not a general evaluator)."""
 from __future__ import annotations
-import argparse, hashlib, json, math, os, random, tempfile, time, urllib.error, urllib.request
+import argparse, hashlib, json, math, os, random, re, tempfile, time, urllib.error, urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-MODELS = ('cx/chatgpt-6-luna-low', 'dva/deepseek-v4-flash-low')
+MODELS = ('cx/gpt-6-luna-low', 'dva/deepseek-v4-flash-low')
 BASE_URL = 'http://127.0.0.1:20128/v1'
 RUBRIC = HERE / 'r2_shared_rubric_v2.md'
 
@@ -60,7 +60,7 @@ def transport(path, key, body=None):
     req=urllib.request.Request(BASE_URL+path,data=encode(body) if body is not None else None,headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'})
     with urllib.request.urlopen(req,timeout=120) as r: return json.loads(r.read())
 
-def run(out, authorize=False, max_requests=40, token_budget=2000000, models=MODELS, send=transport):
+def run(out, authorize=False, max_requests=44, token_budget=2000000, models=MODELS, send=transport):
     rows=packet(); ids=pilot_ids(rows); selected=[r for r in rows if r['query_id'] in ids]
     meta={'schema_version':'r2-v2-pilot-1','packet_manifest_sha256':digest((HERE/'r2_packet_manifest.json').read_bytes()),'rubric_sha256':digest(RUBRIC.read_bytes()),'models':list(models),'pilot_ids':ids,'request_max_output_tokens':1024,'max_requests':max_requests,'token_budget':token_budget}
     if not authorize: return {'mode':'offline-dry-run','manifest':meta,'evaluations':len(selected)*2*len(models)}
@@ -69,37 +69,56 @@ def run(out, authorize=False, max_requests=40, token_budget=2000000, models=MODE
     if not key: raise RuntimeError('OMNIROUTE_API_KEY missing')
     # Avoid sending any configured secret embedded in input evidence or answers.
     blob=(HERE/'paired_judge_inputs.jsonl').read_text()
-    if len(key)>=8 and key in blob: raise RuntimeError('credential found in packet')
+    sensitive = [v for k,v in os.environ.items() if len(v)>=12 and any(w in k.upper() for w in ('API_KEY','SECRET','PASSWORD','TOKEN'))]
+    if any(v in blob for v in sensitive) or re.search(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bsk-[A-Za-z0-9_-]{20,}',blob): raise RuntimeError('possible credential found in packet')
     catalog=send('/models',key); catalog_ids={m['id'] for m in catalog['data']}
     missing=[m for m in models if m not in catalog_ids]
     if missing: raise RuntimeError('exact model absent from catalog: '+', '.join(missing))
     out=Path(out); out.mkdir(parents=True,exist_ok=True); manifest=out/'manifest.json'
     if manifest.exists() and json.loads(manifest.read_text()) != meta: raise RuntimeError('manifest changed: choose a new directory')
     if not manifest.exists(): atomic(manifest,meta)
-    last={}; records=list(out.glob('attempt-*.json')); used=sum(json.loads(p.read_text()).get('reserved_tokens',0) for p in records)
+    records=list(out.glob('attempt-*.json')); used=sum(json.loads(p.read_text()).get('reserved_tokens',0) for p in records)
+    # Wall-clock attempt timestamps survive restart. Never retry an uncertain attempt.
+    last={}
+    for p in records:
+        prior=json.loads(p.read_text()); m=prior['model_requested']
+        last[m]=max(last.get(m,0),prior.get('started_epoch',0))
     for row in selected:
       for baseline in ('B3','B5'):
        for model in models:
         request=payload(row,baseline,model); request_hash=digest(encode(request)); ident=digest(encode([model,row['query_id'],baseline,request_hash]))
         if (out/('result-'+ident+'.json')).exists(): continue
-        if list(out.glob('attempt-'+ident+'-*.json')): raise RuntimeError('previous incomplete/failed attempt requires manual reconciliation: '+ident)
-        reserve=len(encode(request))+1024 # byte-length upper bound for ordinary tokenizers, not a verified provider guarantee
-        if len(records)>=max_requests or used+reserve>token_budget: raise RuntimeError('request or conservative token budget exhausted')
-        delay=4 if model.startswith('cx/') else 7
-        wait=delay-(time.monotonic()-last.get(model,0))
-        if wait>0: time.sleep(wait)
-        attempt=out/('attempt-'+ident+'-1.json'); rec={'id':ident,'model_requested':model,'query_id':row['query_id'],'baseline':baseline,'request_sha256':request_hash,'evidence_sha256':row['judge_inputs'][baseline]['evidence_sha256'],'rubric_sha256':meta['rubric_sha256'],'reserved_tokens':reserve,'state':'started'}
-        atomic(attempt,rec); records.append(attempt); used+=reserve; start=time.monotonic(); last[model]=start
-        try:
-            response=send('/chat/completions',key,request); rec['latency_seconds']=time.monotonic()-start; rec['response']=response
-            if response.get('model') != model: raise ValueError('returned model does not exactly match requested route')
-            parsed=parse(response['choices'][0]['message']['content'],row['answerable']); rec['state']='valid';rec['parsed']=parsed
-        except Exception as e:
-            rec['latency_seconds']=time.monotonic()-start;rec['state']='error';rec['error_type']=type(e).__name__;rec['error']=str(e).replace(key,'[REDACTED]');atomic(attempt,rec);raise RuntimeError('pilot stopped: '+rec['error']) from e
-        atomic(attempt,rec);atomic(out/('result-'+ident+'.json'),rec)
+        prior=sorted(out.glob('attempt-'+ident+'-*.json'))
+        if any(json.loads(p.read_text())['state'] not in ('rate_limited',) for p in prior):
+            raise RuntimeError('previous incomplete/failed attempt requires manual reconciliation: '+ident)
+        if len(prior)>4: raise RuntimeError('retry limit exhausted')
+        while True:
+            reserve=len(encode(request))+1024
+            retry_count=sum(1 for p in records if json.loads(p.read_text()).get('state')=='rate_limited')
+            if len(records)>=max_requests or used+reserve>token_budget or retry_count>4: raise RuntimeError('request, retry, or conservative token budget exhausted')
+            delay=4 if model.startswith('cx/') else 7
+            wait=delay-(time.time()-last.get(model,0))
+            if wait>0: time.sleep(wait)
+            attempt=out/('attempt-'+ident+'-'+str(len(prior)+1)+'.json')
+            rec={'id':ident,'model_requested':model,'query_id':row['query_id'],'baseline':baseline,'request_sha256':request_hash,'evidence_sha256':row['judge_inputs'][baseline]['evidence_sha256'],'rubric_sha256':meta['rubric_sha256'],'reserved_tokens':reserve,'state':'started','started_epoch':time.time()}
+            atomic(attempt,rec); records.append(attempt); prior.append(attempt); used+=reserve; start=time.monotonic(); last[model]=rec['started_epoch']
+            try:
+                response=send('/chat/completions',key,request); rec['latency_seconds']=time.monotonic()-start; rec['response']=response
+                if response.get('model') != model: raise ValueError('returned model does not exactly match requested route')
+                parsed=parse(response['choices'][0]['message']['content'],row['answerable']); rec['state']='valid';rec['parsed']=parsed
+            except urllib.error.HTTPError as e:
+                rec['latency_seconds']=time.monotonic()-start;rec['http_status']=e.code
+                rec['error_body']=e.read().decode('utf-8','replace').replace(key,'[REDACTED]')
+                rec['state']='rate_limited' if e.code==429 else 'error';atomic(attempt,rec)
+                if e.code==429 and retry_count<4 and len(records)<max_requests:
+                    time.sleep(min(60,2**len(prior)));continue
+                raise RuntimeError('pilot stopped: HTTP '+str(e.code)) from e
+            except Exception as e:
+                rec['latency_seconds']=time.monotonic()-start;rec['state']='uncertain' if isinstance(e,(TimeoutError,urllib.error.URLError)) else 'error';rec['error_type']=type(e).__name__;rec['error']=str(e).replace(key,'[REDACTED]');atomic(attempt,rec);raise RuntimeError('pilot stopped: '+rec['error']) from e
+            atomic(attempt,rec);atomic(out/('result-'+ident+'.json'),rec);break
     return {'mode':'complete','evaluations':len(list(out.glob('result-*.json')))}
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--authorize-judge-execution',action='store_true');p.add_argument('--output',default='revision_round1/experiments/r2_v2_pilot');p.add_argument('--max-requests',type=int,default=40);p.add_argument('--token-budget',type=int,default=2000000);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--authorize-judge-execution',action='store_true');p.add_argument('--output',default='revision_round1/experiments/r2_v2_pilot');p.add_argument('--max-requests',type=int,default=44);p.add_argument('--token-budget',type=int,default=2000000);a=p.parse_args()
     print(json.dumps(run(a.output,a.authorize_judge_execution,a.max_requests,a.token_budget),indent=2))
 if __name__=='__main__': main()
