@@ -36,7 +36,7 @@ def test_exact_model_preflight(tmp_path,monkeypatch):
 def test_identity_mismatch_is_preserved_and_stops(tmp_path,monkeypatch):
     monkeypatch.setenv('OMNIROUTE_API_KEY','test-key-not-in-packet')
     def send(path,key,body=None):
-        if path=='/models': return {'data':[{'id':m} for m in r.MODELS]}
+        if path=='/models': return {'data':[{'id':m,'root':('deepseek-v4-flash-low' if m==r.MODELS[1] else 'gpt-6-luna-low')} for m in r.MODELS]}
         return {'model':'different-model','usage':{'prompt_tokens':12,'completion_tokens':2},'choices':[{'message':{'content':'{}'}}]}
     with pytest.raises(RuntimeError,match='returned model'): r.run(tmp_path,authorize=True,send=send)
     attempts=list(tmp_path.glob('attempt-*.json'))
@@ -49,9 +49,26 @@ def test_identity_mismatch_is_preserved_and_stops(tmp_path,monkeypatch):
 def test_timeout_is_uncertain_and_not_retried(tmp_path,monkeypatch):
     monkeypatch.setenv('OMNIROUTE_API_KEY','test-key-not-in-packet')
     def send(path,key,body=None):
-        if path=='/models': return {'data':[{'id':m} for m in r.MODELS]}
+        if path=='/models': return {'data':[{'id':m,'root':('deepseek-v4-flash-low' if m==r.MODELS[1] else 'gpt-6-luna-low')} for m in r.MODELS]}
         raise TimeoutError('deadline')
     with pytest.raises(RuntimeError,match='deadline'): r.run(tmp_path,authorize=True,send=send)
     record=json.loads(next(tmp_path.glob('attempt-*.json')).read_text())
     assert record['state']=='uncertain'
     with pytest.raises(RuntimeError,match='manual reconciliation'): r.run(tmp_path,authorize=True,send=send)
+
+def test_approved_normalization_and_deepseek_root():
+    assert r.RETURNED_MODELS[r.MODELS[0]] == 'gpt-6-luna'
+    assert r.RETURNED_MODELS[r.MODELS[1]] == 'deepseek-v4-flash'
+    assert r.RETURNED_MODELS[r.MODELS[0]] != 'unrelated'
+
+def test_deepseek_root_not_inferred_from_route(tmp_path,monkeypatch):
+    monkeypatch.setenv('OMNIROUTE_API_KEY','test-key-not-in-packet')
+    def send(path,key,body=None):
+        assert path=='/models'
+        return {'data':[{'id':r.MODELS[0]}, {'id':r.MODELS[1],'root':'unrelated'}]}
+    with pytest.raises(RuntimeError,match='catalog root'): r.run(tmp_path,authorize=True,send=send)
+
+def test_valid_success_status_is_preserved():
+    content='{"status":"valid","semantic_accuracy":0,"faithfulness":0.5,"rationale":"Evidence is insufficient."}'
+    parsed=r.parse(content,True)
+    assert parsed['status']=='valid' and parsed['semantic_accuracy']==0 and parsed['faithfulness']==0.5
