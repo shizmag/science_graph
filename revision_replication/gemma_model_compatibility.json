@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "model_path": "/Volumes/happy-disk/models/llm/gemma-3-text-4b-it-4bit",
+  "model_type": "gemma3",
+  "architecture": "Gemma3ForConditionalGeneration",
+  "text_config_model_type": "gemma3_text",
+  "license_metadata": "gemma",
+  "conversion_metadata": {
+    "source_family": "mlx-community/gemma-3-4b-it-bf16",
+    "mlx_lm_version_reported_by_local_README": "0.22.0"
+  },
+  "quantization": {"bits": 4, "group_size": 64},
+  "weight_file": {
+    "name": "model.safetensors",
+    "bytes": 2560876251,
+    "sha256": "4992b5af91dcece8eb3911dd02c4196a7bb88c5379918f19a0b1e1be93f64ac6"
+  },
+  "safetensors_index": {
+    "metadata_total_size": 2560756736,
+    "tensor_count": 925,
+    "sha256": "d4d8fb0c387778633df070716187884efce2ace932802e88005d11ad5d3f554a"
+  },
+  "tokenizer": {
+    "chat_template_present": true,
+    "eos_token_id": [1, 106],
+    "tokenizer_model_bytes": 4689074,
+    "tokenizer_config_sha256": "bfe25c2735e395407beb78456ea9a6984a1f00d8c16fa04a8b75f2a614cf53e1",
+    "tokenizer_json_sha256": "4667f2089529e8e7657cfb6d1c19910ae71ff5f28aa7ab2ff2763330affad795",
+    "tokenizer_model_sha256": "1299c11d7cf632ef3b4e11937501358ada021bbdf7c47638d13c0ee982f2e79c"
+  },
+  "text_config": {
+    "hidden_size": 2560,
+    "intermediate_size": 10240,
+    "num_hidden_layers": 34,
+    "num_attention_heads": 8,
+    "num_key_value_heads": 4,
+    "sliding_window": 1024,
+    "vocab_size": 262208
+  },
+  "provenance": {
+    "weights_loaded": false,
+    "inference_executed": false,
+    "runtime_compatibility": "metadata-compatible; mlx-lm load/forward unverified"
+  }
+}

@@ -1,0 +1,4 @@
+# Isolated local MLX runtime requirements. Install into a dedicated venv only;
+# do not modify the application's dependency graph.
+mlx==0.31.2
+mlx-lm==0.31.3
