@@ -45,11 +45,10 @@ def validate_pair(pair: tuple[JudgeInput, JudgeInput]) -> None:
     left, right = pair
     if (left.query_id != right.query_id or left.paper_baseline != "B3" or right.paper_baseline != "B5"
         or left.query != right.query or left.golden_answer != right.golden_answer
-        or left.generator_visible_evidence != right.generator_visible_evidence
         or left.rubric != right.rubric or left.token_budget != right.token_budget
         or left.evidence_status != right.evidence_status
         or left.evidence_status not in ACCEPTED_EVIDENCE_STATUS):
-        raise ValueError("paired inputs must share ID, query, reference, complete evidence, rubric, and budget")
+        raise ValueError("paired inputs must share ID, query, reference, rubric, and budget; evidence may differ")
 
 
 def paired_call_budget(pairs: Mapping[str, tuple[JudgeInput, JudgeInput]], *, judges: tuple[str, ...],
