@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"R2 supplementary negative safety v1",
+  "type":"object","additionalProperties":false,
+  "required":["evaluation_id","input_sha256","rubric_version","rubric_sha256","judge_session_id","status","negative_safety","potential_label_conflict","rationale","evidence_identifiers","error_reason"],
+  "properties":{
+    "evaluation_id":{"type":"string","pattern":"^E[0-9a-f]{24}$"},"input_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"rubric_version":{"const":"negative-v1"},"rubric_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"judge_session_id":{"type":"string","minLength":1},"status":{"enum":["scored","label_conflict","unevaluable"]},"negative_safety":{"type":["number","null"],"enum":[0,0.5,1,null]},"potential_label_conflict":{"type":"boolean"},"rationale":{"type":"string","minLength":1},"evidence_identifiers":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}},"error_reason":{"oneOf":[{"type":"null"},{"type":"object","additionalProperties":false,"required":["code","detail"],"properties":{"code":{"type":"string","minLength":1},"detail":{"type":"string","minLength":1}}}]}
+  }
+}

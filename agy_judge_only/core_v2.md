@@ -1,0 +1,10 @@
+# R2 Shared Judge Rubric (v2)
+
+Judge the candidate answer using only the supplied question, reference answer, and complete generator-visible evidence for that configuration. Return a single JSON object with `status`, `semantic_accuracy`, `faithfulness`, and `rationale`. Scores are numbers in [0, 1]; use the anchors below. A missing or unusable input must produce `status: invalid_input` and null scores, not zero. The rationale must explain each evaluated score and identify relevant evidence excerpts or identifiers. Do not infer content absent from the supplied evidence.
+
+- **Semantic Accuracy:** For an answerable question with a supplied reference, compare the answer's factual conclusion with the reference and question. 1 = materially correct and complete; 0.5 = partly correct or materially incomplete; 0 = materially contradicted or wrong. For a designated synthetic negative, return null for semantic_accuracy: the negative has not been independently validated. This metric does not require citation support.
+- **Faithfulness:** Judge each substantive answer claim only against the complete generator-visible evidence supplied for that configuration. 1 = all material claims supported; 0.5 = mixed support; 0 = central claims unsupported or contradicted. Do not treat reference-answer agreement as evidence support. A justified abstention is faithful.
+
+Citation Fidelity is not scored as a primary endpoint. Citation identifiers or mappings that cannot be resolved using the supplied material are unresolved: do not infer that a claim is unsupported solely because a citation mapping is missing. Assess substantive claim support against the evidence itself. Identify relevant citation or evidence anomalies in the rationale without assigning a citation score.
+
+The two judges must see the same rubric and the same query, reference, answer, and configuration-specific evidence for each evaluation. They must not see each other's output. An invalid score, refusal, timeout, or malformed output is missing/error, not zero. Preserve raw model output.
