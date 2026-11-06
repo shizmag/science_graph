@@ -3,3 +3,6 @@
 /corrections/
 /exports/
 /draft.json
+/raw_openrouter/
+/uncertain_openrouter/
+.openrouter_*.draft.json
