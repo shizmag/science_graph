@@ -77,3 +77,30 @@ def test_conflict_score_still_requires_scale():
  t={'evaluation_id':'x','question_type':'designated_negative','evidence_ids':[]}
  o={'evaluation_id':'x','question_type':'designated_negative','generation_status':'success','response_behavior':'answered','semantic_accuracy':None,'negative_safety':0.3,'faithfulness':None,'faithfulness_status':'not_applicable_no_factual_claims','answer_relevance':1,'potential_label_conflict':True,'semantic_accuracy_rationale':None,'faithfulness_rationale':'none','negative_safety_rationale':'conflict','evidence_ids':[]}
  with pytest.raises(ValueError): r.validate(o,t)
+
+def test_mocked_pilot_resume_and_budget(monkeypatch,tmp_path):
+ import pytest
+ rows=r.cohort(); tasks=r.tasks_for(rows,True)[:2]
+ monkeypatch.setattr(r,'OUT',tmp_path)
+ monkeypatch.setattr(r,'tasks_for',lambda rows,pilot=False:tasks)
+ monkeypatch.setattr(r,'envkey',lambda name:'http://localhost:20128/v1' if name=='REVISION_JUDGE_BASE_URL' else 'fake-secret')
+ monkeypatch.setattr(r.time,'sleep',lambda _:None)
+ calls=[]
+ def fake(cfg,key,t):
+  calls.append((cfg['provider'],t['evaluation_id']))
+  obj={'evaluation_id':t['evaluation_id'],'question_type':'answerable','generation_status':'success','response_behavior':'answered','semantic_accuracy':1,'negative_safety':None,'faithfulness':1,'faithfulness_status':'scored','answer_relevance':1,'potential_label_conflict':False,'semantic_accuracy_rationale':'supported by reference','faithfulness_rationale':'supported by evidence','negative_safety_rationale':None,'evidence_ids':[]}
+  return {'model':'gpt-6-luna' if cfg['provider']=='omniroute' else cfg['model'],'choices':[{'message':{'content':json.dumps(obj)},'finish_reason':'stop'}],'usage':{'prompt_tokens':5,'completion_tokens':3}}
+ assert all(t['question_type']=='answerable' for t in tasks)
+ monkeypatch.setattr(r,'request',fake)
+ assert r.run(True,True)['completed']==4
+ assert len(calls)==4
+ assert r.run(True,True)['completed']==4
+ assert len(calls)==4
+ result=next((tmp_path/'results'/'omniroute').glob('*.json'))
+ x=json.loads(result.read_text());x['request_sha256']='wrong';result.write_text(json.dumps(x))
+ with pytest.raises(RuntimeError,match='checkpoint mismatch'):r.run(True,True)
+
+def test_query_bootstrap_and_ordinal_kappa():
+ import r2_api_analysis_v3 as a
+ assert a.weighted_kappa([0,.5,1],[0,.5,1])==1
+ assert a.weighted_kappa([1,1],[1,1]) is None
