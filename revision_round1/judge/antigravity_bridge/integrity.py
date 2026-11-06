@@ -145,11 +145,12 @@ def export_accepted(output=WORK/'exports'):
 
 def cli():
     p=argparse.ArgumentParser();sub=p.add_subparsers(dest='cmd',required=True)
-    sub.add_parser('prepare');sub.add_parser('inventory');sub.add_parser('export');sn=sub.add_parser('submit-negative');sn.add_argument('record')
+    sub.add_parser('prepare');sub.add_parser('inventory');sub.add_parser('export');sn=sub.add_parser('submit-negative');sn.add_argument('record');ac=sub.add_parser('accept');ac.add_argument('record');ac.add_argument('--reviewer',required=True);ac.add_argument('--provenance',required=True);ac.add_argument('--grounding',required=True)
     a=p.parse_args()
     if a.cmd=='prepare':x=prepare()
     elif a.cmd=='inventory':x=inventory()[0]
     elif a.cmd=='submit-negative':x={'saved':submit_negative(a.record)}
+    elif a.cmd=='accept':x=accept(a.record,a.reviewer,a.provenance,a.grounding)
     else:x=export_accepted()
     print(json.dumps(x,indent=2,ensure_ascii=False))
 if __name__=='__main__':cli()
