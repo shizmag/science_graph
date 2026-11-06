@@ -1,0 +1,31 @@
+{
+  "files": {
+    "corrected_evidence_eligibility.csv": {
+      "sha256": "ac40f24376f6ea0176ead598beadd8d04205ccd99a962ab02151875d4aa7e757",
+      "size_bytes": 8359914
+    },
+    "paired_judge_inputs.jsonl": {
+      "sha256": "4c020deadf9390d9fa043024dc1707a4ae2b79d0ade09a60eb2f6d80af784e11",
+      "size_bytes": 2018113
+    },
+    "paired_judge_query_ids.json": {
+      "sha256": "b11d86fa13eda4f2e9a12049987b679fe1a8b519d7ff24e4b300fc0de77e9da5",
+      "size_bytes": 3274
+    },
+    "r2_judge_budget.json": {
+      "sha256": "6942df8b4c7cc1e5ace0443e3cd59edb57df0e614f00b60baf17458043a59336",
+      "size_bytes": 565
+    },
+    "r2_shared_rubric.md": {
+      "sha256": "cdea9dddd7c896a81843185d14bc7477206199416dd2bc69ecbcdfa343e6ebcf",
+      "size_bytes": 2151
+    }
+  },
+  "paper_to_code": {
+    "B3": "B4",
+    "B5": "B6"
+  },
+  "schema_version": "1.0",
+  "source_commit": "b4f3322d8cae3395bcbf0b5a1f2e47a904d1591a",
+  "source_run": "/Users/vladimirkasterin/python/graph/graphs/run_20260729_211324_OCC-RAG-1.7B"
+}
