@@ -22,3 +22,31 @@ def test_no_network_in_dry_run(monkeypatch):
  def fail(*args,**kwargs):raise AssertionError('network accessed')
  monkeypatch.setattr(r.urllib.request,'urlopen',fail)
  assert r.run(pilot_only=True)['tasks']==40
+
+def test_provider_routes_share_instructions():
+ t=r.tasks_for(r.cohort(),True)[0]
+ a=r.body_for(dict(r.MODELS['omniroute'],provider='omniroute'),t)
+ b=r.body_for(dict(r.MODELS['openrouter'],provider='openrouter'),t)
+ assert a['messages']==b['messages'] and b['provider']['allow_fallbacks'] is False
+ assert t['query_id'] not in a['messages'][1]['content'] or t['query_id'] in t['generator_visible_evidence']
+
+def test_incorrect_scores_rejected():
+ import pytest
+ t={'evaluation_id':'x','question_type':'answerable','evidence_ids':[]}
+ o={'evaluation_id':'x','question_type':'answerable','generation_status':'success','response_behavior':'answered','semantic_accuracy':2,'negative_safety':None,'faithfulness':1,'faithfulness_status':'scored','answer_relevance':1,'potential_label_conflict':False,'semantic_accuracy_rationale':'x','faithfulness_rationale':'x','negative_safety_rationale':None,'evidence_ids':[]}
+ with pytest.raises(ValueError):r.validate(o,t)
+
+def test_fake_pilot_resume_and_gate(tmp_path,monkeypatch):
+ import pytest
+ monkeypatch.setattr(r,'OUT',tmp_path);monkeypatch.setattr(r.time,'sleep',lambda _:None)
+ monkeypatch.setattr(r,'envkey',lambda k:'http://127.0.0.1:20128/v1' if k=='REVISION_JUDGE_BASE_URL' else 'fake-key')
+ calls=[]
+ def fake(cfg,key,t):
+  calls.append((cfg['provider'],t['evaluation_id']));ans=t['question_type']=='answerable'
+  o={'evaluation_id':t['evaluation_id'],'question_type':t['question_type'],'generation_status':'success','response_behavior':'answered','semantic_accuracy':1 if ans else None,'negative_safety':None if ans else 0,'faithfulness':1,'faithfulness_status':'scored','answer_relevance':1,'potential_label_conflict':False,'semantic_accuracy_rationale':'fixture' if ans else None,'faithfulness_rationale':'fixture','negative_safety_rationale':None if ans else 'fixture','evidence_ids':[]}
+  return {'model':'gpt-6-luna' if cfg['provider']=='omniroute' else cfg['model'],'choices':[{'message':{'content':json.dumps(o)},'finish_reason':'stop'}],'usage':{'prompt_tokens':1,'completion_tokens':1}}
+ monkeypatch.setattr(r,'request',fake)
+ result=r.run(True,True);assert result['completed']==40 and len(calls)==40
+ r.run(True,True);assert len(calls)==40
+ r.run(True,False)
+ assert len(calls)==400

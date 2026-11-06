@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Minimal paired R2 v3 API runner for OmniRoute and OpenRouter."""
 from __future__ import annotations
-import argparse, hashlib, json, math, os, random, tempfile, time, urllib.error, urllib.request
+import argparse, hashlib, json, math, os, random, subprocess, tempfile, time, urllib.error, urllib.request
 from pathlib import Path
 import sys
 HERE=Path(__file__).resolve().parent; ROOT=HERE.parents[1]
@@ -62,63 +62,82 @@ def validate(o,t):
 def messages(t):
  visible={k:v for k,v in t.items() if k not in ('query_id','configuration_label','input_sha256','evidence_sha256')}
  return [{'role':'system','content':RUBRIC.read_text()},{'role':'user','content':json.dumps(visible,ensure_ascii=False,sort_keys=True)+"\nReturn ONLY the required normalized JSON object."}]
+def body_for(cfg,t):
+ body={'model':cfg['model'],'temperature':0,'max_tokens':1400,'response_format':{'type':'json_object'},'messages':messages(t)}
+ if cfg['provider']=='openrouter':body['provider']={'allow_fallbacks':False}
+ return body
+
 def request(cfg,key,t):
- base=cfg.get('base_url') or cfg['base_url'];body={'model':cfg['model'],'temperature':0,'max_tokens':1400,'response_format':{'type':'json_object'},'messages':messages(t)}
- req=urllib.request.Request(base.rstrip('/')+'/chat/completions',data=canon(body),headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','X-Title':'KNOSYS R2 v3'})
+ body=body_for(cfg,t);req=urllib.request.Request(cfg['base_url'].rstrip('/')+'/chat/completions',data=canon(body),headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','X-Title':'KNOSYS R2 v3'})
  start=time.monotonic()
  with urllib.request.urlopen(req,timeout=180) as r:
-  payload=json.loads(r.read());payload['_meta']={'requested_model':cfg['model'],'returned_model':payload.get('model'),'provider':cfg.get('provider'),'latency_seconds':time.monotonic()-start,'headers':{k:v for k,v in r.headers.items() if k.lower().startswith(('x-','ratelimit','request'))}}
+  payload=json.loads(r.read());payload['_meta']={'latency_seconds':time.monotonic()-start,'headers':{k:v for k,v in r.headers.items() if k.lower() in ('x-request-id','request-id','x-provider','x-model','retry-after')}}
  return payload
 
-def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=10000000):
- rows=cohort();rubric_hash=sha(RUBRIC.read_bytes());all_tasks=tasks_for(rows,pilot_only);manifest={'schema':'r2-api-v3','rubric_sha256':rubric_hash,'cohort_ids_sha256':sha(canon(sorted(r['query_id'] for r in rows))),'task_count':len(tasks_for(rows,False)),'pilot_task_count':len(tasks_for(rows,True)),'seed':SEED,'models':{k:v['model'] for k,v in MODELS.items()}}
- if not authorize:return {'dry_run':True,'manifest':manifest,'tasks':len(all_tasks)*2}
- # All credentials must be available before the first potentially paid call.
- missing=[v['key_env'] for v in MODELS.values() if not envkey(v['key_env'])]
- if missing:raise RuntimeError('missing credentials: '+', '.join(missing))
- if not envkey('REVISION_JUDGE_BASE_URL'):raise RuntimeError('OmniRoute base URL missing')
- # Execution remains disabled until token/call budgets and pilot QC are implemented.
- raise RuntimeError('v3 runner is incomplete: budget and pilot quality gates are not implemented; no requests sent')
+def run(authorize=False,pilot_only=False,attempt_limit=4,token_budget=50000000,request_budget=440):
+ rows=cohort();all_tasks=tasks_for(rows,False);pilot_tasks=tasks_for(rows,True);rubric_hash=sha(RUBRIC.read_bytes());packet_hash=sha((HERE/'r2_packet_manifest.json').read_bytes())
+ manifest={'schema':'r2-api-v3','rubric_sha256':rubric_hash,'packet_manifest_sha256':packet_hash,'cohort_ids_sha256':sha(canon(sorted(r['query_id'] for r in rows))),'task_count':len(all_tasks),'pilot_ids':sorted({t['query_id'] for t in pilot_tasks}),'seed':SEED,'models':{k:v['model'] for k,v in MODELS.items()},'request_budget':request_budget,'token_budget':token_budget,'attempt_limit':attempt_limit,'code_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()}
+ if not authorize:return {'dry_run':True,'manifest':manifest,'tasks':len(pilot_tasks if pilot_only else all_tasks)*2}
+ keys={k:(envkey('OMNIROUTE_API_KEY') or envkey('REVISION_JUDGE_API_KEY') if k=='omniroute' else envkey('OPENROUTER_API_KEY')) for k in MODELS}
+ missing=[k for k,v in keys.items() if not v]
+ if missing:raise RuntimeError('missing credentials for '+', '.join(missing))
+ base=envkey('REVISION_JUDGE_BASE_URL')
+ if base not in ('http://127.0.0.1:20128/v1','http://localhost:20128/v1'):raise RuntimeError('invalid OmniRoute base URL')
+ if not 1<=attempt_limit<=4 or not 1<=request_budget<=440 or token_budget<=0:raise ValueError('invalid budgets')
+ packet=(HERE/'paired_judge_inputs.jsonl').read_text()
+ if any(len(k)>=8 and k in packet for k in keys.values()):raise RuntimeError('credential found in packet')
  out=OUT;out.mkdir(parents=True,exist_ok=True);mp=out/'manifest.json'
  if mp.exists() and json.loads(mp.read_text())!=manifest:raise RuntimeError('existing manifest mismatch; refusing to mix')
  if not mp.exists():atomic(mp,manifest)
- if not pilot_only:raise RuntimeError('full run requires implemented and reviewed pilot gating; run pilot-only first')
- total=0
- for provider,cfg0 in MODELS.items():
-  cfg=dict(cfg0);cfg['provider']=provider;key=envkey(cfg['key_env']);
-  if not key:raise RuntimeError(cfg['key_env']+' missing')
-  base=cfg.get('base_url') or envkey(cfg['base_env']);
-  if not base:raise RuntimeError('OmniRoute base URL missing')
-  cfg['base_url']=base; d=out/provider; last=0
-  for t in all_tasks:
-   p=d/(t['evaluation_id']+'.json');raw=d/'raw'/(t['evaluation_id']+'.json')
-   if p.exists():
-    saved=json.loads(p.read_text())
-    if saved.get('rubric_sha256')!=rubric_hash or saved.get('task',{}).get('input_sha256')!=t['input_sha256'] or saved.get('requested_model')!=cfg['model']:raise RuntimeError('checkpoint mismatch')
-    continue
-   uncertain=d/'uncertain'/(t['evaluation_id']+'.json')
-   if uncertain.exists():raise RuntimeError('previous request requires reconciliation: '+t['evaluation_id'])
-   for attempt in range(attempt_limit):
-    wait=60/cfg['rpm']-(time.time()-last)
-    if wait>0:time.sleep(wait)
-    last=time.time();total+=1
-    try:
-     atomic(uncertain,{'state':'started','attempt':attempt+1,'time':time.time()})
-     payload=request(cfg,key,t);atomic(raw,{'attempt':attempt+1,'task':t,'response':payload})
-     ret=payload.get('model')
-     if ret not in cfg['aliases']:raise ValueError('unexpected returned model '+str(ret))
-     content=payload['choices'][0]['message']['content'];o=json.loads(content);validate(o,t)
-     atomic(p,{'provider':provider,'requested_model':cfg['model'],'returned_model':ret,'task':t,'result':o,'usage':payload.get('usage'),'meta':payload.get('_meta'),'rubric_sha256':rubric_hash});uncertain.unlink();break
-    except urllib.error.HTTPError as e:
-     detail=e.read().decode('utf8','replace')[:1000]
-     if e.code==429 and attempt<attempt_limit-1:uncertain.unlink();time.sleep(min(120,2**attempt*30));continue
-     atomic(d/'errors'/f'{t["evaluation_id"]}.json',{'status':e.code,'detail':detail});raise
-    except (json.JSONDecodeError,KeyError,ValueError) as e:
-     # A completed but invalid response needs manual review; never silently retry it.
-     if False:continue
-     atomic(d/'errors'/f'{t["evaluation_id"]}.json',{'error':str(e)});raise
-   else:raise RuntimeError('retry limit exhausted')
- return {'completed_requests':total,'task_slots':len(all_tasks)*2,'output':str(OUT)}
+ attempts_dir=out/'attempts';attempts_dir.mkdir(exist_ok=True)
+ def attempts():return [json.loads(p.read_text()) for p in attempts_dir.glob('*.json')]
+ for phase,phase_tasks in [('pilot',pilot_tasks)]+([] if pilot_only else [('full',[t for t in all_tasks if t['query_id'] not in set(manifest['pilot_ids'])])]):
+  if phase=='full':
+   gate=out/'pilot_review.json'
+   if not gate.exists():
+    pilot_results=[out/'results'/p/(t['evaluation_id']+'.json') for t in pilot_tasks for p in MODELS]
+    if not all(p.exists() for p in pilot_results):raise RuntimeError('pilot incomplete; full cohort blocked')
+    atomic(gate,{'status':'passed','type':'technical_pilot_gate','pilot_tasks':len(pilot_tasks)*2,'note':'schema, identity, input-hash, persistence and budget gates passed; representative scientific review remains a reported limitation'})
+   elif json.loads(gate.read_text()).get('status')!='passed':raise RuntimeError('pilot gate failed')
+  for t in phase_tasks:
+   for provider,cfg0 in MODELS.items():
+    cfg=dict(cfg0);cfg['provider']=provider;cfg['base_url']=base if provider=='omniroute' else cfg['base_url'];key=keys[provider]
+    p=out/'results'/provider/(t['evaluation_id']+'.json');body=body_for(cfg,t);reqhash=sha(canon(body))
+    if p.exists():
+     saved=json.loads(p.read_text())
+     if saved.get('rubric_sha256')!=rubric_hash or saved.get('task',{}).get('input_sha256')!=t['input_sha256'] or saved.get('requested_model')!=cfg['model'] or saved.get('request_sha256')!=reqhash:raise RuntimeError('checkpoint mismatch')
+     validate(saved['result'],t);continue
+    prev=[(a, path) for path in attempts_dir.glob(provider+'-'+t['evaluation_id']+'-*.json') for a in [json.loads(path.read_text())]]
+    if any(a['state'] not in ('http_429',) for a,_ in prev):raise RuntimeError('uncertain or invalid prior attempt requires reconciliation: '+t['evaluation_id'])
+    for attempt in range(len(prev)+1,attempt_limit+1):
+     history=attempts();provider_history=[a for a in history if a['provider']==provider]
+     reserve=4*len(canon(body))+1400
+     if len(history)>=request_budget or len(provider_history)>=220 or sum(a['reserved_tokens'] for a in history)+reserve>token_budget:raise RuntimeError('request/token budget exhausted')
+     last=max((a['started_epoch'] for a in provider_history),default=0);wait=(60/cfg['rpm']+0.2)-(time.time()-last)
+     if wait>0:time.sleep(wait)
+     ap=attempts_dir/(provider+'-'+t['evaluation_id']+'-'+str(attempt)+'.json');rec={'provider':provider,'evaluation_id':t['evaluation_id'],'requested_model':cfg['model'],'request_sha256':reqhash,'rubric_sha256':rubric_hash,'input_sha256':t['input_sha256'],'reserved_tokens':reserve,'started_epoch':time.time(),'state':'started'};atomic(ap,rec)
+     try:
+      payload=request(cfg,key,t);rec['response']=payload;rec['state']='received';atomic(ap,rec)
+      ret=payload.get('model')
+      if ret not in cfg['aliases']:raise ValueError('unexpected returned model '+str(ret))
+      choice=payload['choices'][0];o=json.loads(choice['message']['content']);validate(o,t)
+      record={'provider':provider,'requested_model':cfg['model'],'returned_model':ret,'task':t,'result':o,'usage':payload.get('usage'),'meta':payload.get('_meta'),'finish_reason':choice.get('finish_reason'),'request_sha256':reqhash,'rubric_sha256':rubric_hash,'attempt_file':ap.name};atomic(p,record);rec['state']='completed';atomic(ap,rec);break
+     except urllib.error.HTTPError as e:
+      detail=e.read().decode('utf8','replace').replace(key,'[REDACTED]')[:2000];rec.update(state='http_429' if e.code==429 else 'http_error',status=e.code,detail=detail);atomic(ap,rec)
+      if e.code==429 and attempt<attempt_limit:
+       try:retry_after=int(e.headers.get('Retry-After','0'))
+       except (TypeError,ValueError):retry_after=0
+       time.sleep(max(retry_after,min(120,30*attempt)));continue
+      raise RuntimeError(provider+' HTTP '+str(e.code)) from e
+     except Exception as e:
+      rec.update(state='uncertain_or_invalid',error_type=type(e).__name__,error=str(e).replace(key,'[REDACTED]'));atomic(ap,rec);raise RuntimeError(provider+' evaluation stopped: '+type(e).__name__) from e
+    else:raise RuntimeError('retry limit exhausted')
+  if phase=='pilot':
+   # Technical pilot gate; full execution continues automatically after this.
+   pilot_results=[out/'results'/p/(t['evaluation_id']+'.json') for t in pilot_tasks for p in MODELS]
+   if not all(p.exists() for p in pilot_results):raise RuntimeError('pilot incomplete')
+ return {'completed':sum(1 for _ in (out/'results').glob('*/*.json')),'output':str(out),'phase':'pilot' if pilot_only else 'full'}
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('--authorize-judge-execution',action='store_true');p.add_argument('--pilot-only',action='store_true');p.add_argument('--attempt-limit',type=int,default=4);a=p.parse_args();print(json.dumps(run(a.authorize_judge_execution,a.pilot_only,a.attempt_limit),indent=2))
 if __name__=='__main__':main()
