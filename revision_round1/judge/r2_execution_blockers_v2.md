@@ -1,0 +1,9 @@
+# R2 execution status and protocol revision
+
+The user selected `cx/gpt-6-luna-low` and `dva/deepseek-v4-flash-low`, with request rates of at most 20 and 10 per minute respectively. The user subsequently stated that cost does not matter in this case; the previously stated zero-cost-only condition is therefore superseded for this selection. Do not represent either route as free. No additional judge is authorized. Catalog presence is not proof of actual upstream model identity or fallback behavior.
+
+The original frozen v1 rubric requires reducing citation scores for unresolvable targets; that conflicts with the instruction to preserve missing mappings as unresolved and not automatically classify them as unsupported. The separate v2 rubric removes citation fidelity from scoring and explicitly preserves unresolved mappings. It does not overwrite v1 or its packet manifest. The new rubric must be hashed into a new execution manifest; existing v1 judgments must not be mixed with v2.
+
+Before live calls, the runner must independently verify the frozen packet hashes and per-configuration evidence, screen data against the external-processing policy, validate routing and returned model identity without fallback, implement explicit authorization, persist request/response and per-attempt usage, enforce rate and token/call budgets, and establish pilot quality gates. The existing `paired_protocol.py` is a hard-disabled offline seam, not a production runner; its same-evidence assumption also does not match configuration-specific recovered evidence. Do not bypass it or treat the older context-mismatched pilot as corrected R2 results.
+
+As of this note no live R2 judgment has been requested. No R1/R4 generation has been performed. Sample-size, activation, power and compute analyses remain outstanding.
