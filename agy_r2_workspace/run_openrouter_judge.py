@@ -200,9 +200,6 @@ def main():
                 break
             except urllib.error.HTTPError as e:
                 body = e.read().decode("utf-8", "replace")
-                if e.code == 429 and attempt < MAX_RETRIES:
-                    uncertain.unlink(missing_ok=True)
-                    time.sleep(min(60, 2 ** attempt)); continue
                 detail = body[:2000].replace(api_key, "[REDACTED]")
                 if e.code == 429 and attempt < MAX_RETRIES:
                     # Preserve the provider diagnostic, then retry with a
