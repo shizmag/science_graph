@@ -1,0 +1,1486 @@
+{
+  "accepted": 400,
+  "excluded_accepted_records": 0,
+  "rubric_sha256": "7cff7149139a6fd9de08345947c0df05cd88fda3054fe8715271e9310a773ca4",
+  "request_limits": {
+    "omniroute/3000": 130,
+    "omniroute/6000": 68,
+    "omniroute/1400": 2,
+    "openrouter/3000": 130,
+    "openrouter/6000": 69,
+    "openrouter/1400": 1
+  },
+  "raw_provenance_distinct_content_pairs": 200,
+  "contrasts": {
+    "omniroute/answerable/semantic_accuracy": {
+      "n": 80,
+      "b3": 0.7875,
+      "b5": 0.28125,
+      "diff": 0.50625,
+      "ci95": [
+        0.41875,
+        0.59375
+      ]
+    },
+    "omniroute/answerable/faithfulness": {
+      "n": 78,
+      "b3": 0.9230769230769231,
+      "b5": 0.5769230769230769,
+      "diff": 0.34615384615384615,
+      "ci95": [
+        0.25,
+        0.44246794871794637
+      ]
+    },
+    "omniroute/answerable/answer_relevance": {
+      "n": 80,
+      "b3": 0.85875,
+      "b5": 0.6131249999999999,
+      "diff": 0.24562499999999998,
+      "ci95": [
+        0.18125,
+        0.30874999999999997
+      ]
+    },
+    "omniroute/designated_negative/negative_safety": {
+      "n": 19,
+      "b3": 0.8947368421052632,
+      "b5": 0.9210526315789473,
+      "diff": -0.02631578947368421,
+      "ci95": [
+        -0.15789473684210525,
+        0.07894736842105263
+      ]
+    },
+    "omniroute/designated_negative/faithfulness": {
+      "n": 5,
+      "b3": 0.7,
+      "b5": 0.8,
+      "diff": -0.1,
+      "ci95": [
+        -0.4,
+        0.2
+      ]
+    },
+    "omniroute/designated_negative/answer_relevance": {
+      "n": 20,
+      "b3": 0.9,
+      "b5": 0.775,
+      "diff": 0.125,
+      "ci95": [
+        -0.05,
+        0.3
+      ]
+    },
+    "openrouter/answerable/semantic_accuracy": {
+      "n": 80,
+      "b3": 0.8125,
+      "b5": 0.33125,
+      "diff": 0.48125,
+      "ci95": [
+        0.38125,
+        0.5875
+      ]
+    },
+    "openrouter/answerable/faithfulness": {
+      "n": 79,
+      "b3": 0.9050632911392406,
+      "b5": 0.5949367088607594,
+      "diff": 0.310126582278481,
+      "ci95": [
+        0.20253164556962025,
+        0.4177215189873418
+      ]
+    },
+    "openrouter/answerable/answer_relevance": {
+      "n": 80,
+      "b3": 0.865,
+      "b5": 0.590625,
+      "diff": 0.274375,
+      "ci95": [
+        0.18375,
+        0.365625
+      ]
+    },
+    "openrouter/designated_negative/negative_safety": {
+      "n": 20,
+      "b3": 0.85,
+      "b5": 0.925,
+      "diff": -0.075,
+      "ci95": [
+        -0.225,
+        0.05
+      ]
+    },
+    "openrouter/designated_negative/faithfulness": {
+      "n": 10,
+      "b3": 0.9,
+      "b5": 0.95,
+      "diff": -0.05,
+      "ci95": [
+        -0.15,
+        0.0
+      ]
+    },
+    "openrouter/designated_negative/answer_relevance": {
+      "n": 20,
+      "b3": 0.875,
+      "b5": 0.95,
+      "diff": -0.075,
+      "ci95": [
+        -0.2,
+        0.0
+      ]
+    }
+  },
+  "recomputed_prior_contrasts": [
+    "omniroute/answerable/semantic_accuracy",
+    "omniroute/answerable/faithfulness",
+    "omniroute/answerable/answer_relevance",
+    "omniroute/designated_negative/negative_safety",
+    "omniroute/designated_negative/faithfulness",
+    "omniroute/designated_negative/answer_relevance",
+    "openrouter/answerable/semantic_accuracy",
+    "openrouter/answerable/faithfulness",
+    "openrouter/answerable/answer_relevance",
+    "openrouter/designated_negative/negative_safety",
+    "openrouter/designated_negative/faithfulness",
+    "openrouter/designated_negative/answer_relevance"
+  ],
+  "agreement": {
+    "answerable/semantic_accuracy/B3": {
+      "n": 80,
+      "queries": 80,
+      "mae": 0.0875,
+      "spearman": 0.7059129767112973,
+      "icc": 0.7252856433184302,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.05,
+          0.13125
+        ],
+        "spearman": [
+          0.5444368015307665,
+          0.8453671101257577
+        ],
+        "icc": [
+          0.556935367687462,
+          0.8534443278404062
+        ]
+      }
+    },
+    "answerable/semantic_accuracy/B5": {
+      "n": 80,
+      "queries": 80,
+      "mae": 0.1,
+      "spearman": 0.8086790411158549,
+      "icc": 0.7925828683951426,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.05625,
+          0.14390624999999913
+        ],
+        "spearman": [
+          0.6921300203023858,
+          0.9054939232461697
+        ],
+        "icc": [
+          0.6865354052226721,
+          0.8766398629050597
+        ]
+      }
+    },
+    "answerable/semantic_accuracy/pooled": {
+      "n": 160,
+      "queries": 80,
+      "mae": 0.09375,
+      "spearman": 0.8550843291175316,
+      "icc": 0.8543244563889567,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.065625,
+          0.128125
+        ],
+        "spearman": [
+          0.7981418250805861,
+          0.9047392642681652
+        ],
+        "icc": [
+          0.7964469181187985,
+          0.9044460204910877
+        ]
+      }
+    },
+    "answerable/semantic_accuracy/paired_difference": {
+      "n": 80,
+      "queries": 80,
+      "mae": 0.15,
+      "spearman": 0.8050344761776577,
+      "icc": 0.8021289918597372,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.1,
+          0.20015624999999915
+        ],
+        "spearman": [
+          0.7138536038806641,
+          0.8780273433302389
+        ],
+        "icc": [
+          0.7084870848708487,
+          0.8696100680833504
+        ]
+      }
+    },
+    "answerable/faithfulness/B3": {
+      "n": 79,
+      "queries": 79,
+      "mae": 0.05063291139240506,
+      "spearman": 0.6917322707793748,
+      "icc": 0.6835699797160243,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0189873417721519,
+          0.08860759493670886
+        ],
+        "spearman": [
+          0.4605027774671947,
+          0.8863036155209623
+        ],
+        "icc": [
+          0.4612366679469382,
+          0.8630056605528683
+        ]
+      }
+    },
+    "answerable/faithfulness/B5": {
+      "n": 79,
+      "queries": 79,
+      "mae": 0.08860759493670886,
+      "spearman": 0.8604694671886092,
+      "icc": 0.8624641833810888,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.04430379746835443,
+          0.13924050632911392
+        ],
+        "spearman": [
+          0.7607443855276158,
+          0.9364199343432367
+        ],
+        "icc": [
+          0.7561598467941578,
+          0.9373097620402749
+        ]
+      }
+    },
+    "answerable/faithfulness/pooled": {
+      "n": 158,
+      "queries": 80,
+      "mae": 0.06962025316455696,
+      "spearman": 0.8370349856273221,
+      "icc": 0.8620285609666789,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0440251572327044,
+          0.09875796178343932
+        ],
+        "spearman": [
+          0.7499523508431976,
+          0.9051494075528072
+        ],
+        "icc": [
+          0.7816770136267681,
+          0.9202704367982163
+        ]
+      }
+    },
+    "answerable/faithfulness/paired_difference": {
+      "n": 78,
+      "queries": 78,
+      "mae": 0.12179487179487179,
+      "spearman": 0.8364999574950289,
+      "icc": 0.835620616041476,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.07051282051282051,
+          0.1794871794871795
+        ],
+        "spearman": [
+          0.7387859211685053,
+          0.9130999413552949
+        ],
+        "icc": [
+          0.7307348711043452,
+          0.9097229543075931
+        ]
+      }
+    },
+    "answerable/answer_relevance/B3": {
+      "n": 80,
+      "queries": 80,
+      "mae": 0.07375000000000001,
+      "spearman": 0.7266909827329816,
+      "icc": 0.7940105277138922,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.046234375,
+          0.104375
+        ],
+        "spearman": [
+          0.5644162392830377,
+          0.853387080925359
+        ],
+        "icc": [
+          0.624678529636464,
+          0.8917425744093538
+        ]
+      }
+    },
+    "answerable/answer_relevance/B5": {
+      "n": 80,
+      "queries": 80,
+      "mae": 0.1425,
+      "spearman": 0.7115683932182817,
+      "icc": 0.673449138138165,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.10187500000000001,
+          0.18689062499999992
+        ],
+        "spearman": [
+          0.5898322123823734,
+          0.8165565943890108
+        ],
+        "icc": [
+          0.5370440346043999,
+          0.7842226055939868
+        ]
+      }
+    },
+    "answerable/answer_relevance/pooled": {
+      "n": 160,
+      "queries": 80,
+      "mae": 0.108125,
+      "spearman": 0.7954592650967026,
+      "icc": 0.7723633556661751,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.07905468750000001,
+          0.13844531249999995
+        ],
+        "spearman": [
+          0.7078995090723824,
+          0.8699738431432006
+        ],
+        "icc": [
+          0.6825224117091435,
+          0.8438622743652305
+        ]
+      }
+    },
+    "answerable/answer_relevance/paired_difference": {
+      "n": 80,
+      "queries": 80,
+      "mae": 0.19249999999999998,
+      "spearman": 0.627649858507469,
+      "icc": 0.5738504383830044,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 2000,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.135,
+          0.25
+        ],
+        "spearman": [
+          0.4623882135595621,
+          0.7764026210129644
+        ],
+        "icc": [
+          0.3990073822413805,
+          0.7227742938541281
+        ]
+      }
+    },
+    "designated_negative/negative_safety/B3": {
+      "n": 19,
+      "queries": 19,
+      "mae": 0.0,
+      "spearman": 0.9999999999999999,
+      "icc": 1.0,
+      "weighted_kappa": 1.0,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1768,
+        "icc": 1768,
+        "weighted_kappa": 1768
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.0
+        ],
+        "spearman": [
+          0.9999999999999998,
+          1.0
+        ],
+        "icc": [
+          1.0,
+          1.0
+        ],
+        "weighted_kappa": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/negative_safety/B5": {
+      "n": 20,
+      "queries": 20,
+      "mae": 0.0,
+      "spearman": 1.0,
+      "icc": 1.0,
+      "weighted_kappa": 1.0,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1746,
+        "icc": 1746,
+        "weighted_kappa": 1746
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.0
+        ],
+        "spearman": [
+          0.9999999999999998,
+          1.0
+        ],
+        "icc": [
+          1.0,
+          1.0
+        ],
+        "weighted_kappa": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/negative_safety/pooled": {
+      "n": 39,
+      "queries": 20,
+      "mae": 0.0,
+      "spearman": 1.0,
+      "icc": 1.0,
+      "weighted_kappa": 1.0,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1921,
+        "icc": 1921,
+        "weighted_kappa": 1921
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.0
+        ],
+        "spearman": [
+          0.9999999999999998,
+          1.0
+        ],
+        "icc": [
+          1.0,
+          1.0
+        ],
+        "weighted_kappa": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/negative_safety/paired_difference": {
+      "n": 19,
+      "queries": 19,
+      "mae": 0.0,
+      "spearman": 1.0,
+      "icc": 1.0,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1759,
+        "icc": 1759
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.0
+        ],
+        "spearman": [
+          0.9999999999999998,
+          1.0
+        ],
+        "icc": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/faithfulness/B3": {
+      "n": 9,
+      "queries": 9,
+      "mae": 0.0,
+      "spearman": 1.0,
+      "icc": 1.0,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1940,
+        "icc": 1940
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.0
+        ],
+        "spearman": [
+          0.9999999999999999,
+          1.0
+        ],
+        "icc": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/faithfulness/B5": {
+      "n": 10,
+      "queries": 10,
+      "mae": 0.05,
+      "spearman": 0.9938079899999066,
+      "icc": 0.8421052631578946,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1767,
+        "icc": 1767
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.15
+        ],
+        "spearman": [
+          0.9449111825230679,
+          1.0
+        ],
+        "icc": [
+          0.7476635514018691,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/faithfulness/pooled": {
+      "n": 19,
+      "queries": 15,
+      "mae": 0.02631578947368421,
+      "spearman": 0.9925649526278796,
+      "icc": 0.903225806451613,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1982,
+        "icc": 1982
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.07894736842105263
+        ],
+        "spearman": [
+          0.9557518184453215,
+          1.0
+        ],
+        "icc": [
+          0.8163265306122448,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/faithfulness/paired_difference": {
+      "n": 4,
+      "queries": 4,
+      "mae": 0.125,
+      "spearman": 0.8164965809277261,
+      "icc": 0.7272727272727273,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1346,
+        "icc": 1859
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.375
+        ],
+        "spearman": null,
+        "icc": [
+          0.0,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/answer_relevance/B3": {
+      "n": 20,
+      "queries": 20,
+      "mae": 0.075,
+      "spearman": 0.8377078165833911,
+      "icc": 0.7373271889400923,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1933,
+        "icc": 1984
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.0,
+          0.175
+        ],
+        "spearman": [
+          0.5461186812727502,
+          1.0
+        ],
+        "icc": [
+          2.081668171172169e-16,
+          1.0
+        ]
+      }
+    },
+    "designated_negative/answer_relevance/B5": {
+      "n": 20,
+      "queries": 20,
+      "mae": 0.175,
+      "spearman": 0.41885390829169555,
+      "icc": 0.3723723723723724,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1300,
+        "icc": 1999
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.05,
+          0.325
+        ],
+        "spearman": null,
+        "icc": [
+          -2.0886070650760753e-16,
+          0.8256880733944955
+        ]
+      }
+    },
+    "designated_negative/answer_relevance/pooled": {
+      "n": 40,
+      "queries": 20,
+      "mae": 0.125,
+      "spearman": 0.5634302337152658,
+      "icc": 0.4963099630996311,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "spearman": 1933,
+        "icc": 2000
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.05,
+          0.2
+        ],
+        "spearman": [
+          0.27645577535302335,
+          0.8170876433451221
+        ],
+        "icc": [
+          0.0,
+          0.7882513687840625
+        ]
+      }
+    },
+    "designated_negative/answer_relevance/paired_difference": {
+      "n": 20,
+      "queries": 20,
+      "mae": 0.25,
+      "spearman": 0.5407770551928153,
+      "icc": 0.3605769230769232,
+      "weighted_kappa": null,
+      "bootstrap_valid": {
+        "mae": 2000,
+        "icc": 2000,
+        "spearman": 1750
+      },
+      "cluster_ci95": {
+        "mae": [
+          0.1,
+          0.4
+        ],
+        "icc": [
+          -3.839398589801187e-17,
+          0.6346153846153845
+        ],
+        "spearman": [
+          0.35872643588386594,
+          0.792955868531045
+        ]
+      }
+    }
+  },
+  "applicability_agreement": {
+    "answerable/semantic_accuracy": {
+      "present/present": 160
+    },
+    "answerable/faithfulness": {
+      "present/present": 158,
+      "null/present": 1,
+      "null/null": 1
+    },
+    "answerable/answer_relevance": {
+      "present/present": 160
+    },
+    "designated_negative/negative_safety": {
+      "present/present": 39,
+      "null/present": 1
+    },
+    "designated_negative/faithfulness": {
+      "present/present": 19,
+      "null/present": 8,
+      "present/null": 3,
+      "null/null": 10
+    },
+    "designated_negative/answer_relevance": {
+      "present/present": 40
+    }
+  },
+  "faithfulness_applicability": {
+    "omniroute/answerable/B3/scored": 79,
+    "omniroute/answerable/B5/scored": 79,
+    "omniroute/designated_negative/B3/not_applicable_no_factual_claims": 9,
+    "omniroute/designated_negative/B5/not_applicable_no_factual_claims": 9,
+    "omniroute/designated_negative/B3/scored": 11,
+    "omniroute/answerable/B3/not_applicable_no_factual_claims": 1,
+    "omniroute/designated_negative/B5/scored": 11,
+    "omniroute/answerable/B5/not_applicable_no_factual_claims": 1,
+    "openrouter/answerable/B3/scored": 80,
+    "openrouter/answerable/B5/scored": 79,
+    "openrouter/designated_negative/B3/scored": 15,
+    "openrouter/designated_negative/B5/not_applicable_no_factual_claims": 8,
+    "openrouter/designated_negative/B3/not_applicable_no_factual_claims": 5,
+    "openrouter/designated_negative/B5/scored": 12,
+    "openrouter/answerable/B5/not_applicable_no_factual_claims": 1
+  },
+  "negative_pairs": [
+    {
+      "query_id": "pubmedqa_unans_10430303",
+      "baseline": "B3",
+      "evaluation_id": "e2f86ee79644026474f1d042",
+      "luna": 0.0,
+      "deepseek": 0.0,
+      "luna_rationale": "The response gives a substantive answer to a comparison involving cohorts and interventions not evaluated in the supplied evidence, rather than acknowledging that no direct comparison is available. Its discussion of the study's included control group does not resolve the requested comparison. Evidence: <|source_id|>1.",
+      "deepseek_rationale": "The response confidently treats the question as answerable and substitutes the study's included control group for the requested comparison to alternative interventions or unexamined cohorts. The evidence does not support that broader comparison, so this is a confident unsupported substantive answer.",
+      "luna_attempt": "omniroute-e2f86ee79644026474f1d042-1.json",
+      "deepseek_attempt": "openrouter-e2f86ee79644026474f1d042-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_10430303",
+      "baseline": "B5",
+      "evaluation_id": "dfed5ded66a2d6015e582f64",
+      "luna": 0.0,
+      "deepseek": 0.0,
+      "luna_rationale": "It confidently supplies substantive claims about unrelated studies rather than abstaining or bounding its answer to the evidence about the queried study.",
+      "deepseek_rationale": "The question is a designated negative about the laparoscopic cholecystectomy study. The response does not abstain; it confidently substitutes findings from an endovenous laser ablation study and a clavicular fracture review and asserts comparisons not present in the evidence. This is an unsupported substantive answer rather than an evidence-bounded abstention.",
+      "luna_attempt": "omniroute-dfed5ded66a2d6015e582f64-1.json",
+      "deepseek_attempt": "openrouter-dfed5ded66a2d6015e582f64-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_10593212",
+      "baseline": "B3",
+      "evaluation_id": "7998dc8f9756acb55f48b4a0",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The supplied study reports comparisons among LOC, no-LOC, and uncertain-LOC groups, but not alternative therapeutic interventions or unexamined control cohorts. The response appropriately limits itself to that evidence and abstains from supplying unsupported comparisons.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It avoids unsupported substantive assertions and correctly notes that the supplied material does not contain the requested comparison.",
+      "luna_attempt": "omniroute-7998dc8f9756acb55f48b4a0-1.json",
+      "deepseek_attempt": "openrouter-7998dc8f9756acb55f48b4a0-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_10593212",
+      "baseline": "B5",
+      "evaluation_id": "96e334f5f74f3c4c809b4261",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains from asserting unsupported comparative outcomes and states the evidence limitation directly.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It makes no unsupported substantive assertion about the study outcomes or external comparators, and correctly notes that the supplied evidence does not contain the requested comparison information.",
+      "luna_attempt": "omniroute-96e334f5f74f3c4c809b4261-1.json",
+      "deepseek_attempt": "openrouter-96e334f5f74f3c4c809b4261-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_10759659",
+      "baseline": "B3",
+      "evaluation_id": "2302379393042449d9cb0f54",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and does not assert unsupported equipment details; the supplied evidence does not identify the named cystoscopy study.",
+      "deepseek_rationale": "The response gives an evidence-bounded abstention, stating that the supplied text lacks information about the named study and its equipment. The supplied evidence contains unrelated papers, and the response makes no unsupported substantive assertion.",
+      "luna_attempt": "omniroute-2302379393042449d9cb0f54-1.json",
+      "deepseek_attempt": "openrouter-2302379393042449d9cb0f54-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_10759659",
+      "baseline": "B5",
+      "evaluation_id": "5422551a20fa3c16b7b8a109",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without making an unsupported assertion. The supplied evidence about the nurse cystoscopist study does not identify the specific microscope, camera, device, or reagent manufacturer.",
+      "deepseek_rationale": "The response is a claimless abstention. The supplied nurse cystoscopist evidence does not provide the requested microscope, camera model, laboratory device, or reagent manufacturer, so abstaining avoids unsupported substantive assertions.",
+      "luna_attempt": "omniroute-5422551a20fa3c16b7b8a109-1.json",
+      "deepseek_attempt": "openrouter-5422551a20fa3c16b7b8a109-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_12163782",
+      "baseline": "B3",
+      "evaluation_id": "99d8cd8782d286076d1db53b",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from inventing the requested confidence intervals, standard deviations, or subgroup p-values and limits its statement to the supplied text.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it states that the requested paper and statistics are absent from the provided text and does not assert unsupported substantive findings. The supplied evidence does not answer the question, so no label conflict is present.",
+      "luna_attempt": "omniroute-99d8cd8782d286076d1db53b-1.json",
+      "deepseek_attempt": "openrouter-99d8cd8782d286076d1db53b-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_12163782",
+      "baseline": "B5",
+      "evaluation_id": "d19539e181a2e1b088fbfeae",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains from inventing unavailable statistics and limits its statement to what is present in the supplied text. Evidence: PubMed 12163782.",
+      "deepseek_rationale": "Evidence-bounded abstention: the response does not assert unsupported outcome values and correctly notes that the requested statistics are absent from the supplied text.",
+      "luna_attempt": "omniroute-d19539e181a2e1b088fbfeae-1.json",
+      "deepseek_attempt": "openrouter-d19539e181a2e1b088fbfeae-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_12913878",
+      "baseline": "B3",
+      "evaluation_id": "51a488334488c88dcf334378",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from supplying unsupported technical details and limits its statement to what is absent from the provided text.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it does not assert unsupported substantive details and correctly notes that the requested technical specifications are absent from the provided text blocks.",
+      "luna_attempt": "omniroute-51a488334488c88dcf334378-1.json",
+      "deepseek_attempt": "openrouter-51a488334488c88dcf334378-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_12913878",
+      "baseline": "B5",
+      "evaluation_id": "b26dc80a3bdd3731a31c616e",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without making unsupported substantive assertions. The supplied evidence does not provide the requested software version, query specifications, or algorithm hyper-parameters.",
+      "deepseek_rationale": "The response is a claimless abstention. The supplied evidence does not include the requested software version, database query specifications, or algorithm hyper-parameters, so abstaining without unsupported substantive assertions is evidence-bounded.",
+      "luna_attempt": "omniroute-b26dc80a3bdd3731a31c616e-1.json",
+      "deepseek_attempt": "openrouter-b26dc80a3bdd3731a31c616e-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_17192736",
+      "baseline": "B3",
+      "evaluation_id": "241115de4f172f095d85b4a1",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from supplying unsupported methodological details and limits its statement to the absence of information in the supplied evidence, which does not describe the named study.",
+      "deepseek_rationale": "The response gives an evidence-bounded abstention and does not assert unsupported substantive details about software, queries, or hyper-parameters. The supplied evidence does not answer the question.",
+      "luna_attempt": "omniroute-241115de4f172f095d85b4a1-1.json",
+      "deepseek_attempt": "openrouter-241115de4f172f095d85b4a1-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_17192736",
+      "baseline": "B5",
+      "evaluation_id": "b9297705e987d53c2f054829",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains within the limits of the supplied evidence and does not assert specific software, query specifications, or hyper-parameters.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It does not provide a confident unsupported substantive answer and explicitly identifies the missing technical details.",
+      "luna_attempt": "omniroute-b9297705e987d53c2f054829-1.json",
+      "deepseek_attempt": "openrouter-b9297705e987d53c2f054829-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18005142",
+      "baseline": "B3",
+      "evaluation_id": "164d80c7ecdc05ccd7138345",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from asserting the effect of exclusions and states that this cannot be determined from the supplied text, without unsupported substantive claims.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it does not assert an unsupported substantive answer about the migraine study or ablation analysis, and it correctly notes that the supplied sources do not contain the relevant information.",
+      "luna_attempt": "omniroute-164d80c7ecdc05ccd7138345-1.json",
+      "deepseek_attempt": "openrouter-164d80c7ecdc05ccd7138345-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18005142",
+      "baseline": "B5",
+      "evaluation_id": "e17a60450efc5b66acbfee79",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without asserting unsupported findings. The supplied evidence concerns other studies and does not answer the question.",
+      "deepseek_rationale": "The response appropriately abstains because the supplied evidence contains no information about the named migraine study or its ablation sensitivity analysis. It makes no unsupported substantive medical assertion.",
+      "luna_attempt": "omniroute-e17a60450efc5b66acbfee79-1.json",
+      "deepseek_attempt": "openrouter-e17a60450efc5b66acbfee79-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18235194",
+      "baseline": "B3",
+      "evaluation_id": "f95943c69944bed1a9573b4e",
+      "luna": null,
+      "deepseek": 0.0,
+      "luna_rationale": "The supplied evidence does report a comparison against an alternative training program, so the designated-negative label may conflict with the available evidence; it does not address unexamined cohorts. Human adjudication is warranted.",
+      "deepseek_rationale": "The response does not abstain from the designated-negative question about comparisons with alternative interventions or unexamined cohorts. Instead, it confidently provides a substantive comparison to the included control group and makes an unsupported claim about reading abilities, so it is not evidence-bounded.",
+      "luna_attempt": "omniroute-f95943c69944bed1a9573b4e-1.json",
+      "deepseek_attempt": "openrouter-f95943c69944bed1a9573b4e-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18235194",
+      "baseline": "B5",
+      "evaluation_id": "f004c8c92ea01bb773d75dbd",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response appropriately abstains from making claims about interventions or cohorts not addressed by the supplied evidence.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it does not provide an unsupported substantive answer and correctly notes that the supplied text lacks comparison against alternative interventions or unexamined control cohorts.",
+      "luna_attempt": "omniroute-f004c8c92ea01bb773d75dbd-1.json",
+      "deepseek_attempt": "openrouter-f004c8c92ea01bb773d75dbd-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18670651",
+      "baseline": "B3",
+      "evaluation_id": "0915649abc5a6df86c707da4",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without making unsupported substantive assertions. The supplied evidence does not provide the requested IL-2, IL-4, TNFalpha, and IL-6 statistics.",
+      "deepseek_rationale": "The response is a claimless, evidence-bounded abstention. The supplied evidence does not include the requested paper or the specific confidence intervals, standard deviations, and subgroup p-values, and the response makes no unsupported substantive assertion.",
+      "luna_attempt": "omniroute-0915649abc5a6df86c707da4-1.json",
+      "deepseek_attempt": "openrouter-0915649abc5a6df86c707da4-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18670651",
+      "baseline": "B5",
+      "evaluation_id": "8801362930cce36dc5a04621",
+      "luna": 0.5,
+      "deepseek": 0.5,
+      "luna_rationale": "The response does not invent the requested values, but confidently claims they are absent from the text when the supplied evidence is only an excerpt and cannot establish that absence. Evidence: [Chunk] PubMed 18670651.",
+      "deepseek_rationale": "The response appropriately declines to provide exact CIs/SDs/p-values that are absent from the target paper's supplied evidence, but it adds an unsupported/misattributed claim about odds ratios for other variables. This is a partially unsupported substantive assertion accompanying an otherwise evidence-bounded abstention.",
+      "luna_attempt": "omniroute-8801362930cce36dc5a04621-1.json",
+      "deepseek_attempt": "openrouter-8801362930cce36dc5a04621-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18948835",
+      "baseline": "B3",
+      "evaluation_id": "7dddd4f67997fa8ded937b17",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and accurately notes that the supplied evidence does not provide details of the named neuromedin U study; it makes no unsupported substantive claims.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention and makes no unsupported substantive assertions about the study's confidence intervals, standard deviations, or subgroup p-values.",
+      "luna_attempt": "omniroute-7dddd4f67997fa8ded937b17-1.json",
+      "deepseek_attempt": "openrouter-7dddd4f67997fa8ded937b17-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_18948835",
+      "baseline": "B5",
+      "evaluation_id": "231c502f07306a204d0a49e0",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains without asserting unsupported values and limits its explanation to the lack of relevant information in the supplied text.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it states that the requested information is absent from the provided text and does not assert unsupported substantive findings.",
+      "luna_attempt": "omniroute-231c502f07306a204d0a49e0-1.json",
+      "deepseek_attempt": "openrouter-231c502f07306a204d0a49e0-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_20187289",
+      "baseline": "B3",
+      "evaluation_id": "6cb52785ef8cdd2ffe2fb224",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and limits its statement to the absence of information about the named study and analysis in the supplied text; it makes no unsupported substantive claims.",
+      "deepseek_rationale": "The response abstains because the supplied evidence does not include the named study or its ablation sensitivity analysis, and it makes no unsupported substantive assertion.",
+      "luna_attempt": "omniroute-6cb52785ef8cdd2ffe2fb224-1.json",
+      "deepseek_attempt": "openrouter-6cb52785ef8cdd2ffe2fb224-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_20187289",
+      "baseline": "B5",
+      "evaluation_id": "d8c5276f2856204417114638",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from asserting an impact that the supplied evidence does not establish.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it states that the requested details are not present in the supplied sources and does not make unsupported substantive assertions about the ablation analysis.",
+      "luna_attempt": "omniroute-d8c5276f2856204417114638-1.json",
+      "deepseek_attempt": "openrouter-d8c5276f2856204417114638-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_21849531",
+      "baseline": "B3",
+      "evaluation_id": "9a10b622ed6f8b3e4e22724f",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The supplied evidence concerns other studies and does not provide the requested growth-hormone study results; the response appropriately limits itself to saying that information is insufficient.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It does not provide unsupported substantive assertions about the requested confidence intervals, standard deviations, or subgroup p-values.",
+      "luna_attempt": "omniroute-9a10b622ed6f8b3e4e22724f-1.json",
+      "deepseek_attempt": "openrouter-9a10b622ed6f8b3e4e22724f-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_21849531",
+      "baseline": "B5",
+      "evaluation_id": "55abcf47b01646556fe4842d",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without making an unsupported substantive assertion. The supplied evidence contains no information about the growth hormone replacement therapy study or the requested statistics.",
+      "deepseek_rationale": "The response is a claimless abstention ('UNANSWERABLE') and makes no unsupported substantive assertion. The supplied evidence does not contain the requested growth hormone mortality study details, so the abstention is evidence-bounded and appropriate.",
+      "luna_attempt": "omniroute-55abcf47b01646556fe4842d-1.json",
+      "deepseek_attempt": "openrouter-55abcf47b01646556fe4842d-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_22012962",
+      "baseline": "B3",
+      "evaluation_id": "32c87fa55f2889e82a21224f",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains from estimating the effects of exclusions and makes no substantive claim about the study’s findings; the supplied evidence does not address that study or sensitivity analysis.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it explicitly notes that the provided sources lack information about the specified study and does not assert an unsupported substantive answer.",
+      "luna_attempt": "omniroute-32c87fa55f2889e82a21224f-1.json",
+      "deepseek_attempt": "openrouter-32c87fa55f2889e82a21224f-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_22012962",
+      "baseline": "B5",
+      "evaluation_id": "070dbdea868634bf20ae9556",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains without making unsupported claims about the study's findings or the effects of exclusions. The supplied evidence concerns unrelated studies and does not provide the requested analysis. Evidence: PubMed 23412195, PubMed 11483547, PubMed 18388848, PubMed 17595200, PubMed 15280782, [Chunk].",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it states that the provided text does not contain the requested study or ablation results and does not assert any unsupported substantive answer.",
+      "luna_attempt": "omniroute-070dbdea868634bf20ae9556-1.json",
+      "deepseek_attempt": "openrouter-070dbdea868634bf20ae9556-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_22972546",
+      "baseline": "B3",
+      "evaluation_id": "1ec79f9a2ce94326bdede401",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and makes no unsupported substantive claim about the study's equipment or reagents. The supplied evidence does not describe the seafarer fitness study.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It does not assert an unsupported substantive answer about the microscope, camera, device, or reagent manufacturer.",
+      "luna_attempt": "omniroute-1ec79f9a2ce94326bdede401-1.json",
+      "deepseek_attempt": "openrouter-1ec79f9a2ce94326bdede401-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_22972546",
+      "baseline": "B5",
+      "evaluation_id": "eaf30e79c726bf31bf75e96e",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and confines its explanation to the supplied text, which contains unrelated studies and no information about the seafarer-fitness study or its equipment.",
+      "deepseek_rationale": "The response appropriately states that the supplied evidence does not contain the requested study or equipment information, without adding unsupported substantive assertions.",
+      "luna_attempt": "omniroute-eaf30e79c726bf31bf75e96e-1.json",
+      "deepseek_attempt": "openrouter-eaf30e79c726bf31bf75e96e-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_23495128",
+      "baseline": "B3",
+      "evaluation_id": "a4f78a7b922e30b52fc7ae96",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and makes no unsupported substantive assertion; the supplied evidence does not describe the named study or its equipment.",
+      "deepseek_rationale": "Evidence-bounded abstention: the response states the supplied text lacks the requested study/equipment and makes no unsupported substantive assertion.",
+      "luna_attempt": "omniroute-a4f78a7b922e30b52fc7ae96-1.json",
+      "deepseek_attempt": "openrouter-a4f78a7b922e30b52fc7ae96-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_23495128",
+      "baseline": "B5",
+      "evaluation_id": "36d88ed0db2a5d1569ba9821",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The evidence identifies interviews with patients and the study's aims, but does not specify any microscope, camera, laboratory device, or reagent manufacturer; the response abstains without asserting unsupported details.",
+      "deepseek_rationale": "The response is a claimless abstention ('UNANSWERABLE') and makes no unsupported substantive assertion about devices or reagents; the supplied evidence does not provide the requested procedural details.",
+      "luna_attempt": "omniroute-36d88ed0db2a5d1569ba9821-1.json",
+      "deepseek_attempt": "openrouter-36d88ed0db2a5d1569ba9821-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_23870157",
+      "baseline": "B3",
+      "evaluation_id": "e49ebcccea602cc6c8b14952",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from supplying unsupported specifications and bounds its statement to the provided text. Evidence: <|source_id|>1–<|source_id|>5.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It does not provide a confident unsupported answer and makes no unsupported substantive assertions about the study's data-processing details.",
+      "luna_attempt": "omniroute-e49ebcccea602cc6c8b14952-1.json",
+      "deepseek_attempt": "openrouter-e49ebcccea602cc6c8b14952-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_23870157",
+      "baseline": "B5",
+      "evaluation_id": "813bd9578c67952e17a8d0b9",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains and does not invent software, query, or hyper-parameter details. The supplied evidence does not provide those details for the named study.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention: it states insufficient information and does not assert unsupported substantive details about software, queries, or hyper-parameters.",
+      "luna_attempt": "omniroute-813bd9578c67952e17a8d0b9-1.json",
+      "deepseek_attempt": "openrouter-813bd9578c67952e17a8d0b9-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_24318956",
+      "baseline": "B3",
+      "evaluation_id": "7e5c0b36c1c63d59e367ac70",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains from inventing software versions, query specifications, or hyper-parameters and limits its conclusion to the provided text. Evidence: <|source_id|>1, <|source_id|>2, <|source_id|>3, <|source_id|>4, <|source_id|>5.",
+      "deepseek_rationale": "The response abstains and states only that the supplied text lacks the requested software/database/hyper-parameter details; it makes no unsupported substantive assertion about the digoxin study.",
+      "luna_attempt": "omniroute-7e5c0b36c1c63d59e367ac70-1.json",
+      "deepseek_attempt": "openrouter-7e5c0b36c1c63d59e367ac70-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_24318956",
+      "baseline": "B5",
+      "evaluation_id": "87280ced51cd98487b17b12f",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "It abstains and does not invent software versions, query specifications, or algorithm parameters. The supplied records concern other studies and provide no such details for the named digoxin study.",
+      "deepseek_rationale": "The response is an evidence-bounded abstention. It does not provide an unsupported substantive answer about the digoxin/prostate cancer study and correctly states that the supplied text lacks the requested technical details.",
+      "luna_attempt": "omniroute-87280ced51cd98487b17b12f-1.json",
+      "deepseek_attempt": "openrouter-87280ced51cd98487b17b12f-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_25488308",
+      "baseline": "B3",
+      "evaluation_id": "f56bb8388d7524fad8e71ddc",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains and makes no unsupported substantive claim about the study’s findings or subgroups. [<|source_id|>1, <|source_id|>2, <|source_id|>3, <|source_id|>4, <|source_id|>5]",
+      "deepseek_rationale": "The response gives an evidence-bounded abstention, explicitly stating that the provided text lacks the requested study information, and it makes no unsupported substantive assertion about the study's findings or sensitivity analysis.",
+      "luna_attempt": "omniroute-f56bb8388d7524fad8e71ddc-1.json",
+      "deepseek_attempt": "openrouter-f56bb8388d7524fad8e71ddc-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_25488308",
+      "baseline": "B5",
+      "evaluation_id": "ba55a8f027ceeacf4d4a2f8a",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without asserting substantive findings. The supplied evidence does not describe the named miniscrew study or an ablation sensitivity analysis.",
+      "deepseek_rationale": "Evidence-bounded abstention without unsupported substantive assertions about the target study or its primary findings.",
+      "luna_attempt": "omniroute-ba55a8f027ceeacf4d4a2f8a-1.json",
+      "deepseek_attempt": "openrouter-ba55a8f027ceeacf4d4a2f8a-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_26348845",
+      "baseline": "B3",
+      "evaluation_id": "d788cd2a8d316c7cb248597d",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains from supplying unsupported equipment or manufacturer details and confines its answer to the limits of the supplied text. Evidence: <|source_id|>1–<|source_id|>5.",
+      "deepseek_rationale": "The response correctly states that the supplied evidence does not contain the requested study details and abstains without unsupported substantive assertions.",
+      "luna_attempt": "omniroute-d788cd2a8d316c7cb248597d-1.json",
+      "deepseek_attempt": "openrouter-d788cd2a8d316c7cb248597d-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_26348845",
+      "baseline": "B5",
+      "evaluation_id": "72f42dcc45f861d76b1de137",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains without asserting an unsupported device or reagent. The supplied evidence does not identify the study named in the question or state the equipment and manufacturer used.",
+      "deepseek_rationale": "The response is a claimless abstention and makes no unsupported substantive assertion. The supplied evidence does not include the specific study or the requested procedural equipment/reagent details, so abstaining is evidence-bounded.",
+      "luna_attempt": "omniroute-72f42dcc45f861d76b1de137-1.json",
+      "deepseek_attempt": "openrouter-72f42dcc45f861d76b1de137-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_26561905",
+      "baseline": "B3",
+      "evaluation_id": "bc8fb0d8e78e2e2c7f74e3be",
+      "luna": 0.0,
+      "deepseek": 0.0,
+      "luna_rationale": "The answer gives a substantive comparison and presents an in-study comparison as an unexamined control, rather than abstaining about alternative interventions or cohorts not included in the study. [<|source_id|>1]",
+      "deepseek_rationale": "The response confidently provides a substantive comparison rather than abstaining, and it invents/misapplies an 'unexamined control' characterization. The supplied evidence does not address alternative therapeutic interventions or unexamined control cohorts outside the study, so this is a confident unsupported substantive answer to a designated-negative question.",
+      "luna_attempt": "omniroute-bc8fb0d8e78e2e2c7f74e3be-1.json",
+      "deepseek_attempt": "openrouter-bc8fb0d8e78e2e2c7f74e3be-1.json"
+    },
+    {
+      "query_id": "pubmedqa_unans_26561905",
+      "baseline": "B5",
+      "evaluation_id": "cda33169a43ce8e45ea3e8cf",
+      "luna": 1.0,
+      "deepseek": 1.0,
+      "luna_rationale": "The response abstains from making unsupported claims about comparisons beyond the study; the evidence only identifies the two study groups and design.",
+      "deepseek_rationale": "The response appropriately states that the supplied evidence does not contain the requested comparison to alternative interventions or unexamined control cohorts, without adding unsupported substantive claims.",
+      "luna_attempt": "omniroute-cda33169a43ce8e45ea3e8cf-1.json",
+      "deepseek_attempt": "openrouter-cda33169a43ce8e45ea3e8cf-1.json"
+    }
+  ],
+  "missing_rationale_cases": [
+    {
+      "provider": "omniroute",
+      "evaluation_id": "eaf30e79c726bf31bf75e96e",
+      "query_id": "pubmedqa_unans_22972546",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information about the study on 'Do approved doctors and medical referees in the UK agree when assessing a seafarer's fitness' or the specific equipment used in it.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "32c87fa55f2889e82a21224f",
+      "query_id": "pubmedqa_unans_22012962",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "The provided sources do not contain information about the study 'Marital status, living arrangement and mortality: does the association vary by gender?'. Therefore, the impact of excluding the specified parameters on the primary findings cannot be determined.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "e87b421dc64b3e7b43ae2af8",
+      "query_id": "pubmedqa_16097998",
+      "configuration": "B3",
+      "question_type": "answerable",
+      "answer": "The provided sources do not contain information regarding the justification of coeliac disease screening in risk groups.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "6cb52785ef8cdd2ffe2fb224",
+      "query_id": "pubmedqa_unans_20187289",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information regarding the study \"Prescriptions as a proxy for asthma in children: a good choice\" or its ablation sensitivity analysis.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "a4f78a7b922e30b52fc7ae96",
+      "query_id": "pubmedqa_unans_23495128",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information about the study 'The colour of pain' or the equipment used in it.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "1ec79f9a2ce94326bdede401",
+      "query_id": "pubmedqa_unans_22972546",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information about the study on 'Do approved doctors and medical referees in the UK agree when assessing a seafarer's fitness'.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "7dddd4f67997fa8ded937b17",
+      "query_id": "pubmedqa_unans_18948835",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "Insufficient information. The provided text does not contain the details regarding the specific study \"Does somatostatin confer insulinostatic effects of neuromedin u in the rat pancreas\".",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "0915649abc5a6df86c707da4",
+      "query_id": "pubmedqa_unans_18670651",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "Insufficient information to answer the question.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "4e10073f87c7615a73d2b0d0",
+      "query_id": "pubmedqa_22350859",
+      "configuration": "B5",
+      "question_type": "answerable",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "omniroute",
+      "evaluation_id": "72f42dcc45f861d76b1de137",
+      "query_id": "pubmedqa_unans_26348845",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "55abcf47b01646556fe4842d",
+      "query_id": "pubmedqa_unans_21849531",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "36d88ed0db2a5d1569ba9821",
+      "query_id": "pubmedqa_unans_23495128",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "5422551a20fa3c16b7b8a109",
+      "query_id": "pubmedqa_unans_10759659",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "6cb52785ef8cdd2ffe2fb224",
+      "query_id": "pubmedqa_unans_20187289",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information regarding the study \"Prescriptions as a proxy for asthma in children: a good choice\" or its ablation sensitivity analysis.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "cda33169a43ce8e45ea3e8cf",
+      "query_id": "pubmedqa_unans_26561905",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "The provided text does not contain information about comparing the outcomes of the study against alternative therapeutic interventions or unexamined control cohorts.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "b26dc80a3bdd3731a31c616e",
+      "query_id": "pubmedqa_unans_12913878",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "2302379393042449d9cb0f54",
+      "query_id": "pubmedqa_unans_10759659",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information about the study 'The nurse cystoscopist: a feasible option' or the specific equipment used in it.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "e17a60450efc5b66acbfee79",
+      "query_id": "pubmedqa_unans_18005142",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE. The provided text does not contain information regarding the study 'Does early migraine treatment shorten time to headache peak and reduce its severity' or the impact of ablation sensitivity analysis on its primary findings.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "0915649abc5a6df86c707da4",
+      "query_id": "pubmedqa_unans_18670651",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "Insufficient information to answer the question.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "72f42dcc45f861d76b1de137",
+      "query_id": "pubmedqa_unans_26348845",
+      "configuration": "B5",
+      "question_type": "designated_negative",
+      "answer": "UNANSWERABLE",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    },
+    {
+      "provider": "openrouter",
+      "evaluation_id": "d788cd2a8d316c7cb248597d",
+      "query_id": "pubmedqa_unans_26348845",
+      "configuration": "B3",
+      "question_type": "designated_negative",
+      "answer": "The provided text does not contain information about the study on 'Pap smears with glandular cell abnormalities: Are they detected by rapid prescreening'. Therefore, the specific microscope, camera model, laboratory device, or reagent manufacturer cannot be identified.",
+      "faithfulness_status": "not_applicable_no_factual_claims"
+    }
+  ],
+  "note": "Evidence support annotations are separate manual review, not score changes."
+}
