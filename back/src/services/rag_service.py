@@ -2369,7 +2369,10 @@ class RAGService:
 
             # Get system prompt for token counting
             if self.expander and config.rag_components.get("graph_expansion", True):
-                system_prompt = prompts.get_prompt("rag", "ask_expander", enrichment_block="", history_str=history_str, query=wrapped_query)
+                system_prompt = prompts.get_prompt(
+                    "rag", "ask_expander", context_text="", context_graph="",
+                    enrichment_block="", history_str=history_str, query=wrapped_query,
+                )
             else:
                 system_prompt = prompts.get_prompt("rag", "ask_no_expander", context_text="", context_graph="", history_str=history_str, query=wrapped_query)
 
@@ -2410,7 +2413,11 @@ class RAGService:
                     prompt = prompts.get_prompt("rag", "ask_no_expander", context_text=trimmed_text, context_graph=trimmed_graph, history_str=history_str, query=wrapped_query)
                 else:
                     con.warning("Using graph expansion block.")
-                    prompt = prompts.get_prompt("rag", "ask_expander", enrichment_block=enrichment_block, history_str=history_str, query=wrapped_query)
+                    prompt = prompts.get_prompt(
+                        "rag", "ask_expander", context_text=trimmed_text,
+                        context_graph=trimmed_graph, enrichment_block=enrichment_block,
+                        history_str=history_str, query=wrapped_query,
+                    )
             else:
                 prompt = prompts.get_prompt("rag", "ask_no_expander", context_text=trimmed_text, context_graph=trimmed_graph, history_str=history_str, query=wrapped_query)
 
@@ -2468,11 +2475,15 @@ class RAGService:
                 if self.expander.reranker is None:
                     self.expander.reranker = await asyncio.to_thread(self._get_reranker)
                 enrichment_block = await asyncio.to_thread(self.expander.expand, question, final_chunks)
+                context_text, context_graph = await asyncio.to_thread(self.build_context, final_chunks, limit)
                 if not enrichment_block or enrichment_block == "No essential knowledge graph enrichment found.":
-                    context_text, context_graph = await asyncio.to_thread(self.build_context, final_chunks, limit)
                     prompt = prompts.get_prompt("rag", "stream_no_expander", context_text=context_text, context_graph=context_graph, question=wrapped_question)
                 else:
-                    prompt = prompts.get_prompt("rag", "stream_expander", enrichment_block=enrichment_block, question=wrapped_question)
+                    prompt = prompts.get_prompt(
+                        "rag", "stream_expander", context_text=context_text,
+                        context_graph=context_graph, enrichment_block=enrichment_block,
+                        question=wrapped_question,
+                    )
             else:
                 context_text, context_graph = await asyncio.to_thread(self.build_context, final_chunks, limit)
                 prompt = prompts.get_prompt("rag", "stream_no_expander", context_text=context_text, context_graph=context_graph, question=wrapped_question)
@@ -2530,5 +2541,3 @@ class RAGService:
                 yield {"type": "token", "text": f"\n\n{card}"}
 
         yield {"type": "done"}
-
-

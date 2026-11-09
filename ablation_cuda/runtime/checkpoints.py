@@ -9,8 +9,9 @@ import os
 import sqlite3
 import tempfile
 import time
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 
 def canonical_json(value: Any) -> bytes:
@@ -127,10 +128,15 @@ class CheckpointStore:
                 error TEXT NOT NULL, transient INTEGER NOT NULL, time_epoch REAL NOT NULL,
                 PRIMARY KEY(arm_id,query_id,attempt))""")
 
-    def _connect(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
         connection = sqlite3.connect(self.database, timeout=30)
-        connection.execute("PRAGMA foreign_keys=ON")
-        return connection
+        try:
+            connection.execute("PRAGMA foreign_keys=ON")
+            with connection:
+                yield connection
+        finally:
+            connection.close()
 
     def get(self, arm_id: str, query_id: str, input_identity: str) -> dict[str, Any] | None:
         with self._connect() as connection:

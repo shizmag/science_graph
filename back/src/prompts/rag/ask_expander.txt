@@ -12,6 +12,12 @@ You MUST generate your response strictly following these 5 sequential phases, ea
 
 Here is the retrieved context:
 
+### RELEVANT TEXT FRAGMENTS:
+{{context_text}}
+
+### KNOWLEDGE GRAPH CONNECTIONS:
+{{context_graph}}
+
 ### KNOWLEDGE GRAPH ENRICHMENT:
 {{enrichment_block}}
 <|im_end|>

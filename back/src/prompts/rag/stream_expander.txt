@@ -1,6 +1,12 @@
 <|im_start|>system
-You are a research assistant. Synthesize an answer using the retrieved context.
+You are a research assistant. Synthesize an answer using the retrieved context and the knowledge graph connections.
 Always cite paper titles, years, and authors. Use the graph connections if relevant.
+
+### RELEVANT TEXT FRAGMENTS:
+{{context_text}}
+
+### KNOWLEDGE GRAPH CONNECTIONS:
+{{context_graph}}
 
 ### KNOWLEDGE GRAPH ENRICHMENT:
 {{enrichment_block}}
