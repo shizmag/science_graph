@@ -20,6 +20,7 @@ from typing import Any, Mapping, Sequence
 from ablation_portability.dataset.loader import load_frozen_dataset
 
 from .checkpoint import CheckpointError, DurableResultStore
+from .census import build_census_report, validate_census_output_path, write_census_report
 from .cohort import CohortRow, prepare_cohort, select_smoke_rows
 from .evidence import EvidenceError, ReadOnlyEvidenceStore
 from .identity import (
@@ -51,6 +52,16 @@ from .protocol import (
     SMOKE_GENERATION_BUDGET,
     SMOKE_QUERY_IDS,
     build_prompt,
+)
+from .telemetry import (
+    TELEMETRY_AGGREGATION,
+    TELEMETRY_IMPLEMENTATION,
+    TELEMETRY_PROTOCOL_VERSION,
+    TELEMETRY_SOURCE,
+    TELEMETRY_TOP_KS,
+    TELEMETRY_UNITS,
+    TelemetryCompatibilityError,
+    validate_telemetry_payload,
 )
 
 
@@ -561,10 +572,7 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
         "external_judging": "not_run",
         "historical_cuda_archive": "immutable; not merged",
         "model_config_disclosure": source_manifest.get("model_config_disclosure"),
-        "entropy_telemetry": {
-            "status": "unavailable_from_mlx_lm_generate_distribution_api",
-            "definitions": ["H20", "H50", "H100"],
-        },
+        "entropy_telemetry": _telemetry_manifest_contract(),
     }
     # Complete validation precedes writes. The root must still be empty: a
     # failure during a previous freeze is never silently resumed or overwritten.
@@ -586,7 +594,13 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
     return 0
 
 
-def _validate_runtime_namespace(args: argparse.Namespace, *, smoke: bool) -> tuple[Path, dict[str, Any], dict[str, Any], list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
+def _validate_runtime_namespace(
+    args: argparse.Namespace,
+    *,
+    smoke: bool,
+    allow_legacy_telemetry: bool = False,
+    validate_results: bool = True,
+) -> tuple[Path, dict[str, Any], dict[str, Any], list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
     model_path, dataset_path, database_path, _ = _args_paths(args)
     root = _runtime_artifact_root(args)
     if root == _path(DEFAULT_ARTIFACT_ROOT):
@@ -605,6 +619,14 @@ def _validate_runtime_namespace(args: argparse.Namespace, *, smoke: bool) -> tup
         raise ValueError("Unsupported or non-executable runtime manifest schema")
     if manifest.get("protocol_version") != PROTOCOL_VERSION or manifest.get("prompt_version") != PROMPT_VERSION:
         raise ValueError("Runtime manifest protocol/prompt version does not match this code")
+    declared_telemetry = manifest.get("entropy_telemetry")
+    legacy_telemetry = {
+        "status": "unavailable_from_mlx_lm_generate_distribution_api",
+        "definitions": ["H20", "H50", "H100"],
+    }
+    legacy_read_only = allow_legacy_telemetry and declared_telemetry == legacy_telemetry
+    if declared_telemetry != _telemetry_manifest_contract() and not legacy_read_only:
+        raise ValueError("Runtime manifest predictive-distribution telemetry contract is incompatible")
     cohort_path = _runtime_cohort_path(root)
     declared_cohort_path = manifest.get("cohort_path")
     if not isinstance(declared_cohort_path, str) or _path(declared_cohort_path) != cohort_path.resolve():
@@ -662,7 +684,92 @@ def _validate_runtime_namespace(args: argparse.Namespace, *, smoke: bool) -> tup
     rows, bundles = _bundle_rows(records, cohort, evidence, smoke=smoke)
     if not smoke and len(rows) != len(cohort.get("rows", [])):
         raise ValueError("Full cohort has missing or duplicate query identities")
+    if validate_results:
+        _validate_result_telemetry(
+            root,
+            manifest,
+            allow_legacy=legacy_read_only,
+            legacy_manifest=legacy_read_only,
+        )
     return root, manifest, cohort, rows, bundles, local_model
+
+
+def _telemetry_manifest_contract() -> dict[str, Any]:
+    return {
+        "status": "available_from_generate_step",
+        "protocol_version": TELEMETRY_PROTOCOL_VERSION,
+        "implementation": TELEMETRY_IMPLEMENTATION,
+        "source": TELEMETRY_SOURCE,
+        "top_k": list(TELEMETRY_TOP_KS),
+        "units": dict(TELEMETRY_UNITS),
+        "aggregation": TELEMETRY_AGGREGATION,
+        "eos_included_in_aggregation": True,
+        "definitions": {
+            "h20_bits": "mean local top-20 entropy in bits over all compact generated-token rows, including stop rows",
+            "h50_bits": "mean local top-50 entropy in bits over all compact generated-token rows, including stop rows",
+            "h100_bits": "mean local top-100 entropy in bits over all compact generated-token rows, including stop rows",
+        },
+    }
+
+
+def _validate_result_telemetry(
+    root: Path,
+    manifest: Mapping[str, Any],
+    *,
+    allow_legacy: bool = False,
+    legacy_manifest: bool = False,
+) -> dict[str, int]:
+    """Validate new payloads; retain explicit legacy unavailable rows unchanged."""
+
+    store = DurableResultStore(
+        root,
+        _runtime_manifest_path(root),
+        str(manifest["manifest_hash"]),
+    )
+    protocol_counts: dict[str, int] = {}
+    for item in store.accepted_rows():
+        result = item.get("result")
+        if not isinstance(result, Mapping):
+            continue
+        payload = result.get("telemetry")
+        if payload is None:
+            # Legacy rows are auditable, but a runtime with the new manifest
+            # must not silently continue using a mixture of missing telemetry.
+            if result.get("telemetry_source") not in (None, "unavailable"):
+                raise ValueError("Accepted result has telemetry source metadata but no payload")
+            if not allow_legacy or not legacy_manifest:
+                raise ValueError("Legacy unavailable telemetry cannot be continued under the new protocol")
+            if result.get("entropy_valid") is not False:
+                raise ValueError("Accepted result without predictive telemetry is not explicitly legacy")
+            protocol_counts["legacy_unavailable"] = protocol_counts.get("legacy_unavailable", 0) + 1
+            continue
+        if legacy_manifest:
+            raise ValueError("Legacy runtime manifest cannot accept predictive telemetry results")
+        if not isinstance(payload, Mapping):
+            raise ValueError("Accepted result telemetry must be a mapping")
+        try:
+            validate_telemetry_payload(payload)
+        except TelemetryCompatibilityError as exc:
+            raise ValueError(f"Accepted result telemetry is incompatible: {exc}") from exc
+        version = str(payload["protocol_version"])
+        protocol_counts[version] = protocol_counts.get(version, 0) + 1
+        for key, expected in (
+            ("telemetry_protocol_version", version),
+            ("telemetry_implementation", payload.get("implementation")),
+            ("telemetry_source", payload.get("source")),
+            ("telemetry_valid", payload.get("valid")),
+        ):
+            if result.get(key) != expected:
+                raise ValueError(f"Accepted result {key} does not match telemetry payload")
+    populated_protocols = {key for key in protocol_counts if key != "legacy_unavailable"}
+    if len(populated_protocols) > 1:
+        raise ValueError("Accepted results mix incompatible predictive-telemetry protocols")
+    # The previous smoke's accepted records predate this protocol. They are
+    # intentionally preserved but cannot be continued under a new manifest.
+    has_legacy_rows = protocol_counts.get("legacy_unavailable", 0) > 0
+    if populated_protocols and has_legacy_rows:
+        raise ValueError("Runtime accepted rows mix legacy unavailable and predictive telemetry")
+    return protocol_counts
 
 
 def _new_runtime_adapter(model_path: Path):
@@ -836,12 +943,21 @@ def cmd_validate(args: argparse.Namespace) -> int:
     # all checked before reporting accumulated results.
     if getattr(args, "runtime_artifact_root", None):
         root, manifest, cohort, rows, bundles, local_model = _validate_runtime_namespace(
-            args, smoke=False
+            args,
+            smoke=False,
+            allow_legacy_telemetry=True,
+            validate_results=False,
         )
         del cohort, bundles
         manifest_path = _runtime_manifest_path(root)
         store = DurableResultStore(root, manifest_path, manifest["manifest_hash"])
         accepted = store.accepted_rows()
+        telemetry_protocol_counts = _validate_result_telemetry(
+            root,
+            manifest,
+            allow_legacy=True,
+            legacy_manifest=(manifest.get("entropy_telemetry") != _telemetry_manifest_contract()),
+        )
         telemetry_warnings = []
         for item in accepted:
             result = item["result"]
@@ -869,6 +985,17 @@ def cmd_validate(args: argparse.Namespace) -> int:
                 "accepted": len(accepted),
                 "entropy_valid": False,
                 "telemetry_warnings": telemetry_warnings,
+                "predictive_telemetry_protocol_counts": telemetry_protocol_counts,
+                "predictive_telemetry_valid_records": sum(
+                    isinstance(item.get("result"), Mapping)
+                    and item["result"].get("telemetry_valid") is True
+                    for item in accepted
+                ),
+                "predictive_telemetry_invalid_records": sum(
+                    isinstance(item.get("result"), Mapping)
+                    and item["result"].get("telemetry_valid") is False
+                    for item in accepted
+                ),
             }
         )
         return 0
@@ -936,6 +1063,32 @@ def cmd_export(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_census(args: argparse.Namespace) -> int:
+    """Build and atomically write the CPU-only full prompt census."""
+
+    _, dataset_path, database_path, _ = _args_paths(args)
+    output = validate_census_output_path(_path(args.output))
+    if output.exists():
+        raise ValueError(f"Refusing to overwrite an existing census report: {output}")
+    report = build_census_report(
+        dataset_path=dataset_path,
+        database_path=database_path,
+        tokenizer_path=_path(args.tokenizer),
+    )
+    report_hash = write_census_report(output, report)
+    _json_dump(
+        {
+            "command": "census",
+            "path": str(output),
+            "report_sha256": report_hash,
+            "counts": report["counts"],
+            "distributions": report["distributions"],
+            "model_inference": "not_run",
+        }
+    )
+    return 0
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="r1-mlx")
     parser.add_argument("--model", default=str(DEFAULT_MODEL))
@@ -957,6 +1110,9 @@ def _parser() -> argparse.ArgumentParser:
         command.add_argument("--manifest-hash")
     export = sub.choices["export"]
     export.add_argument("--output")
+    census = sub.add_parser("census")
+    census.add_argument("--tokenizer", default=str(DEFAULT_MODEL / "tokenizer.json"))
+    census.add_argument("--output", required=True)
     freeze_runtime = sub.add_parser("freeze-runtime")
     freeze_runtime.add_argument("--source-manifest-hash", required=True)
     for name in ("smoke", "run"):
@@ -981,6 +1137,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "status": cmd_status,
         "validate": cmd_validate,
         "export": cmd_export,
+        "census": cmd_census,
         "freeze-runtime": cmd_freeze_runtime,
         "smoke": cmd_smoke,
         "run": cmd_run,
