@@ -9,6 +9,10 @@ from typing import Any, Callable, Mapping, Sequence
 
 from .checkpoint import CheckpointError, DurableResultStore
 from .identity import query_input_identity
+import hashlib, json
+
+def _stable(value: Any) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 from .protocol import (
     ARM_OFF,
     ARM_ON,
@@ -19,6 +23,7 @@ from .protocol import (
     attach_token_ids,
     build_prompt,
 )
+from .prepared import PreparedInput
 
 
 class RunError(RuntimeError):
@@ -362,3 +367,76 @@ def run_pairs(
         terminal=terminal,
         failed=failed,
     )
+
+@_serialized_run
+def run_prepared(inputs: Sequence[PreparedInput], *, store: DurableResultStore,
+                 adapter: Any, model_identity: Mapping[str, Any],
+                 tokenizer_identity: Mapping[str, Any], decoding: Mapping[str, Any],
+                 manifest_hash: str, stop_after: int | None = None,
+                 on_result: Callable[[dict[str, Any]], None] | None = None) -> dict[str, int]:
+    """Sequentially generate from an already complete immutable input set."""
+    if manifest_hash != store.manifest_hash:
+        raise RunError("Runner manifest hash does not match the checkpoint store")
+    if not inputs:
+        return _counts(generated=0, skipped=0, terminal=0, failed=0)
+    store.recover_inflight()
+    # Do not load MLX on a completed/no-op resume.  For an unfinished run,
+    # this remains the single load boundary before the first slot.
+    states = store.operation_states([item.query_id for item in inputs], [ARM_ON, ARM_OFF])
+    pending = [item for item in inputs if not store.is_complete_operation_status(states.get((item.query_id, item.arm_id)))]
+    if not pending:
+        return _counts(generated=0, skipped=len(inputs), terminal=0, failed=0)
+    _adapter_ready(adapter)
+    generated = skipped = terminal = failed = processed = 0
+    for item in inputs:
+        identity = item.input_hash
+        accepted = store.accepted(item.query_id, item.arm_id, identity)
+        if accepted is not None:
+            skipped += 1
+            if on_result: on_result(accepted["result"])
+            continue
+        if store.is_complete_operation_status(states.get((item.query_id, item.arm_id))):
+            skipped += 1
+            continue
+        if stop_after is not None and processed >= stop_after:
+            return _counts(generated=generated, skipped=skipped, terminal=terminal, failed=failed, stopped=1)
+        attempt = store.begin_attempt(item.query_id, item.arm_id, identity)
+        base = {"protocol_version": PROTOCOL_VERSION, "prompt_version": PROMPT_VERSION,
+                "query_id": item.query_id, "arm_id": item.arm_id, "prompt": item.prompt,
+                "prompt_sha256": item.prompt_hash, "token_ids": list(item.token_ids),
+                "token_ids_sha256": item.token_ids_hash, "input_token_count": item.prompt_token_count,
+                "input_identity": identity, "prepared_input_hash": identity,
+                "model_identity": dict(model_identity), "tokenizer_identity": dict(tokenizer_identity),
+                "decoding": dict(decoding), "activation": item.activation,
+                "static_relation_count": item.static_relation_count}
+        base["stable_result_id"] = _stable({"input_identity": identity, "prompt_sha256": item.prompt_hash})
+        if item.status == "failed":
+            result = {**base, "status": "FAILED_TERMINAL", "error_message": item.failure_reason}
+            store.record_terminal(attempt_id=attempt, query_id=item.query_id, arm_id=item.arm_id,
+                                  input_identity=identity, status="FAILED_TERMINAL", result=result)
+            terminal += 1; processed += 1
+            if on_result: on_result(result)
+            continue
+        started = time.perf_counter(); store.mark_generation_started(attempt); generated += 1
+        try:
+            value = adapter.generate(item.prompt)
+            result = {**base, **(dict(value) if isinstance(value, Mapping) else {"text": str(value)})}
+            result.setdefault("status", "SUCCESS"); result["duration_seconds"] = time.perf_counter() - started
+            if result["status"] == "SUCCESS":
+                store.commit_success(attempt_id=attempt, query_id=item.query_id, arm_id=item.arm_id,
+                                     input_identity=identity, result=result)
+            else:
+                store.record_terminal(attempt_id=attempt, query_id=item.query_id, arm_id=item.arm_id,
+                                      input_identity=identity, status=str(result["status"]), result=result)
+                terminal += 1
+            processed += 1
+            if on_result: on_result(result)
+        except Exception as exc:
+            result = {**base, "status": "FAILED_RETRYABLE", "error_class": type(exc).__name__,
+                      "error_message": str(exc), "duration_seconds": time.perf_counter() - started}
+            store.record_terminal(attempt_id=attempt, query_id=item.query_id, arm_id=item.arm_id,
+                                  input_identity=identity, status="FAILED_RETRYABLE", result=result,
+                                  error_class=type(exc).__name__, error_message=str(exc))
+            failed += 1; processed += 1
+            if on_result: on_result(result)
+    return _counts(generated=generated, skipped=skipped, terminal=terminal, failed=failed)
