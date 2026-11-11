@@ -377,8 +377,10 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     _database_metadata(database_path)
     evidence = ReadOnlyEvidenceStore(database_path, expected_sha256=DATABASE_SHA256, snapshot_id=DATABASE_SNAPSHOT_ID)
     rows, cohort_meta = prepare_cohort(records, evidence)
-    selected = select_smoke_rows(rows)
-    cohort_payload = _cohort_payload(rows)
+    answerable_only = bool(getattr(args, "answerable_only", False))
+    selected_rows = [row for row in rows if row.answerability_label == "answerable"] if answerable_only else rows
+    selected = select_smoke_rows(rows) if not answerable_only else []
+    cohort_payload = _cohort_payload(selected_rows)
     cohort_payload["population_manifest"] = cohort_meta
     cohort_payload["smoke_query_ids"] = [row.query_id for row in selected]
     cohort_hash = _write_cohort(_cohort_path(artifact_root), cohort_payload)
@@ -387,7 +389,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     model = _verified_model_identity(model_path)
     manifest = _build_manifest(args, model=model, cohort_hash=cohort_hash)
     manifest_hash = write_manifest(_manifest_path(artifact_root), manifest)
-    _json_dump({"manifest_path": str(_manifest_path(artifact_root)), "manifest_hash": manifest_hash, "cohort_path": str(_cohort_path(artifact_root)), "cohort_hash": cohort_hash, "smoke_query_ids": [row.query_id for row in selected], "population": {"eligible": len(rows), "activation_positive": sum(row.activation_positive for row in rows), "activation_negative": sum(not row.activation_positive for row in rows)}})
+    _json_dump({"manifest_path": str(_manifest_path(artifact_root)), "manifest_hash": manifest_hash, "cohort_path": str(_cohort_path(artifact_root)), "cohort_hash": cohort_hash, "smoke_query_ids": [row.query_id for row in selected], "population": {"eligible": len(selected_rows), "activation_positive": sum(row.activation_positive for row in selected_rows), "activation_negative": sum(not row.activation_positive for row in selected_rows)}})
     return 0
 
 
@@ -423,6 +425,7 @@ def _load_prepared_namespace(
     expected_hash: str | None,
     manifest_path: Path | None = None,
     cohort_path: Path | None = None,
+    full: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     source_root = source_root.expanduser().resolve()
     manifest_path = (manifest_path or _manifest_path(source_root)).expanduser().resolve()
@@ -443,10 +446,10 @@ def _load_prepared_namespace(
         raise ValueError("Pre-runtime manifest/cohort identity mismatch")
     if cohort.get("experiment_manifest_hash") not in (None, manifest["manifest_hash"]):
         raise ValueError("Pre-runtime cohort is linked to another experiment manifest")
-    if tuple(cohort.get("smoke_query_ids", ())) != SMOKE_QUERY_IDS:
+    if not full and tuple(cohort.get("smoke_query_ids", ())) != SMOKE_QUERY_IDS:
         raise ValueError("Pre-runtime smoke IDs differ from the frozen outcome-blind cohort")
     row_ids = [str(row.get("query_id")) for row in cohort.get("rows", [])]
-    if len(row_ids) != len(set(row_ids)) or not set(SMOKE_QUERY_IDS).issubset(row_ids):
+    if len(row_ids) != len(set(row_ids)) or (not full and not set(SMOKE_QUERY_IDS).issubset(row_ids)):
         raise ValueError("Pre-runtime cohort is missing or duplicates frozen query IDs")
     return manifest, cohort
 
@@ -529,15 +532,22 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
         raise ValueError("Runtime and pre-runtime artifact roots must be distinct")
     _assert_empty_runtime_root(runtime_root)
     source_manifest, source_cohort = _load_prepared_namespace(
-        source_root, expected_hash=args.source_manifest_hash
+        source_root, expected_hash=args.source_manifest_hash, full=args.full
     )
+    source_cohort_hash = source_cohort["cohort_hash"]
+    if args.full:
+        source_cohort = dict(source_cohort)
+        source_cohort["rows"] = [row for row in source_cohort["rows"] if row.get("answerability_label") == "answerable"]
+        source_cohort.pop("smoke_query_ids", None)
+        source_cohort["cohort_hash"] = None
+        source_cohort["experiment_manifest_hash"] = source_manifest["manifest_hash"]
     records, evidence, local_model = _validate_frozen_inputs(
         model_path=model_path,
         dataset_path=dataset_path,
         database_path=database_path,
         manifest=source_manifest,
     )
-    _, bundles = _bundle_rows(records, source_cohort, evidence, smoke=True)
+    _, bundles = _bundle_rows(records, source_cohort, evidence, smoke=not args.full)
     del bundles  # Evidence activation proof is the precondition; generation is not run here.
     current_runtime = _current_pinned_runtime_identity()
     root_manifest = {
@@ -551,7 +561,8 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
         "decoding": {"temperature": 0.0, "max_new_tokens": OUTPUT_TOKEN_LIMIT, "strategy": "greedy"},
         "input_token_limit": INPUT_TOKEN_LIMIT,
         "output_token_limit": OUTPUT_TOKEN_LIMIT,
-        "smoke_generation_budget": SMOKE_GENERATION_BUDGET,
+        "smoke_generation_budget": 0 if args.full else SMOKE_GENERATION_BUDGET,
+        "full_primary_cohort": bool(args.full),
         "cohort_seed": COHORT_SEED,
         "model_path": str(model_path),
         "model": local_model,
@@ -561,12 +572,12 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
         "dataset_path": str(dataset_path),
         "dataset_sha256": DATASET_SHA256,
         "cohort_path": str(_runtime_cohort_path(runtime_root)),
-        "cohort_hash": source_cohort["cohort_hash"],
+        "cohort_hash": None,
         "source_pre_runtime": {
             "manifest_path": str(_manifest_path(source_root)),
             "manifest_hash": source_manifest["manifest_hash"],
             "cohort_path": str(_cohort_path(source_root)),
-            "cohort_hash": source_cohort["cohort_hash"],
+            "cohort_hash": source_cohort_hash,
         },
         "runtime": current_runtime,
         "network_access": "forbidden",
@@ -579,8 +590,7 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
     # failure during a previous freeze is never silently resumed or overwritten.
     runtime_root.mkdir(parents=True, exist_ok=True)
     cohort_hash = _write_cohort(_runtime_cohort_path(runtime_root), dict(source_cohort))
-    if cohort_hash != source_cohort["cohort_hash"]:
-        raise ValueError("Copied runtime cohort hash differs from prepared cohort")
+    root_manifest["cohort_hash"] = cohort_hash
     manifest_hash = write_manifest(_runtime_manifest_path(runtime_root), root_manifest)
     _json_dump({
         "runtime_root": str(runtime_root),
@@ -588,7 +598,8 @@ def cmd_freeze_runtime(args: argparse.Namespace) -> int:
         "manifest_hash": manifest_hash,
         "cohort_path": str(_runtime_cohort_path(runtime_root)),
         "cohort_hash": cohort_hash,
-        "smoke_query_ids": list(SMOKE_QUERY_IDS),
+        "planned_slots": len(source_cohort.get("rows", [])) * 2,
+        "full_primary_cohort": bool(args.full),
         "runtime": current_runtime,
         "generation_started": False,
     })
@@ -670,9 +681,23 @@ def _validate_runtime_namespace(
     ):
         if source_manifest.get(key) != manifest.get(key):
             raise ValueError(f"Runtime manifest differs from linked source field: {key}")
-    if source_cohort.get("cohort_hash") != cohort.get("cohort_hash"):
+    if manifest.get("full_primary_cohort"):
+        source_rows = source_cohort.get("rows", [])
+        runtime_rows = cohort.get("rows", [])
+        expected_ids = [str(row.get("query_id")) for row in source_rows
+                        if row.get("answerability_label") == "answerable"]
+        actual_ids = [str(row.get("query_id")) for row in runtime_rows]
+        if len(expected_ids) != 300 or len(set(expected_ids)) != 300:
+            raise ValueError("Frozen source cohort does not contain exactly 300 unique answerable queries")
+        if actual_ids != expected_ids:
+            raise ValueError("Runtime cohort is not the deterministic answerable subset of its source cohort")
+        if any(row.get("answerability_label") != "answerable" for row in runtime_rows):
+            raise ValueError("Runtime cohort contains a non-answerable query")
+        if len(actual_ids) != 300 or len(set(actual_ids)) != 300:
+            raise ValueError("Runtime cohort must contain exactly 300 unique queries")
+    elif source_cohort.get("cohort_hash") != cohort.get("cohort_hash"):
         raise ValueError("Runtime cohort no longer matches its prepared source cohort")
-    if cohort.get("smoke_query_ids") != list(SMOKE_QUERY_IDS):
+    if not manifest.get("full_primary_cohort") and cohort.get("smoke_query_ids") != list(SMOKE_QUERY_IDS):
         raise ValueError("Runtime cohort smoke IDs do not match frozen protocol IDs")
     records, evidence, local_model = _validate_frozen_inputs(
         model_path=model_path,
@@ -922,6 +947,8 @@ def cmd_activation(args: argparse.Namespace) -> int:
 
 def _open_store(args: argparse.Namespace) -> DurableResultStore:
     _, _, _, artifact_root = _args_paths(args)
+    if getattr(args, "runtime_artifact_root", None):
+        artifact_root = _runtime_artifact_root(args)
     manifest_path = _manifest_path(artifact_root)
     if args.manifest_hash:
         require_manifest(manifest_path, args.manifest_hash)
@@ -1253,7 +1280,8 @@ def _parser() -> argparse.ArgumentParser:
     sub.add_parser("doctor")
     preflight = sub.add_parser("preflight")
     preflight.add_argument("--require-artifacts", action="store_true")
-    sub.add_parser("prepare")
+    prepare = sub.add_parser("prepare")
+    prepare.add_argument("--answerable-only", action="store_true")
     prepare_contexts = sub.add_parser("prepare-contexts", help="Persist frozen generator inputs without loading model weights")
     prepare_contexts.add_argument("--manifest-hash", required=True)
     judge_inputs = sub.add_parser("prepare-judge-inputs")
@@ -1269,6 +1297,7 @@ def _parser() -> argparse.ArgumentParser:
     generation = sub.add_parser("generate-prepared", help="Sequential generation from immutable prepared inputs")
     generation.add_argument("--manifest-hash", required=True)
     generation.add_argument("--stop-after", type=int)
+    generation.add_argument("--max-new-slots", type=int, dest="stop_after")
     export = sub.choices["export"]
     export.add_argument("--output")
     census = sub.add_parser("census")
@@ -1276,6 +1305,7 @@ def _parser() -> argparse.ArgumentParser:
     census.add_argument("--output", required=True)
     freeze_runtime = sub.add_parser("freeze-runtime")
     freeze_runtime.add_argument("--source-manifest-hash", required=True)
+    freeze_runtime.add_argument("--full", action="store_true")
     for name in ("smoke", "run"):
         execution = sub.add_parser(name)
         execution.add_argument("--manifest-hash", required=True)
