@@ -1063,6 +1063,55 @@ def cmd_export(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_prepare_contexts(args: argparse.Namespace) -> int:
+    """Materialize frozen prompts without loading generator weights."""
+    from tokenizers import Tokenizer
+    from .census import _tokenizer_ids
+    from .prepared import make, prepare_all, read
+
+    model_path, dataset_path, database_path, _ = _args_paths(args)
+    root = _runtime_artifact_root(args)
+    manifest_path = _runtime_manifest_path(root)
+    manifest = require_manifest(manifest_path, args.manifest_hash)
+    cohort = _load_cohort(_runtime_cohort_path(root))
+    if manifest.get("schema_version") != "r1-mlx-corrected-runtime-1" or manifest.get("protocol_version") != PROTOCOL_VERSION or manifest.get("prompt_version") != PROMPT_VERSION or manifest.get("intervention") != "static_graph_relations_only" or manifest.get("arms") != [ARM_ON, ARM_OFF]:
+        raise ValueError("Unsupported frozen runtime protocol or intervention")
+    if manifest.get("cohort_hash") != cohort.get("cohort_hash"):
+        raise ValueError("Frozen manifest/cohort identity mismatch")
+    records, evidence, _ = _validate_frozen_inputs(model_path=model_path, dataset_path=dataset_path, database_path=database_path, manifest=manifest)
+    by_id = {str(row["query_id"]): row for row in records}
+    tokenizer = Tokenizer.from_file(str(model_path / "tokenizer.json"))
+    bundles: dict[str, Any] = {}
+
+    def build(row: Mapping[str, Any], arm: str):
+        query_id = str(row["query_id"])
+        if query_id not in bundles:
+            if query_id not in by_id:
+                raise ValueError(f"Frozen cohort query missing from dataset: {query_id}")
+            bundle = evidence.evidence_for_record(by_id[query_id])
+            on, off = build_prompt(bundle, ARM_ON), build_prompt(bundle, ARM_OFF)
+            if bool(row.get("activation_positive")) != (on.trace.activation_status == "positive") or on.trace.non_target_fingerprint != off.trace.non_target_fingerprint:
+                raise ValueError(f"Activation or non-target evidence mismatch for {query_id}")
+            bundles[query_id] = (bundle, {ARM_ON: on, ARM_OFF: off})
+        bundle, builds = bundles[query_id]
+        prompt = builds[arm].prompt
+        return make(query_id, arm, prompt, _tokenizer_ids(tokenizer, prompt),
+                    manifest_hash=args.manifest_hash, question=bundle.question,
+                    evidence_ids=tuple(chunk.chunk_id for chunk in bundle.chunks),
+                    activation=bundle.activation_positive, static_relation_count=len(bundle.relations),
+                    evidence_identity=object_sha256(asdict(bundle)))
+
+    rows = cohort["rows"]
+    items = [(str(row["query_id"]), arm, lambda row=row, arm=arm: build(row, arm))
+             for row in rows for arm in (ARM_ON, ARM_OFF)]
+    output = root / "prepared_inputs"
+    counts = prepare_all(items, output, manifest_path=manifest_path, manifest_hash=args.manifest_hash, cohort=cohort)
+    failures = sum(read(output / f"{q}__{arm}.json").status != "prepared" for q, arm, _ in items)
+    _json_dump({"prepared": counts["prepared"], "skipped": counts["skipped"], "failed": failures,
+                "remaining": failures, "total": len(items), "path": str(output)})
+    return 1 if failures else 0
+
+
 def cmd_census(args: argparse.Namespace) -> int:
     """Build and atomically write the CPU-only full prompt census."""
 
@@ -1104,6 +1153,8 @@ def _parser() -> argparse.ArgumentParser:
     preflight = sub.add_parser("preflight")
     preflight.add_argument("--require-artifacts", action="store_true")
     sub.add_parser("prepare")
+    prepare_contexts = sub.add_parser("prepare-contexts", help="Persist frozen generator inputs without loading model weights")
+    prepare_contexts.add_argument("--manifest-hash", required=True)
     sub.add_parser("activation")
     for name in ("status", "validate", "export"):
         command = sub.add_parser(name)
@@ -1133,6 +1184,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "doctor": cmd_doctor,
         "preflight": cmd_preflight,
         "prepare": cmd_prepare,
+        "prepare-contexts": cmd_prepare_contexts,
         "activation": cmd_activation,
         "status": cmd_status,
         "validate": cmd_validate,
