@@ -1256,6 +1256,12 @@ def _parser() -> argparse.ArgumentParser:
     sub.add_parser("prepare")
     prepare_contexts = sub.add_parser("prepare-contexts", help="Persist frozen generator inputs without loading model weights")
     prepare_contexts.add_argument("--manifest-hash", required=True)
+    judge_inputs = sub.add_parser("prepare-judge-inputs")
+    judge_inputs.add_argument("--manifest-hash", required=True)
+    for name in ("run-luna", "run-deepseek"):
+        p = sub.add_parser(name); p.add_argument("--manifest-hash", required=True); p.add_argument("--stop-after", type=int); p.add_argument("--max-attempts", type=int, default=2)
+    judge_status = sub.add_parser("judge-status"); judge_status.add_argument("--judge", choices=("luna", "deepseek"), required=True)
+    judge_export = sub.add_parser("export-judge-scores"); judge_export.add_argument("--judge", choices=("luna", "deepseek"), required=True); judge_export.add_argument("--output", required=True)
     sub.add_parser("activation")
     for name in ("status", "validate", "export"):
         command = sub.add_parser(name)
@@ -1284,6 +1290,13 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    if args.command in {"prepare-judge-inputs", "run-luna", "run-deepseek", "judge-status", "export-judge-scores"}:
+        from . import judging
+        root = _runtime_artifact_root(args)
+        if args.command == "prepare-judge-inputs": return _json_dump({"prepared": judging.prepare(root, args.manifest_hash)}) or 0
+        if args.command.startswith("run-"): return _json_dump({"accepted": judging.run(root, args.command[4:], args.max_attempts, args.stop_after)}) or 0
+        if args.command == "judge-status": return _json_dump(judging.status(root, args.judge)) or 0
+        return _json_dump({"exported": judging.export(root, args.judge, args.output)}) or 0
     handlers = {
         "doctor": cmd_doctor,
         "preflight": cmd_preflight,
