@@ -15,6 +15,7 @@ from pathlib import Path
 import platform
 import shutil
 import sys
+import time
 from typing import Any, Mapping, Sequence
 
 from ablation_portability.dataset.loader import load_frozen_dataset
@@ -930,7 +931,15 @@ def _open_store(args: argparse.Namespace) -> DurableResultStore:
 
 def cmd_status(args: argparse.Namespace) -> int:
     store = _open_store(args)
-    _json_dump(store.progress())
+    progress = store.progress()
+    manifest = require_manifest(_runtime_manifest_path(_runtime_artifact_root(args)), args.manifest_hash)
+    cohort = _load_cohort(_runtime_cohort_path(_runtime_artifact_root(args)))
+    total = len(cohort.get("rows", [])) * 2
+    progress.update({"manifest_hash": manifest["manifest_hash"], "preparation_total": total,
+                     "generation_total": total, "remaining": total - progress.get("accepted", 0),
+                     "completed_pairs": progress.get("accepted", 0) // 2,
+                     "state": "complete" if progress.get("accepted", 0) >= total else "in_progress"})
+    _json_dump(progress)
     return 0
 
 
@@ -1165,23 +1174,42 @@ def cmd_generate_prepared(args: argparse.Namespace) -> int:
     if progress.get("accepted", 0) >= total:
         _json_dump({"stage": "generation", "total": total, "accepted": progress["accepted"], "generation_calls": store.generation_calls(), "model_loaded": False, "result": {"generated": 0, "skipped": total}})
         return 0
+    print("R1 MLX | GENERATION | validating prepared inputs: complete", file=sys.stderr, flush=True)
+    print("R1 MLX | GENERATION | loading model: started", file=sys.stderr, flush=True)
+    started = time.monotonic()
     adapter = _new_runtime_adapter(Path(manifest["model_path"]))
+    load_elapsed = time.monotonic() - started
+    print(f"R1 MLX | GENERATION | loading model: complete ({load_elapsed:.1f}s)", file=sys.stderr, flush=True)
     from .runner import run_prepared
     completed = progress.get("accepted", 0)
-    def report(_result: dict[str, Any]) -> None:
+    preexisting = {(row["query_id"], row["arm_id"]) for row in store.accepted_rows()}
+    generated_here = 0
+    def report(result: dict[str, Any]) -> None:
         nonlocal completed
-        completed += 1
-        print(f"R1 | GENERATION {completed}/{total} | accepted={completed} | remaining={total-completed}", file=sys.stderr, flush=True)
+        nonlocal generated_here
+        key = (result.get("query_id"), result.get("arm_id"))
+        if key not in preexisting:
+            preexisting.add(key)
+            completed += 1
+            generated_here += 1
+        elapsed = time.monotonic() - started
+        rate = generated_here / elapsed * 60 if elapsed > 0 else 0.0
+        eta = (total - completed) / (generated_here / elapsed) if generated_here and elapsed > 0 else None
+        pairs = sum(1 for q in {x.query_id for x in inputs} if all((q, a) in preexisting for a in (ARM_ON, ARM_OFF)))
+        eta_text = f"~{int(eta // 60):02d}:{int(eta % 60):02d}" if eta is not None else "calculating..."
+        print(f"R1 MLX | GENERATION | {completed}/{total} ({100*completed/total:.1f}%) | pairs={pairs} | accepted={completed} | retryable={store.progress().get('failed_retryable', 0)} | terminal={store.progress().get('failed_terminal', 0)} | remaining={total-completed} | current={result.get('query_id')}/{result.get('arm_id')} | elapsed={int(elapsed//60):02d}:{int(elapsed%60):02d} | throughput={rate:.1f}/min | ETA={eta_text} | checkpoint=persisted", file=sys.stderr, flush=True)
     try:
         result = run_prepared(inputs, store=store, adapter=adapter, model_identity=manifest["model"],
                               tokenizer_identity=_tokenizer_identity(manifest["model"]), decoding=manifest["decoding"],
                               manifest_hash=args.manifest_hash, stop_after=args.stop_after, on_result=report)
     except KeyboardInterrupt:
-        print("Generation interrupted; accepted checkpoints are preserved.", file=sys.stderr)
+        current = store.progress()
+        print(f"R1 MLX | GENERATION | interrupted | accepted={current.get('accepted', 0)} | remaining={total-current.get('accepted', 0)} | checkpoint=preserved", file=sys.stderr)
         print("Resume command: " + " ".join(sys.argv), file=sys.stderr)
         return 130
     final = store.progress()
-    _json_dump({"stage": "generation", "total": total, "progress": final, "result": result, "generation_calls": store.generation_calls(), "model_loaded": True})
+    active_elapsed = time.monotonic() - started
+    _json_dump({"stage": "generation", "total": total, "progress": final, "result": result, "generation_calls": store.generation_calls(), "model_loaded": True, "active_elapsed_seconds": active_elapsed, "throughput_per_minute": generated_here / active_elapsed * 60 if active_elapsed else 0.0, "checkpointed_before_start": progress.get("accepted", 0)})
     return 0
 
 

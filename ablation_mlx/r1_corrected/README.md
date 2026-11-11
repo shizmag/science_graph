@@ -497,3 +497,36 @@ study: MLX rather than CUDA/PyTorch, a separately frozen local environment,
 and a local model directory whose config hash differs from the archived config
 lock despite matching weights. Those changes are why its results require a
 new manifest and cannot be silently pooled with October CUDA outputs.
+# Sequential prepared-input generation
+
+Use a new runtime namespace for each frozen experiment. The runtime manifest
+hash binds the cohort, prompt/token inputs, model configuration, and checkpoint
+ledger; do not edit files beneath `prepared_inputs/`.
+
+```bash
+# Readiness and identity checks (CPU-only)
+python3 -m ablation_mlx.r1_corrected.cli --runtime-artifact-root RUNTIME preflight
+
+# Prepare immutable ON/OFF inputs
+python3 -m ablation_mlx.r1_corrected.cli --runtime-artifact-root RUNTIME \
+  prepare-contexts --manifest-hash FROZEN_MANIFEST_HASH
+
+# Sequential MLX generation (one resident model, durable checkpoint per slot)
+python3 -m ablation_mlx.r1_corrected.cli --runtime-artifact-root RUNTIME \
+  generate-prepared --manifest-hash FROZEN_MANIFEST_HASH
+
+# The same command resumes after Ctrl-C; accepted slots are skipped.
+# Inspect progress without loading MLX:
+python3 -m ablation_mlx.r1_corrected.cli --runtime-artifact-root RUNTIME \
+  status --manifest-hash FROZEN_MANIFEST_HASH
+
+# Validate accepted result artifacts
+python3 -m ablation_mlx.r1_corrected.cli --runtime-artifact-root RUNTIME \
+  validate --manifest-hash FROZEN_MANIFEST_HASH
+```
+
+The checkpoint database and atomic result artifacts live in the runtime
+namespace. Preparation is immutable and generation never rebuilds retrieval or
+context. A completed run reports `model_loaded: false` and performs no
+inference. Synthetic tests cover this boundary; real-model telemetry parity
+still requires author-operated MLX execution.
