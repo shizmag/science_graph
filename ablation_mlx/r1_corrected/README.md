@@ -19,6 +19,50 @@ The corrected MLX results must not be merged into the October CUDA ledger or
 described as a retroactive repair of that study.  The July MLX experiment is a
 different experiment and is not used as the source model or database here.
 
+## Prepared-input execution
+
+Run the CPU-only readiness check first, using a new runtime namespace (the
+namespace must already have been created by `freeze-runtime`):
+
+```bash
+python3 -m ablation_mlx.r1_corrected.cli \
+  --runtime-artifact-root RUNTIME_NAMESPACE preflight --require-artifacts
+```
+
+Materialize the immutable prompts and token IDs without loading MLX weights:
+
+```bash
+python3 -m ablation_mlx.r1_corrected.cli \
+  --runtime-artifact-root RUNTIME_NAMESPACE prepare-contexts \
+  --manifest-hash FROZEN_RUNTIME_MANIFEST_HASH
+```
+
+Start sequential generation from those artifacts.  The command validates all
+artifacts before constructing the adapter, then keeps one adapter/model
+resident and checkpoints each accepted slot:
+
+```bash
+python3 -m ablation_mlx.r1_corrected.cli \
+  --runtime-artifact-root RUNTIME_NAMESPACE generate-prepared \
+  --manifest-hash FROZEN_RUNTIME_MANIFEST_HASH
+```
+
+Interrupt with Ctrl-C at any time.  Accepted rows remain durable; rerun the
+same command to resume.  A completed rerun performs no inference and does not
+load the model.  To inspect progress without loading MLX:
+
+```bash
+python3 -m ablation_mlx.r1_corrected.cli \
+  --runtime-artifact-root RUNTIME_NAMESPACE status \
+  --manifest-hash FROZEN_RUNTIME_MANIFEST_HASH
+```
+
+Validate or export accepted results with `validate` and `export` after the
+run.  The checkpoint directory is the runtime namespace itself and contains
+the SQLite ledger plus atomic accepted-result records.  Every row is bound to
+the frozen runtime manifest hash, cohort hash, prepared-input hash, prompt
+hash, and token-ID hash; do not copy artifacts between namespaces.
+
 Frozen inputs:
 
 - Model: `occ-ai/OCC-RAG-1.7B`, archived revision

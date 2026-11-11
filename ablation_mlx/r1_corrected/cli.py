@@ -1111,6 +1111,79 @@ def cmd_prepare_contexts(args: argparse.Namespace) -> int:
                 "remaining": failures, "total": len(items), "path": str(output)})
     return 1 if failures else 0
 
+def _load_complete_prepared_inputs(root: Path, manifest: Mapping[str, Any]) -> list[Any]:
+    """Validate the immutable generation boundary without constructing context."""
+    from .prepared import read
+    if manifest.get("arms") != [ARM_ON, ARM_OFF]:
+        raise ValueError("Prepared generation requires the frozen ON/OFF arm set")
+    cohort = _load_cohort(_runtime_cohort_path(root))
+    if cohort.get("cohort_hash") != manifest.get("cohort_hash"):
+        raise ValueError("Frozen manifest/cohort identity mismatch")
+    rows = cohort.get("rows")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("Frozen cohort has no rows")
+    directory = root / "prepared_inputs"
+    result: list[Any] = []
+    seen: set[tuple[str, str]] = set()
+    for row in rows:
+        query_id = str(row.get("query_id"))
+        for arm in (ARM_ON, ARM_OFF):
+            path = directory / f"{query_id}__{arm}.json"
+            if not path.is_file():
+                raise ValueError(f"Missing prepared-input artifact: {path}")
+            try:
+                item = read(path)
+            except (OSError, TypeError, ValueError) as exc:
+                raise ValueError(f"Invalid prepared-input artifact {path}: {exc}") from exc
+            if item.manifest_hash != manifest["manifest_hash"] or (item.query_id, item.arm_id) != (query_id, arm):
+                raise ValueError(f"Prepared input identity mismatch: {path}")
+            if item.status not in ("prepared", "failed"):
+                raise ValueError(f"Unsupported prepared input status: {path}")
+            key = (item.query_id, item.arm_id)
+            if key in seen:
+                raise ValueError(f"Duplicate prepared input: {key}")
+            seen.add(key)
+            result.append(item)
+    if len(result) != len(rows) * 2:
+        raise ValueError("Prepared-input completeness check failed")
+    return result
+
+def cmd_generate_prepared(args: argparse.Namespace) -> int:
+    root = _runtime_artifact_root(args)
+    manifest_path = _runtime_manifest_path(root)
+    manifest = require_manifest(manifest_path, args.manifest_hash)
+    if manifest.get("schema_version") != "r1-mlx-corrected-runtime-1":
+        raise ValueError("Unsupported runtime manifest schema")
+    if manifest.get("protocol_version") != PROTOCOL_VERSION or manifest.get("prompt_version") != PROMPT_VERSION:
+        raise ValueError("Runtime protocol or prompt version is incompatible")
+    if manifest.get("entropy_telemetry", {}).get("protocol_version") != TELEMETRY_PROTOCOL_VERSION:
+        raise ValueError("Unsupported telemetry protocol")
+    inputs = _load_complete_prepared_inputs(root, manifest)
+    store = DurableResultStore(root, manifest_path, args.manifest_hash)
+    progress = store.progress()
+    total = len(inputs)
+    if progress.get("accepted", 0) >= total:
+        _json_dump({"stage": "generation", "total": total, "accepted": progress["accepted"], "generation_calls": store.generation_calls(), "model_loaded": False, "result": {"generated": 0, "skipped": total}})
+        return 0
+    adapter = _new_runtime_adapter(Path(manifest["model_path"]))
+    from .runner import run_prepared
+    completed = progress.get("accepted", 0)
+    def report(_result: dict[str, Any]) -> None:
+        nonlocal completed
+        completed += 1
+        print(f"R1 | GENERATION {completed}/{total} | accepted={completed} | remaining={total-completed}", file=sys.stderr, flush=True)
+    try:
+        result = run_prepared(inputs, store=store, adapter=adapter, model_identity=manifest["model"],
+                              tokenizer_identity=_tokenizer_identity(manifest["model"]), decoding=manifest["decoding"],
+                              manifest_hash=args.manifest_hash, stop_after=args.stop_after, on_result=report)
+    except KeyboardInterrupt:
+        print("Generation interrupted; accepted checkpoints are preserved.", file=sys.stderr)
+        print("Resume command: " + " ".join(sys.argv), file=sys.stderr)
+        return 130
+    final = store.progress()
+    _json_dump({"stage": "generation", "total": total, "progress": final, "result": result, "generation_calls": store.generation_calls(), "model_loaded": True})
+    return 0
+
 
 def cmd_census(args: argparse.Namespace) -> int:
     """Build and atomically write the CPU-only full prompt census."""
@@ -1159,6 +1232,9 @@ def _parser() -> argparse.ArgumentParser:
     for name in ("status", "validate", "export"):
         command = sub.add_parser(name)
         command.add_argument("--manifest-hash")
+    generation = sub.add_parser("generate-prepared", help="Sequential generation from immutable prepared inputs")
+    generation.add_argument("--manifest-hash", required=True)
+    generation.add_argument("--stop-after", type=int)
     export = sub.choices["export"]
     export.add_argument("--output")
     census = sub.add_parser("census")
@@ -1187,6 +1263,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "prepare-contexts": cmd_prepare_contexts,
         "activation": cmd_activation,
         "status": cmd_status,
+        "generate-prepared": cmd_generate_prepared,
         "validate": cmd_validate,
         "export": cmd_export,
         "census": cmd_census,
