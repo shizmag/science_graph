@@ -1,0 +1,5 @@
+arm,answerable_n,successes,failures,success_rate,all_query_successes,all_query_failures
+B6_full,300,248,52,0.8266666666666667,296,79
+B6_minus_dynamic_graph_expander,300,300,0,1.0,375,0
+B6_minus_parent_deduplication,300,293,7,0.9766666666666667,347,28
+B6_minus_static_graph_context,300,248,52,0.8266666666666667,296,79

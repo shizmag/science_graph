@@ -1,0 +1,67 @@
+{
+  "accepted_by_arm": {
+    "structured_context_off": 300,
+    "structured_context_on": 300
+  },
+  "accepted_hash_failures": [],
+  "accepted_rows": 600,
+  "attempt_active_seconds_sum": 10360.41743183136,
+  "attempt_finished_epoch_max": 1794524273.0999758,
+  "attempt_rows": 600,
+  "attempt_started_epoch_min": 1794513737.30831,
+  "attempt_status_counts": {
+    "SUCCESS": 600
+  },
+  "both_failed_pairs": 0,
+  "by_arm_generation_totals": {
+    "structured_context_off": {
+      "duration_seconds_mean": 16.614779300321825,
+      "duration_seconds_total": 4984.433790096547,
+      "finish_reason_counts": {
+        "length": 4,
+        "stop": 296
+      },
+      "generation_tokens_mean": 324.2866666666667,
+      "generation_tokens_total": 97286,
+      "input_tokens_mean": 598.7733333333333,
+      "input_tokens_total": 179632,
+      "output_tokens_mean": 323.3,
+      "output_tokens_total": 96990,
+      "results": 300,
+      "telemetry_rows_total": 97286
+    },
+    "structured_context_on": {
+      "duration_seconds_mean": 17.85585490140443,
+      "duration_seconds_total": 5356.756470421329,
+      "finish_reason_counts": {
+        "length": 5,
+        "stop": 295
+      },
+      "generation_tokens_mean": 344.99666666666667,
+      "generation_tokens_total": 103499,
+      "input_tokens_mean": 817.29,
+      "input_tokens_total": 245187,
+      "output_tokens_mean": 344.0133333333333,
+      "output_tokens_total": 103204,
+      "results": 300,
+      "telemetry_rows_total": 103499
+    }
+  },
+  "completed_pairs": 300,
+  "duplicate_or_rejected_attempts": 0,
+  "incomplete_slots": 0,
+  "interrupted_attempts": 0,
+  "model_loading_overhead_note": "No separate model-load interval is recorded in the frozen v2 ledger/log; not estimated from generation durations.",
+  "model_loading_overhead_seconds": null,
+  "off_only_successes": 0,
+  "on_only_successes": 0,
+  "planned_slots": 600,
+  "prepared_count": 600,
+  "result_count": 600,
+  "results_with_status_success": 600,
+  "retryable_failures": 0,
+  "terminal_failures": 0,
+  "total_model_generation_attempts": 600,
+  "valid_accepted_hashes": 600,
+  "wall_clock_execution_seconds": 10535.791665792465
+}

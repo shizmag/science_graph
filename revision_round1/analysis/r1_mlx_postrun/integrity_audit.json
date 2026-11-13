@@ -1,0 +1,20 @@
+{
+  "accepted_hash_failures": [],
+  "activation_negative": 22,
+  "activation_positive": 278,
+  "active_non_target_invariant": 278,
+  "active_static_changed": 278,
+  "cohort_hash": "bf4cc128d85d5534e28a5a0804bef0c6eb6ddfed44a1777fc1ad42d050cf7074",
+  "negative_identical_outputs": 22,
+  "negative_identical_prompts": 22,
+  "recomputed_cohort_hash": "bf4cc128d85d5534e28a5a0804bef0c6eb6ddfed44a1777fc1ad42d050cf7074",
+  "recomputed_runtime_manifest_hash": "dffd5b400b86035eb270961496399f90495b122891da9e2e0eb37a9fcc7b4607",
+  "runtime_manifest_hash": "dffd5b400b86035eb270961496399f90495b122891da9e2e0eb37a9fcc7b4607",
+  "telemetry_valid_pairs": 300,
+  "validation_error_count": 0,
+  "validation_errors": [],
+  "warning_count": 1,
+  "warnings": [
+    "cohort experiment_manifest_hash is the pre-runtime source hash, not the v2 runtime hash"
+  ]
+}

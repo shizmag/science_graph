@@ -1,0 +1,99 @@
+{
+  "answerable_arm_table": [
+    {
+      "all_query_failures": 79,
+      "all_query_successes": 296,
+      "answerable_n": 300,
+      "arm": "B6_full",
+      "failures": 52,
+      "success_rate": 0.8266666666666667,
+      "successes": 248
+    },
+    {
+      "all_query_failures": 0,
+      "all_query_successes": 375,
+      "answerable_n": 300,
+      "arm": "B6_minus_dynamic_graph_expander",
+      "failures": 0,
+      "success_rate": 1.0,
+      "successes": 300
+    },
+    {
+      "all_query_failures": 28,
+      "all_query_successes": 347,
+      "answerable_n": 300,
+      "arm": "B6_minus_parent_deduplication",
+      "failures": 7,
+      "success_rate": 0.9766666666666667,
+      "successes": 293
+    },
+    {
+      "all_query_failures": 79,
+      "all_query_successes": 296,
+      "answerable_n": 300,
+      "arm": "B6_minus_static_graph_context",
+      "failures": 52,
+      "success_rate": 0.8266666666666667,
+      "successes": 248
+    }
+  ],
+  "answerable_n": 300,
+  "archive": "/Users/vladimirkasterin/python/graph/graphs/run_20261020T065029857103Z_OCC-RAG-1.7B_CUDA_ABLATION",
+  "arms": 14,
+  "failed_or_partial_operations": 985,
+  "operation_rows": 5250,
+  "paired_comparisons": [
+    {
+      "arm_successes": 300,
+      "bootstrap_ci95_success_difference_full_minus_arm": [
+        -0.21666666666666667,
+        -0.13
+      ],
+      "comparison": "B6_full vs B6_minus_dynamic_graph_expander",
+      "full_successes": 248,
+      "mcnemar": {
+        "discordant": 52,
+        "exact_two_sided_p": 4.440892098500626e-16,
+        "on_failure_off_success": 52,
+        "on_success_off_failure": 0,
+        "statistic_uncorrected": 52.0
+      }
+    },
+    {
+      "arm_successes": 293,
+      "bootstrap_ci95_success_difference_full_minus_arm": [
+        -0.19,
+        -0.11
+      ],
+      "comparison": "B6_full vs B6_minus_parent_deduplication",
+      "full_successes": 248,
+      "mcnemar": {
+        "discordant": 45,
+        "exact_two_sided_p": 5.684341886080802e-14,
+        "on_failure_off_success": 45,
+        "on_success_off_failure": 0,
+        "statistic_uncorrected": 45.0
+      }
+    },
+    {
+      "arm_successes": 248,
+      "bootstrap_ci95_success_difference_full_minus_arm": [
+        0.0,
+        0.0
+      ],
+      "comparison": "B6_full vs B6_minus_static_graph_context",
+      "full_successes": 248,
+      "mcnemar": {
+        "discordant": 0,
+        "exact_two_sided_p": 1.0,
+        "on_failure_off_success": 0,
+        "on_success_off_failure": 0,
+        "statistic_uncorrected": 0.0
+      }
+    }
+  ],
+  "planned_operations": 5250,
+  "queries": 375,
+  "static_prompt_identity_note": "B6_minus_static_graph_context and B6_full have identical canonical result hashes for successful paired rows in the archived anchor; the archive marks intervention integrity incomplete.",
+  "successful_operations": 4265
+}

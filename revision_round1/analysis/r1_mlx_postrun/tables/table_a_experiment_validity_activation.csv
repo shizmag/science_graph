@@ -1,0 +1,6 @@
+item,ON,OFF,total,notes
+planned generation slots,300,300,600,durable ledger
+accepted successful generations,300,300,600,all accepted hashes valid
+activation-positive intervention,278,NA,278,static relation section changed
+activation-negative controls,22,22,22,prompts and outputs identical
+valid matched telemetry pairs,300,300,300,r1-mlx-predictive-distribution-v1

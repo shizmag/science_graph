@@ -1,0 +1,1 @@
+Figures were not rendered because the optional matplotlib dependency was unavailable: ModuleNotFoundError: No module named 'matplotlib'. The audit remains fully reproducible; install matplotlib and rerun the script to render PNGs.

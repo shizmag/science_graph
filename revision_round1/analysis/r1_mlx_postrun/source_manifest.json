@@ -1,0 +1,11 @@
+{
+  "analysis_script": "/Volumes/happy-disk/codex-worktrees/r1-mlx-structured-context/revision_round1/analysis/r1_mlx_postrun/scripts/audit_r1_mlx.py",
+  "bootstrap_resamples": 10000,
+  "cohort_manifest_sha256": "e37501c53cadf446d7bfbd227c7e632c64b47901609d411ad77b0b85e321ec77",
+  "cuda_archive": "/Users/vladimirkasterin/python/graph/graphs/run_20261020T065029857103Z_OCC-RAG-1.7B_CUDA_ABLATION",
+  "offline_only": true,
+  "runtime": "/Volumes/happy-disk/codex-worktrees/r1-mlx-structured-context/revision_round1/experiments/r1_mlx_corrected_runtime_2026-11-12_full_v2",
+  "runtime_manifest_sha256": "947dcaa2b46a15ae393e1136b8a215c929e930136bb8cd9b72e8681942ef91e9",
+  "seed": 20261113,
+  "sqlite_sha256": "fc52a7e68c3ea5848342b03b8028df15812f32c1cd7d1578e7538978f7cafd5c"
+}
