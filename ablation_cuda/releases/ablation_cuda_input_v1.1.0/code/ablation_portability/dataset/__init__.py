@@ -1,1 +1,0 @@
-"""Frozen query manifest loader."""
