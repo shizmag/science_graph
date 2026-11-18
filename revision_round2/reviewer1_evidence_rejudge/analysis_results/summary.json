@@ -1,0 +1,3925 @@
+{
+  "status": "PENDING RESULTS",
+  "planned": 320,
+  "accepted": 297,
+  "status_counts": {
+    "accepted": 297,
+    "judge_missing": 23
+  },
+  "generation_status_counts": {
+    "success": 160
+  },
+  "seed": 20261116,
+  "bootstrap_resamples": 10000,
+  "metrics": {
+    "F": {
+      "common_ids": [
+        "pubmedqa_10173769",
+        "pubmedqa_10331115",
+        "pubmedqa_10381996",
+        "pubmedqa_10759659",
+        "pubmedqa_10966943",
+        "pubmedqa_11035130",
+        "pubmedqa_11500608",
+        "pubmedqa_11567820",
+        "pubmedqa_12626177",
+        "pubmedqa_14518645",
+        "pubmedqa_14627582",
+        "pubmedqa_15137012",
+        "pubmedqa_15703931",
+        "pubmedqa_16097998",
+        "pubmedqa_16392897",
+        "pubmedqa_16465002",
+        "pubmedqa_16498158",
+        "pubmedqa_16772913",
+        "pubmedqa_17595200",
+        "pubmedqa_17971187",
+        "pubmedqa_18619710",
+        "pubmedqa_18926458",
+        "pubmedqa_19406119",
+        "pubmedqa_19913785",
+        "pubmedqa_20187289",
+        "pubmedqa_20337202",
+        "pubmedqa_20401819",
+        "pubmedqa_20497880",
+        "pubmedqa_20577124",
+        "pubmedqa_21214884",
+        "pubmedqa_21823940",
+        "pubmedqa_21873082",
+        "pubmedqa_21889895",
+        "pubmedqa_22117569",
+        "pubmedqa_22497340",
+        "pubmedqa_22504515",
+        "pubmedqa_22532370",
+        "pubmedqa_23412195",
+        "pubmedqa_23495128",
+        "pubmedqa_23899611",
+        "pubmedqa_24139705",
+        "pubmedqa_24298614",
+        "pubmedqa_24336869",
+        "pubmedqa_24516646",
+        "pubmedqa_24625433",
+        "pubmedqa_24671913",
+        "pubmedqa_24684514",
+        "pubmedqa_24747511",
+        "pubmedqa_24748473",
+        "pubmedqa_24827404",
+        "pubmedqa_24901580",
+        "pubmedqa_25475395",
+        "pubmedqa_25756710",
+        "pubmedqa_26348845",
+        "pubmedqa_26449554",
+        "pubmedqa_26852225",
+        "pubmedqa_27491658",
+        "pubmedqa_7547656",
+        "pubmedqa_9278754",
+        "pubmedqa_9446993",
+        "pubmedqa_9550200",
+        "pubmedqa_9582182",
+        "pubmedqa_9745063"
+      ],
+      "common_n": 63,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12095973",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15065192",
+          "pubmedqa_15137012",
+          "pubmedqa_15151701",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_16962519",
+          "pubmedqa_17192736",
+          "pubmedqa_17595200",
+          "pubmedqa_17894828",
+          "pubmedqa_17971187",
+          "pubmedqa_18565233",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19309468",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26298839",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ],
+        "openrouter": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10490564",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15137012",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_17595200",
+          "pubmedqa_17971187",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26708803",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10490564": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B5:not_applicable_no_factual_claims"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26708803": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B5:judge_missing"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_12095973": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_17192736": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19309468": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:not_applicable_no_factual_claims"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26298839": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 63,
+            "B3_mean": 0.8920194003527339,
+            "B5_mean": 0.5575396825396826,
+            "difference": 0.33447971781305114,
+            "CI95": {
+              "interval": [
+                0.23037698412698412,
+                0.43818452380952383
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 63,
+            "B3_mean": 0.9005291005291006,
+            "B5_mean": 0.5976190476190477,
+            "difference": 0.30291005291005296,
+            "CI95": {
+              "interval": [
+                0.19086640211640213,
+                0.41455026455026456
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 72,
+            "B3_mean": 0.8904706790123458,
+            "B5_mean": 0.5595734126984127,
+            "difference": 0.330897266313933,
+            "CI95": {
+              "interval": [
+                0.23340925374779542,
+                0.42773547729276895
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 65,
+            "B3_mean": 0.9035897435897436,
+            "B5_mean": 0.6069230769230769,
+            "difference": 0.2966666666666667,
+            "CI95": {
+              "interval": [
+                0.18602564102564104,
+                0.4053878205128204
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 0.815348165163255,
+          "Spearman": 0.7405924274761494,
+          "judge_mean_difference": -0.024294532627865965,
+          "mean_absolute_difference": 0.11344797178130513
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.7166988967596037,
+              0.8843641350198655
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.6295175753741347,
+              0.8304082879372896
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.05875275573192241,
+              0.009193672839506164
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.08405974426807758,
+              0.14596726190476192
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 0.7489979605613348,
+          "Spearman": 0.6740799913823909,
+          "judge_mean_difference": 0.03156966490299824,
+          "mean_absolute_difference": 0.2041446208112875
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.5814038807238908,
+              0.8595768938506011
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.48114726695296345,
+              0.8069116523767522
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.044092813051146366,
+              0.10921847442680772
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.14827932098765434,
+              0.2654772927689594
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 1.0,
+        "CI95": {
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    },
+    "CF": {
+      "common_ids": [
+        "pubmedqa_10173769",
+        "pubmedqa_10331115",
+        "pubmedqa_10381996",
+        "pubmedqa_10759659",
+        "pubmedqa_10966943",
+        "pubmedqa_11035130",
+        "pubmedqa_11500608",
+        "pubmedqa_11567820",
+        "pubmedqa_12626177",
+        "pubmedqa_14518645",
+        "pubmedqa_14627582",
+        "pubmedqa_15137012",
+        "pubmedqa_15703931",
+        "pubmedqa_16097998",
+        "pubmedqa_16392897",
+        "pubmedqa_16465002",
+        "pubmedqa_16498158",
+        "pubmedqa_16772913",
+        "pubmedqa_17595200",
+        "pubmedqa_17971187",
+        "pubmedqa_18619710",
+        "pubmedqa_18926458",
+        "pubmedqa_19406119",
+        "pubmedqa_19913785",
+        "pubmedqa_20187289",
+        "pubmedqa_20337202",
+        "pubmedqa_20401819",
+        "pubmedqa_20497880",
+        "pubmedqa_20577124",
+        "pubmedqa_21214884",
+        "pubmedqa_21823940",
+        "pubmedqa_21873082",
+        "pubmedqa_21889895",
+        "pubmedqa_22117569",
+        "pubmedqa_22497340",
+        "pubmedqa_22504515",
+        "pubmedqa_22532370",
+        "pubmedqa_23412195",
+        "pubmedqa_23495128",
+        "pubmedqa_23899611",
+        "pubmedqa_24139705",
+        "pubmedqa_24298614",
+        "pubmedqa_24336869",
+        "pubmedqa_24516646",
+        "pubmedqa_24625433",
+        "pubmedqa_24671913",
+        "pubmedqa_24684514",
+        "pubmedqa_24747511",
+        "pubmedqa_24748473",
+        "pubmedqa_24827404",
+        "pubmedqa_24901580",
+        "pubmedqa_25475395",
+        "pubmedqa_25756710",
+        "pubmedqa_26348845",
+        "pubmedqa_26449554",
+        "pubmedqa_26852225",
+        "pubmedqa_27491658",
+        "pubmedqa_7547656",
+        "pubmedqa_9278754",
+        "pubmedqa_9446993",
+        "pubmedqa_9550200",
+        "pubmedqa_9582182",
+        "pubmedqa_9745063"
+      ],
+      "common_n": 63,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12095973",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15065192",
+          "pubmedqa_15137012",
+          "pubmedqa_15151701",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_16962519",
+          "pubmedqa_17192736",
+          "pubmedqa_17595200",
+          "pubmedqa_17894828",
+          "pubmedqa_17971187",
+          "pubmedqa_18565233",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19309468",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26298839",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ],
+        "openrouter": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10490564",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15137012",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_17595200",
+          "pubmedqa_17971187",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26708803",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10490564": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B5:not_applicable_no_factual_claims"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26708803": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B5:judge_missing"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_12095973": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_17192736": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19309468": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:not_applicable_no_factual_claims"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26298839": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 63,
+            "B3_mean": 0.19047619047619047,
+            "B5_mean": 0.1111111111111111,
+            "difference": 0.07936507936507936,
+            "CI95": {
+              "interval": [
+                -0.031746031746031744,
+                0.1984126984126984
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 63,
+            "B3_mean": 0.23544973544973546,
+            "B5_mean": 0.10185185185185186,
+            "difference": 0.13359788359788358,
+            "CI95": {
+              "interval": [
+                0.009259259259259262,
+                0.25793650793650796
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 72,
+            "B3_mean": 0.19444444444444445,
+            "B5_mean": 0.1494212962962963,
+            "difference": 0.045023148148148145,
+            "CI95": {
+              "interval": [
+                -0.06550925925925927,
+                0.15555844907407404
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 65,
+            "B3_mean": 0.22820512820512823,
+            "B5_mean": 0.09871794871794871,
+            "difference": 0.12948717948717947,
+            "CI95": {
+              "interval": [
+                0.011538461538461539,
+                0.25384615384615383
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 0.8334307304378422,
+          "Spearman": 0.9114664142952786,
+          "judge_mean_difference": -0.017857142857142856,
+          "mean_absolute_difference": 0.05357142857142857
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.6902794887881748,
+              0.940096428969144
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.811257836541613,
+              0.9935067320643098
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.052248677248677246,
+              0.01322751322751323
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.025793650793650792,
+              0.08664021164021164
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 0.8488308420896848,
+          "Spearman": 0.9234742304744993,
+          "judge_mean_difference": -0.05423280423280424,
+          "mean_absolute_difference": 0.10714285714285714
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.7133657516398871,
+              0.9436731816433389
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.8312319863168843,
+              0.9918148104359414
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.12433862433862433,
+              0.006613756613756615
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.051587301587301584,
+              0.17328042328042328
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 1.0,
+        "CI95": {
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    },
+    "coverage": {
+      "common_ids": [
+        "pubmedqa_10173769",
+        "pubmedqa_10331115",
+        "pubmedqa_10381996",
+        "pubmedqa_10759659",
+        "pubmedqa_10966943",
+        "pubmedqa_11035130",
+        "pubmedqa_11500608",
+        "pubmedqa_11567820",
+        "pubmedqa_12626177",
+        "pubmedqa_14518645",
+        "pubmedqa_14627582",
+        "pubmedqa_15137012",
+        "pubmedqa_15703931",
+        "pubmedqa_16097998",
+        "pubmedqa_16392897",
+        "pubmedqa_16465002",
+        "pubmedqa_16498158",
+        "pubmedqa_16772913",
+        "pubmedqa_17595200",
+        "pubmedqa_17971187",
+        "pubmedqa_18619710",
+        "pubmedqa_18926458",
+        "pubmedqa_19406119",
+        "pubmedqa_19913785",
+        "pubmedqa_20187289",
+        "pubmedqa_20337202",
+        "pubmedqa_20401819",
+        "pubmedqa_20497880",
+        "pubmedqa_20577124",
+        "pubmedqa_21214884",
+        "pubmedqa_21823940",
+        "pubmedqa_21873082",
+        "pubmedqa_21889895",
+        "pubmedqa_22117569",
+        "pubmedqa_22497340",
+        "pubmedqa_22504515",
+        "pubmedqa_22532370",
+        "pubmedqa_23412195",
+        "pubmedqa_23495128",
+        "pubmedqa_23899611",
+        "pubmedqa_24139705",
+        "pubmedqa_24298614",
+        "pubmedqa_24336869",
+        "pubmedqa_24516646",
+        "pubmedqa_24625433",
+        "pubmedqa_24671913",
+        "pubmedqa_24684514",
+        "pubmedqa_24747511",
+        "pubmedqa_24748473",
+        "pubmedqa_24827404",
+        "pubmedqa_24901580",
+        "pubmedqa_25475395",
+        "pubmedqa_25756710",
+        "pubmedqa_26348845",
+        "pubmedqa_26449554",
+        "pubmedqa_26852225",
+        "pubmedqa_27491658",
+        "pubmedqa_7547656",
+        "pubmedqa_9278754",
+        "pubmedqa_9446993",
+        "pubmedqa_9550200",
+        "pubmedqa_9582182",
+        "pubmedqa_9745063"
+      ],
+      "common_n": 63,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12095973",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15065192",
+          "pubmedqa_15137012",
+          "pubmedqa_15151701",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_16962519",
+          "pubmedqa_17192736",
+          "pubmedqa_17595200",
+          "pubmedqa_17894828",
+          "pubmedqa_17971187",
+          "pubmedqa_18565233",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19309468",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26298839",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ],
+        "openrouter": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10490564",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15137012",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_17595200",
+          "pubmedqa_17971187",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26708803",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10490564": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26708803": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B5:judge_missing"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_12095973": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_17192736": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19309468": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26298839": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 63,
+            "B3_mean": 0.15229276895943564,
+            "B5_mean": 0.08575207860922146,
+            "difference": 0.06654069035021415,
+            "CI95": {
+              "interval": [
+                -0.025788296800201563,
+                0.16583616780045352
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 63,
+            "B3_mean": 0.20423280423280424,
+            "B5_mean": 0.08783068783068781,
+            "difference": 0.1164021164021164,
+            "CI95": {
+              "interval": [
+                0.005291005291005297,
+                0.2328042328042328
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 72,
+            "B3_mean": 0.14830246913580247,
+            "B5_mean": 0.1173941798941799,
+            "difference": 0.030908289241622575,
+            "CI95": {
+              "interval": [
+                -0.06562059082892417,
+                0.12674355158730158
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 65,
+            "B3_mean": 0.197948717948718,
+            "B5_mean": 0.08512820512820513,
+            "difference": 0.11282051282051284,
+            "CI95": {
+              "interval": [
+                0.0020512820512820543,
+                0.22615384615384615
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 0.7858923999476436,
+          "Spearman": 0.9242346179048527,
+          "judge_mean_difference": -0.027009322247417485,
+          "mean_absolute_difference": 0.06457545981355504
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.6412843005422607,
+              0.8983335416836394
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.8390287578996616,
+              0.9903915422477166
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.06274313429075334,
+              0.009921107331821614
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0343346875787352,
+              0.10026628243890146
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 0.8340654575399276,
+          "Spearman": 0.920379019597584,
+          "judge_mean_difference": -0.04986142605190225,
+          "mean_absolute_difference": 0.11327790375409422
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.6955311540847059,
+              0.9252768790702495
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.8359450872378524,
+              0.9778666026027809
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.11326530612244899,
+              0.007735575711766182
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.06267195767195768,
+              0.17165658856135046
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 1.0,
+        "CI95": {
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    },
+    "resolvability": {
+      "common_ids": [
+        "pubmedqa_14518645",
+        "pubmedqa_20577124",
+        "pubmedqa_22497340",
+        "pubmedqa_22532370",
+        "pubmedqa_9446993"
+      ],
+      "common_n": 5,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_14518645",
+          "pubmedqa_15065192",
+          "pubmedqa_15151701",
+          "pubmedqa_17192736",
+          "pubmedqa_20577124",
+          "pubmedqa_22497340",
+          "pubmedqa_22532370",
+          "pubmedqa_9446993"
+        ],
+        "openrouter": [
+          "pubmedqa_14518645",
+          "pubmedqa_20577124",
+          "pubmedqa_22497340",
+          "pubmedqa_22532370",
+          "pubmedqa_9446993"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10173769": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10331115": [
+            "B5:N/A"
+          ],
+          "pubmedqa_10381996": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10490564": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_10759659": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10966943": [
+            "B3:N/A"
+          ],
+          "pubmedqa_11035130": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_11500608": [
+            "B5:N/A"
+          ],
+          "pubmedqa_11567820": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12095973": [
+            "B5:N/A"
+          ],
+          "pubmedqa_12626177": [
+            "B3:N/A"
+          ],
+          "pubmedqa_14627582": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_15137012": [
+            "B5:N/A"
+          ],
+          "pubmedqa_15703931": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16097998": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16392897": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16465002": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16498158": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16772913": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16962519": [
+            "B5:N/A"
+          ],
+          "pubmedqa_17595200": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17894828": [
+            "B5:N/A"
+          ],
+          "pubmedqa_17971187": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_18388848": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18619710": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18926458": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19309468": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19406119": [
+            "B5:N/A"
+          ],
+          "pubmedqa_19913785": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20187289": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20337202": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20401819": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20497880": [
+            "B3:N/A"
+          ],
+          "pubmedqa_21214884": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21823940": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21873082": [
+            "B5:N/A"
+          ],
+          "pubmedqa_21889895": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22117569": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22350859": [
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_22504515": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23412195": [
+            "B3:N/A"
+          ],
+          "pubmedqa_23453079": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_23495128": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23899611": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24139705": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24298614": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24336869": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24374414": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24516646": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24625433": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24671913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24684514": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24747511": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24748473": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24827404": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24901580": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25475395": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25756710": [
+            "B5:N/A"
+          ],
+          "pubmedqa_26298839": [
+            "B3:N/A"
+          ],
+          "pubmedqa_26348845": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26449554": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26708803": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26852225": [
+            "B3:N/A"
+          ],
+          "pubmedqa_27491658": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_28196511": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_7547656": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9278754": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9550200": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9582182": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9745063": [
+            "B5:N/A"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_10173769": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10331115": [
+            "B5:N/A"
+          ],
+          "pubmedqa_10381996": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10490564": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10759659": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10966943": [
+            "B3:N/A"
+          ],
+          "pubmedqa_11035130": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_11500608": [
+            "B5:N/A"
+          ],
+          "pubmedqa_11567820": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12095973": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_12626177": [
+            "B3:N/A"
+          ],
+          "pubmedqa_14627582": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15137012": [
+            "B5:N/A"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15703931": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16097998": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16392897": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16465002": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16498158": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16772913": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_17192736": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17595200": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_17971187": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_18388848": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18619710": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18926458": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19309468": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19406119": [
+            "B5:N/A"
+          ],
+          "pubmedqa_19913785": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20187289": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20337202": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20401819": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20497880": [
+            "B3:N/A"
+          ],
+          "pubmedqa_21214884": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21823940": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21873082": [
+            "B5:N/A"
+          ],
+          "pubmedqa_21889895": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22117569": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_22504515": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23412195": [
+            "B3:N/A"
+          ],
+          "pubmedqa_23453079": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_23495128": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23899611": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24139705": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24298614": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24336869": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24374414": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24516646": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24625433": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24671913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24684514": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24747511": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24748473": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24827404": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24901580": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25475395": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25756710": [
+            "B5:N/A"
+          ],
+          "pubmedqa_26298839": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26348845": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26449554": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26708803": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26852225": [
+            "B3:N/A"
+          ],
+          "pubmedqa_27491658": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_7547656": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9278754": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9550200": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9582182": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9745063": [
+            "B5:N/A"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 5,
+            "B3_mean": 0.4,
+            "B5_mean": 0.4,
+            "difference": 0.0,
+            "CI95": {
+              "interval": [
+                -0.3,
+                0.3
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 5,
+            "B3_mean": 0.5666666666666667,
+            "B5_mean": 0.4,
+            "difference": 0.16666666666666666,
+            "CI95": {
+              "interval": [
+                -0.30000000000000004,
+                0.7
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 8,
+            "B3_mean": 0.5,
+            "B5_mean": 0.625,
+            "difference": -0.125,
+            "CI95": {
+              "interval": [
+                -0.4375,
+                0.125
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 5,
+            "B3_mean": 0.5666666666666667,
+            "B5_mean": 0.4,
+            "difference": 0.16666666666666666,
+            "CI95": {
+              "interval": [
+                -0.30000000000000004,
+                0.7
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 0.7623126338329763,
+          "Spearman": 0.7580113988510842,
+          "judge_mean_difference": -0.08333333333333333,
+          "mean_absolute_difference": 0.11666666666666667
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.12195121951219494,
+              1.0
+            ],
+            "valid_resamples": 9994
+          },
+          "Spearman": {
+            "interval": [
+              0.3586095690932793,
+              1.0
+            ],
+            "valid_resamples": 9869
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.3,
+              0.05
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0,
+              0.31666666666666665
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 0.5865921787709498,
+          "Spearman": 0.6882472016116853,
+          "judge_mean_difference": -0.16666666666666666,
+          "mean_absolute_difference": 0.23333333333333334
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              -0.14285714285714268,
+              1.0
+            ],
+            "valid_resamples": 9909
+          },
+          "Spearman": {
+            "interval": [
+              -0.3042903097250923,
+              1.0
+            ],
+            "valid_resamples": 9206
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.6,
+              0.10000000000000005
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0,
+              0.6333333333333334
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 1.0,
+        "CI95": {
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    },
+    "compliance": {
+      "common_ids": [
+        "pubmedqa_10173769",
+        "pubmedqa_10331115",
+        "pubmedqa_10381996",
+        "pubmedqa_10759659",
+        "pubmedqa_10966943",
+        "pubmedqa_11035130",
+        "pubmedqa_11500608",
+        "pubmedqa_11567820",
+        "pubmedqa_12626177",
+        "pubmedqa_14518645",
+        "pubmedqa_14627582",
+        "pubmedqa_15137012",
+        "pubmedqa_15703931",
+        "pubmedqa_16097998",
+        "pubmedqa_16392897",
+        "pubmedqa_16465002",
+        "pubmedqa_16498158",
+        "pubmedqa_16772913",
+        "pubmedqa_17595200",
+        "pubmedqa_17971187",
+        "pubmedqa_18619710",
+        "pubmedqa_18926458",
+        "pubmedqa_19406119",
+        "pubmedqa_19913785",
+        "pubmedqa_20187289",
+        "pubmedqa_20337202",
+        "pubmedqa_20401819",
+        "pubmedqa_20497880",
+        "pubmedqa_20577124",
+        "pubmedqa_21214884",
+        "pubmedqa_21823940",
+        "pubmedqa_21873082",
+        "pubmedqa_21889895",
+        "pubmedqa_22117569",
+        "pubmedqa_22497340",
+        "pubmedqa_22504515",
+        "pubmedqa_22532370",
+        "pubmedqa_23412195",
+        "pubmedqa_23495128",
+        "pubmedqa_23899611",
+        "pubmedqa_24139705",
+        "pubmedqa_24298614",
+        "pubmedqa_24336869",
+        "pubmedqa_24516646",
+        "pubmedqa_24625433",
+        "pubmedqa_24671913",
+        "pubmedqa_24684514",
+        "pubmedqa_24747511",
+        "pubmedqa_24748473",
+        "pubmedqa_24827404",
+        "pubmedqa_24901580",
+        "pubmedqa_25475395",
+        "pubmedqa_25756710",
+        "pubmedqa_26348845",
+        "pubmedqa_26449554",
+        "pubmedqa_26852225",
+        "pubmedqa_27491658",
+        "pubmedqa_7547656",
+        "pubmedqa_9278754",
+        "pubmedqa_9446993",
+        "pubmedqa_9550200",
+        "pubmedqa_9582182",
+        "pubmedqa_9745063"
+      ],
+      "common_n": 63,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12095973",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15065192",
+          "pubmedqa_15137012",
+          "pubmedqa_15151701",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_16962519",
+          "pubmedqa_17192736",
+          "pubmedqa_17595200",
+          "pubmedqa_17894828",
+          "pubmedqa_17971187",
+          "pubmedqa_18565233",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19309468",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26298839",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ],
+        "openrouter": [
+          "pubmedqa_10173769",
+          "pubmedqa_10331115",
+          "pubmedqa_10381996",
+          "pubmedqa_10490564",
+          "pubmedqa_10759659",
+          "pubmedqa_10966943",
+          "pubmedqa_11035130",
+          "pubmedqa_11500608",
+          "pubmedqa_11567820",
+          "pubmedqa_12626177",
+          "pubmedqa_14518645",
+          "pubmedqa_14627582",
+          "pubmedqa_15137012",
+          "pubmedqa_15703931",
+          "pubmedqa_16097998",
+          "pubmedqa_16392897",
+          "pubmedqa_16465002",
+          "pubmedqa_16498158",
+          "pubmedqa_16772913",
+          "pubmedqa_17595200",
+          "pubmedqa_17971187",
+          "pubmedqa_18619710",
+          "pubmedqa_18926458",
+          "pubmedqa_19406119",
+          "pubmedqa_19913785",
+          "pubmedqa_20187289",
+          "pubmedqa_20337202",
+          "pubmedqa_20401819",
+          "pubmedqa_20497880",
+          "pubmedqa_20577124",
+          "pubmedqa_21214884",
+          "pubmedqa_21823940",
+          "pubmedqa_21873082",
+          "pubmedqa_21889895",
+          "pubmedqa_22117569",
+          "pubmedqa_22497340",
+          "pubmedqa_22504515",
+          "pubmedqa_22532370",
+          "pubmedqa_23412195",
+          "pubmedqa_23495128",
+          "pubmedqa_23899611",
+          "pubmedqa_24139705",
+          "pubmedqa_24298614",
+          "pubmedqa_24336869",
+          "pubmedqa_24516646",
+          "pubmedqa_24625433",
+          "pubmedqa_24671913",
+          "pubmedqa_24684514",
+          "pubmedqa_24747511",
+          "pubmedqa_24748473",
+          "pubmedqa_24827404",
+          "pubmedqa_24901580",
+          "pubmedqa_25475395",
+          "pubmedqa_25756710",
+          "pubmedqa_26348845",
+          "pubmedqa_26449554",
+          "pubmedqa_26708803",
+          "pubmedqa_26852225",
+          "pubmedqa_27491658",
+          "pubmedqa_7547656",
+          "pubmedqa_9278754",
+          "pubmedqa_9446993",
+          "pubmedqa_9550200",
+          "pubmedqa_9582182",
+          "pubmedqa_9745063"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10490564": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26708803": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B5:judge_missing"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_12095973": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_17192736": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_18388848": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19309468": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_23453079": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24374414": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26298839": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 63,
+            "B3_mean": 0.30158730158730157,
+            "B5_mean": 0.3492063492063492,
+            "difference": -0.047619047619047616,
+            "CI95": {
+              "interval": [
+                -0.2222222222222222,
+                0.12698412698412698
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 63,
+            "B3_mean": 0.30158730158730157,
+            "B5_mean": 0.3492063492063492,
+            "difference": -0.047619047619047616,
+            "CI95": {
+              "interval": [
+                -0.2222222222222222,
+                0.12698412698412698
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 72,
+            "B3_mean": 0.3472222222222222,
+            "B5_mean": 0.3888888888888889,
+            "difference": -0.041666666666666664,
+            "CI95": {
+              "interval": [
+                -0.20833333333333334,
+                0.125
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 65,
+            "B3_mean": 0.2923076923076923,
+            "B5_mean": 0.3384615384615385,
+            "difference": -0.046153846153846156,
+            "CI95": {
+              "interval": [
+                -0.2153846153846154,
+                0.12307692307692308
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 1.0,
+          "Spearman": 1.0,
+          "judge_mean_difference": 0.0,
+          "mean_absolute_difference": 0.0
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              1.0,
+              1.0
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.9999999999999999,
+              1.0
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 1.0,
+          "Spearman": 0.9999999999999998,
+          "judge_mean_difference": 0.0,
+          "mean_absolute_difference": 0.0
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              1.0,
+              1.0
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              0.9999999999999998,
+              1.0
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0,
+              0.0
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 1.0,
+        "CI95": {
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    },
+    "CF_no_citation_na": {
+      "common_ids": [
+        "pubmedqa_14518645",
+        "pubmedqa_20577124",
+        "pubmedqa_22497340",
+        "pubmedqa_22532370",
+        "pubmedqa_9446993"
+      ],
+      "common_n": 5,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_14518645",
+          "pubmedqa_15065192",
+          "pubmedqa_15151701",
+          "pubmedqa_17192736",
+          "pubmedqa_20577124",
+          "pubmedqa_22497340",
+          "pubmedqa_22532370",
+          "pubmedqa_9446993"
+        ],
+        "openrouter": [
+          "pubmedqa_14518645",
+          "pubmedqa_20577124",
+          "pubmedqa_22497340",
+          "pubmedqa_22532370",
+          "pubmedqa_9446993"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10173769": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10331115": [
+            "B5:N/A"
+          ],
+          "pubmedqa_10381996": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10490564": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_10759659": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10966943": [
+            "B3:N/A"
+          ],
+          "pubmedqa_11035130": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_11500608": [
+            "B5:N/A"
+          ],
+          "pubmedqa_11567820": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12095973": [
+            "B5:N/A"
+          ],
+          "pubmedqa_12626177": [
+            "B3:N/A"
+          ],
+          "pubmedqa_14627582": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_15137012": [
+            "B5:N/A"
+          ],
+          "pubmedqa_15703931": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16097998": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16392897": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16465002": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16498158": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16772913": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16962519": [
+            "B5:N/A"
+          ],
+          "pubmedqa_17595200": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17894828": [
+            "B5:N/A"
+          ],
+          "pubmedqa_17971187": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_18388848": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18619710": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18926458": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19309468": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19406119": [
+            "B5:N/A"
+          ],
+          "pubmedqa_19913785": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20187289": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20337202": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20401819": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20497880": [
+            "B3:N/A"
+          ],
+          "pubmedqa_21214884": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21823940": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21873082": [
+            "B5:N/A"
+          ],
+          "pubmedqa_21889895": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22117569": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22350859": [
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_22504515": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23412195": [
+            "B3:N/A"
+          ],
+          "pubmedqa_23453079": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_23495128": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23899611": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24139705": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24298614": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24336869": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24374414": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24516646": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24625433": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24671913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24684514": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24747511": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24748473": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24827404": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24901580": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25475395": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25756710": [
+            "B5:N/A"
+          ],
+          "pubmedqa_26298839": [
+            "B3:N/A"
+          ],
+          "pubmedqa_26348845": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26449554": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26708803": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26852225": [
+            "B3:N/A"
+          ],
+          "pubmedqa_27491658": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_28196511": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_7547656": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9278754": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9550200": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9582182": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9745063": [
+            "B5:N/A"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_10173769": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10331115": [
+            "B5:N/A"
+          ],
+          "pubmedqa_10381996": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10490564": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10759659": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10966943": [
+            "B3:N/A"
+          ],
+          "pubmedqa_11035130": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_11500608": [
+            "B5:N/A"
+          ],
+          "pubmedqa_11567820": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12095973": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_12626177": [
+            "B3:N/A"
+          ],
+          "pubmedqa_14627582": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15137012": [
+            "B5:N/A"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15703931": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16097998": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16392897": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16465002": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16498158": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16772913": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_17192736": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17595200": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_17971187": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_18388848": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18619710": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18926458": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19309468": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19406119": [
+            "B5:N/A"
+          ],
+          "pubmedqa_19913785": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20187289": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20337202": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20401819": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20497880": [
+            "B3:N/A"
+          ],
+          "pubmedqa_21214884": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21823940": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21873082": [
+            "B5:N/A"
+          ],
+          "pubmedqa_21889895": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22117569": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_22504515": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23412195": [
+            "B3:N/A"
+          ],
+          "pubmedqa_23453079": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_23495128": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23899611": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24139705": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24298614": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24336869": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24374414": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24516646": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24625433": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24671913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24684514": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24747511": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24748473": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24827404": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24901580": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25475395": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25756710": [
+            "B5:N/A"
+          ],
+          "pubmedqa_26298839": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26348845": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26449554": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26708803": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26852225": [
+            "B3:N/A"
+          ],
+          "pubmedqa_27491658": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_7547656": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9278754": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9550200": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9582182": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9745063": [
+            "B5:N/A"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 5,
+            "B3_mean": 0.35,
+            "B5_mean": 0.2,
+            "difference": 0.15,
+            "CI95": {
+              "interval": [
+                -0.1,
+                0.4
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 5,
+            "B3_mean": 0.4666666666666667,
+            "B5_mean": 0.2,
+            "difference": 0.26666666666666666,
+            "CI95": {
+              "interval": [
+                -0.2,
+                0.7
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 8,
+            "B3_mean": 0.46875,
+            "B5_mean": 0.40625,
+            "difference": 0.0625,
+            "CI95": {
+              "interval": [
+                -0.3125,
+                0.40625
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 5,
+            "B3_mean": 0.4666666666666667,
+            "B5_mean": 0.2,
+            "difference": 0.26666666666666666,
+            "CI95": {
+              "interval": [
+                -0.2,
+                0.7
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 0.6407322654462243,
+          "Spearman": 0.6920938334812062,
+          "judge_mean_difference": -0.05833333333333333,
+          "mean_absolute_difference": 0.14166666666666666
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.023880597014925408,
+              0.9768637532133677
+            ],
+            "valid_resamples": 9992
+          },
+          "Spearman": {
+            "interval": [
+              0.19920476822239888,
+              1.0
+            ],
+            "valid_resamples": 9888
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.2833333333333333,
+              0.08333333333333334
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.01666666666666667,
+              0.325
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 0.43928571428571417,
+          "Spearman": 0.5270462766947298,
+          "judge_mean_difference": -0.11666666666666665,
+          "mean_absolute_difference": 0.2833333333333333
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              -0.9230769230769231,
+              0.9600000000000002
+            ],
+            "valid_resamples": 9989
+          },
+          "Spearman": {
+            "interval": [
+              -0.9128709291752769,
+              1.0
+            ],
+            "valid_resamples": 9781
+          },
+          "judge_mean_difference": {
+            "interval": [
+              -0.5666666666666667,
+              0.16666666666666669
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.03333333333333334,
+              0.65
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 1.0,
+        "CI95": {
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    },
+    "CF_resolved_only": {
+      "common_ids": [
+        "pubmedqa_14518645",
+        "pubmedqa_9446993"
+      ],
+      "common_n": 2,
+      "judge_available_ids": {
+        "omniroute": [
+          "pubmedqa_14518645",
+          "pubmedqa_15065192",
+          "pubmedqa_15151701",
+          "pubmedqa_9446993"
+        ],
+        "openrouter": [
+          "pubmedqa_14518645",
+          "pubmedqa_9446993"
+        ]
+      },
+      "excluded": {
+        "omniroute": {
+          "pubmedqa_10173769": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10331115": [
+            "B5:N/A"
+          ],
+          "pubmedqa_10381996": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10490564": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_10759659": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10966943": [
+            "B3:N/A"
+          ],
+          "pubmedqa_11035130": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_11500608": [
+            "B5:N/A"
+          ],
+          "pubmedqa_11567820": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12095973": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12626177": [
+            "B3:N/A"
+          ],
+          "pubmedqa_14627582": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_15137012": [
+            "B5:N/A"
+          ],
+          "pubmedqa_15703931": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16097998": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16392897": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16465002": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16498158": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16772913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16962519": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17192736": [
+            "B3:N/A"
+          ],
+          "pubmedqa_17595200": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17894828": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17971187": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_18388848": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18619710": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18926458": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_19309468": [
+            "B3:N/A"
+          ],
+          "pubmedqa_19406119": [
+            "B5:N/A"
+          ],
+          "pubmedqa_19913785": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20187289": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_20337202": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20401819": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20497880": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20577124": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21214884": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21823940": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21873082": [
+            "B5:N/A"
+          ],
+          "pubmedqa_21889895": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22117569": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22350859": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_22497340": [
+            "B5:N/A"
+          ],
+          "pubmedqa_22504515": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22532370": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23412195": [
+            "B3:N/A"
+          ],
+          "pubmedqa_23453079": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_23495128": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23899611": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24139705": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24298614": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24336869": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24374414": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24516646": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24625433": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24671913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24684514": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24747511": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24748473": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24827404": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24901580": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25475395": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25756710": [
+            "B5:N/A"
+          ],
+          "pubmedqa_26298839": [
+            "B3:N/A"
+          ],
+          "pubmedqa_26348845": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26449554": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26708803": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26852225": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_27491658": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_28196511": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_7547656": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9278754": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9550200": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9582182": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9745063": [
+            "B5:N/A"
+          ]
+        },
+        "openrouter": {
+          "pubmedqa_10173769": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10331115": [
+            "B5:N/A"
+          ],
+          "pubmedqa_10381996": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10490564": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_10759659": [
+            "B3:N/A"
+          ],
+          "pubmedqa_10966943": [
+            "B3:N/A"
+          ],
+          "pubmedqa_11035130": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_11500608": [
+            "B5:N/A"
+          ],
+          "pubmedqa_11567820": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_12095973": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_12626177": [
+            "B3:N/A"
+          ],
+          "pubmedqa_14627582": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_15065192": [
+            "B3:judge_missing",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15137012": [
+            "B5:N/A"
+          ],
+          "pubmedqa_15151701": [
+            "B5:judge_missing"
+          ],
+          "pubmedqa_15703931": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16097998": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16392897": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16465002": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16498158": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_16772913": [
+            "B5:N/A"
+          ],
+          "pubmedqa_16962519": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_17192736": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_17595200": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_17894828": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_17971187": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_18388848": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18565233": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_18619710": [
+            "B3:N/A"
+          ],
+          "pubmedqa_18926458": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_19309468": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_19406119": [
+            "B5:N/A"
+          ],
+          "pubmedqa_19913785": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20187289": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_20337202": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20401819": [
+            "B5:N/A"
+          ],
+          "pubmedqa_20497880": [
+            "B3:N/A"
+          ],
+          "pubmedqa_20577124": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21214884": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21823940": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_21873082": [
+            "B5:N/A"
+          ],
+          "pubmedqa_21889895": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22117569": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22350859": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_22411435": [
+            "B3:judge_missing"
+          ],
+          "pubmedqa_22497340": [
+            "B5:N/A"
+          ],
+          "pubmedqa_22504515": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_22532370": [
+            "B5:N/A"
+          ],
+          "pubmedqa_23412195": [
+            "B3:N/A"
+          ],
+          "pubmedqa_23453079": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_23495128": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_23899611": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24139705": [
+            "B3:N/A"
+          ],
+          "pubmedqa_24298614": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24336869": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24374414": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_24516646": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24625433": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24671913": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24684514": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24747511": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24748473": [
+            "B5:N/A"
+          ],
+          "pubmedqa_24827404": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_24901580": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25475395": [
+            "B3:N/A"
+          ],
+          "pubmedqa_25756710": [
+            "B5:N/A"
+          ],
+          "pubmedqa_26298839": [
+            "B3:N/A",
+            "B5:judge_missing"
+          ],
+          "pubmedqa_26348845": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26449554": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26708803": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_26852225": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_27491658": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_28196511": [
+            "B3:judge_missing",
+            "B5:N/A"
+          ],
+          "pubmedqa_7547656": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9278754": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9550200": [
+            "B3:N/A"
+          ],
+          "pubmedqa_9582182": [
+            "B3:N/A",
+            "B5:N/A"
+          ],
+          "pubmedqa_9745063": [
+            "B5:N/A"
+          ]
+        }
+      },
+      "contrasts": {
+        "primary_common": {
+          "omniroute": {
+            "n": 2,
+            "B3_mean": 0.875,
+            "B5_mean": 0.5,
+            "difference": 0.375,
+            "CI95": {
+              "interval": [
+                -0.25,
+                1.0
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 2,
+            "B3_mean": 0.75,
+            "B5_mean": 0.5,
+            "difference": 0.25,
+            "CI95": {
+              "interval": [
+                -0.5,
+                1.0
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        },
+        "judge_available": {
+          "omniroute": {
+            "n": 4,
+            "B3_mean": 0.9375,
+            "B5_mean": 0.5625,
+            "difference": 0.375,
+            "CI95": {
+              "interval": [
+                -0.125,
+                0.875
+              ],
+              "valid_resamples": 10000
+            }
+          },
+          "openrouter": {
+            "n": 2,
+            "B3_mean": 0.75,
+            "B5_mean": 0.5,
+            "difference": 0.25,
+            "CI95": {
+              "interval": [
+                -0.5,
+                1.0
+              ],
+              "valid_resamples": 10000
+            }
+          }
+        }
+      },
+      "individual_responses": {
+        "point": {
+          "ICC_A1": 0.9655172413793104,
+          "Spearman": 1.0,
+          "judge_mean_difference": 0.0625,
+          "mean_absolute_difference": 0.0625
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.7272727272727272,
+              1.0
+            ],
+            "valid_resamples": 10000
+          },
+          "Spearman": {
+            "interval": [
+              1.0,
+              1.0
+            ],
+            "valid_resamples": 10000
+          },
+          "judge_mean_difference": {
+            "interval": [
+              0.0,
+              0.125
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0,
+              0.125
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "paired_differences": {
+        "point": {
+          "ICC_A1": 0.9836065573770492,
+          "Spearman": 0.9999999999999999,
+          "judge_mean_difference": 0.125,
+          "mean_absolute_difference": 0.125
+        },
+        "CI95": {
+          "ICC_A1": {
+            "interval": [
+              0.0,
+              0.9836065573770492
+            ],
+            "valid_resamples": 7534
+          },
+          "Spearman": {
+            "interval": [
+              0.9999999999999999,
+              0.9999999999999999
+            ],
+            "valid_resamples": 5024
+          },
+          "judge_mean_difference": {
+            "interval": [
+              0.0,
+              0.25
+            ],
+            "valid_resamples": 10000
+          },
+          "mean_absolute_difference": {
+            "interval": [
+              0.0,
+              0.25
+            ],
+            "valid_resamples": 10000
+          }
+        }
+      },
+      "applicability_agreement": {
+        "n": 141,
+        "fraction": 0.9716312056737588,
+        "CI95": {
+          "interval": [
+            0.9420289855072463,
+            0.993103448275862
+          ],
+          "valid_resamples": 10000
+        }
+      }
+    }
+  },
+  "citation_diagnostics": {
+    "omniroute/B3": {
+      "n": 79,
+      "no_citations": 52,
+      "no_citation_percentage": 65.82278481012658,
+      "missing_required": 52,
+      "F_NA": 0,
+      "CF_NA": 0,
+      "citations": 40,
+      "resolved": 23,
+      "incorrect": 0,
+      "unresolved": 17,
+      "ambiguous": 0,
+      "incorrect_frequency": 0.0,
+      "resolvable_fraction": 0.575
+    },
+    "omniroute/B5": {
+      "n": 74,
+      "no_citations": 45,
+      "no_citation_percentage": 60.810810810810814,
+      "missing_required": 44,
+      "F_NA": 1,
+      "CF_NA": 1,
+      "citations": 70,
+      "resolved": 52,
+      "incorrect": 12,
+      "unresolved": 18,
+      "ambiguous": 0,
+      "incorrect_frequency": 0.17142857142857143,
+      "resolvable_fraction": 0.7428571428571429
+    },
+    "openrouter/B3": {
+      "n": 73,
+      "no_citations": 52,
+      "no_citation_percentage": 71.23287671232876,
+      "missing_required": 52,
+      "F_NA": 0,
+      "CF_NA": 0,
+      "citations": 28,
+      "resolved": 21,
+      "incorrect": 0,
+      "unresolved": 7,
+      "ambiguous": 0,
+      "incorrect_frequency": 0.0,
+      "resolvable_fraction": 0.75
+    },
+    "openrouter/B5": {
+      "n": 71,
+      "no_citations": 48,
+      "no_citation_percentage": 67.6056338028169,
+      "missing_required": 47,
+      "F_NA": 1,
+      "CF_NA": 1,
+      "citations": 40,
+      "resolved": 19,
+      "incorrect": 5,
+      "unresolved": 17,
+      "ambiguous": 4,
+      "incorrect_frequency": 0.125,
+      "resolvable_fraction": 0.475
+    }
+  }
+}

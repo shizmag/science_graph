@@ -1,0 +1,8 @@
+{
+  "mode": "offline-dry-run",
+  "tasks": 320,
+  "protocol_sha256": "25212bc7b8dd12471853d0b4ff78693e66dccd4fe7f7bdff7698bb3ebf7ca12e",
+  "expected_calls": 320,
+  "max_attempts": 1280,
+  "paid_calls_made": 0
+}
