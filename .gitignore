@@ -232,3 +232,18 @@ revision_round1/judge/*
 !revision_round1/judge/antigravity_bridge/
 revision_round1/judge/antigravity_bridge/private/
 revision_round1/judge/antigravity_bridge/**/__pycache__/
+
+# Versioned Reviewer #1 historical evidence reassessment (other revisions unchanged).
+!revision_round2/
+revision_round2/*
+!revision_round2/reviewer1_evidence_rejudge/
+!revision_round2/reviewer1_evidence_rejudge/**
+revision_round2/reviewer1_evidence_rejudge/**/__pycache__/
+revision_round2/reviewer1_evidence_rejudge/.pytest_cache/
+
+# Developer-local symbol index and machine-specific Serena settings.
+.serena/cache/
+.serena/project.local.yml
+
+# Temporary outputs from interrupted benchmark/evaluation runs.
+*.tmp.*
