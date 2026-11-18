@@ -247,3 +247,6 @@ revision_round2/reviewer1_evidence_rejudge/.pytest_cache/
 
 # Temporary outputs from interrupted benchmark/evaluation runs.
 *.tmp.*
+
+# Serena project metadata and indexes are machine-local; add shared config explicitly if needed.
+.serena/
