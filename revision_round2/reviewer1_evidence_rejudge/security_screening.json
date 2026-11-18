@@ -1,0 +1,25 @@
+{
+  "scope": "New data manifests only; historical archives preserved; imported code may contain local endpoint conventions. Not a public-release authorization. Environment-secret scan also enforced by freeze.py.",
+  "checks": {
+    "cohort_manifest.json": {
+      "absolute_private_path_patterns": false,
+      "credential_patterns": false
+    },
+    "evidence_manifest.jsonl": {
+      "absolute_private_path_patterns": false,
+      "credential_patterns": false
+    },
+    "reconstructed_prompt_manifest.jsonl": {
+      "absolute_private_path_patterns": false,
+      "credential_patterns": false
+    },
+    "judge_tasks.jsonl": {
+      "absolute_private_path_patterns": false,
+      "credential_patterns": false
+    },
+    "provenance_checks.json": {
+      "absolute_private_path_patterns": false,
+      "credential_patterns": false
+    }
+  }
+}

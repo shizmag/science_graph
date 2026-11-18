@@ -1,0 +1,110 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "evaluation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "support": {
+            "enum": [
+              "full",
+              "partial",
+              "unsupported"
+            ]
+          },
+          "evidence_quote": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "quote",
+          "support",
+          "evidence_quote",
+          "explanation"
+        ]
+      }
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resolution": {
+            "enum": [
+              "resolved",
+              "unresolved",
+              "ambiguous"
+            ]
+          },
+          "source_quote": {
+            "type": "string"
+          },
+          "support": {
+            "enum": [
+              "full",
+              "partial",
+              "unsupported",
+              "unassessable"
+            ]
+          },
+          "explanation": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "quote",
+          "claim_id",
+          "target",
+          "resolution",
+          "source_quote",
+          "support",
+          "explanation"
+        ]
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "evaluation_id",
+    "claims",
+    "citations",
+    "notes"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
